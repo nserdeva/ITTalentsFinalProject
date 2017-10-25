@@ -65,7 +65,14 @@
 		    <artifactId>xuggle-xuggler</artifactId>
 		    <version>5.4</version>
 		</dependency>
-	
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>4.2.5.RELEASE</version>
+		</dependency>
+
+
 	</dependencies>
 	
 

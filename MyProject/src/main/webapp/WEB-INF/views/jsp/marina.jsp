@@ -1,4 +1,3 @@
-<jsp:useBean id="name" scope="request" type=""/>
 <%--
   Created by IntelliJ IDEA.
   User: Marina
@@ -15,6 +14,7 @@
 </head>
 <body>
 <p>
+    ${}
     ${name}
 </p>
 </body>

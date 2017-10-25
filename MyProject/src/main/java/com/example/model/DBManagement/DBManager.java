@@ -12,7 +12,6 @@ final class DBManager {
 	//private static DBManager instance;
 	private Connection con;
 
-	@Autowired
 	public DBManager(){
 		System.out.println("==============VLIZASH LI TUK BE==================");
 
@@ -40,7 +39,6 @@ final class DBManager {
 	}
 
 
-	@Autowired
 	public Connection getCon(){
 		return this.con;
 	}

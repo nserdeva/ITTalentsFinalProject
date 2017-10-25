@@ -22,8 +22,6 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	@Autowired
 	MultimediaDao multimediaDao;
 	@Autowired
-	UserDao userDao;
-	@Autowired
 	LocationDao locationDao;
 	@Autowired
 	CommentDao commentDao;
@@ -96,7 +94,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 						rs.getLong("profile_pic_id"), rs.getString("description"));
 				fetched.setProfilePic(multimediaDao.getMultimediaById(rs.getLong("profile_pic_id")));
 			}
-			userDao.setPosts(fetched);
+			this.setPosts(fetched);
 			return fetched;
 		}
 	}
@@ -192,7 +190,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				post.setLocation(locationDao.getLocationByPost(post));
 				post.setCategories(categoryDao.getCategoriesForPost(post));
 				post.setMultimedia(multimediaDao.getAllMultimediaForPost(post));
-				post.setTaggedPeople(userDao.getAllTaggedUsersForPost(post));
+				post.setTaggedPeople(this.getAllTaggedUsersForPost(post));
 				post.setComments(commentDao.getCommentsForPost(post));
 				posts.add(post);
 			}
@@ -216,28 +214,28 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// ::::::::: setting user data :::::::::
 	// set followers
 	public void setFollowers(User u) throws SQLException, UserException {
-		u.setFollowers(userDao.getFollowers(u));
+		u.setFollowers(this.getFollowers(u));
 	}
 
 	// set following
 	public void setFollowing(User u) throws SQLException, UserException {
-		u.setFollowing(userDao.getFollowing(u));
+		u.setFollowing(this.getFollowing(u));
 	}
 
 	// set visited locations
 	public void setVisitedLocations(User u) throws SQLException, UserException, LocationException {
-		u.setVisitedLocations(userDao.getVisitedLocations(u));
+		u.setVisitedLocations(this.getVisitedLocations(u));
 	}
 
 	// set wishlit
 	public void setWishlistLocations(User u) throws SQLException, UserException, LocationException {
-		u.setWishlist(userDao.getWishlistLocations(u));
+		u.setWishlist(this.getWishlistLocations(u));
 	}
 
 	// set posts
 	public void setPosts(User u)
 			throws SQLException, UserException, PostException, LocationException, CategoryException, CommentException {
-		u.setPosts(userDao.getPosts(u));
+		u.setPosts(this.getPosts(u));
 	}
 
 	// ::::::::: methods for updating user data :::::::::

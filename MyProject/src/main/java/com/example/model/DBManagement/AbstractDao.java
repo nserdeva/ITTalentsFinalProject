@@ -21,8 +21,9 @@ public abstract class AbstractDao {
 
     public AbstractDao() {
             dbManager=new DBManager();
-            //this.this.getConnection()=dbManager.getthis.getConnection()();
+            //this.this.getConnection()=dbManager.getConnection()();
         }
+
 
     public Connection getConnection(){
         return dbManager==null? null:dbManager.getCon();
