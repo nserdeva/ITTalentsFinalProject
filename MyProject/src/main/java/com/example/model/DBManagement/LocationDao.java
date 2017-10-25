@@ -17,7 +17,7 @@ public class LocationDao extends AbstractDao {
     //tested
     public void insertLocation(Location location) throws SQLException, LocationException {
         try{
-            PreparedStatement ps= this.getCon().prepareStatement(
+            PreparedStatement ps= connection.prepareStatement(
                     "insert into locations( latitude,longtitude, description, location_name) values (?,?,?,?);",
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, location.getLatitude());
@@ -36,7 +36,7 @@ public class LocationDao extends AbstractDao {
     public Location getLocationById(long id) throws SQLException, LocationException {
         Location location;
         try {
-            PreparedStatement ps = this.getCon().prepareStatement(
+            PreparedStatement ps = connection.prepareStatement(
                     "SELECT latitude, longtitude, description, location_name FROM locations where location_id=?;");
             ps.setLong(1, id);
             ResultSet rs=ps.executeQuery();
@@ -51,8 +51,7 @@ public class LocationDao extends AbstractDao {
 
     //tested
     public Location getLocationByPost(Post post) throws SQLException, LocationException {
-        //Connection con = DBManager.getInstance().getConnection();
-        PreparedStatement ps = this.getCon().prepareStatement("select l.location_id, l.latitude, l.longtitude, l.description, l.location_name" +
+        PreparedStatement ps = connection.prepareStatement("select l.location_id, l.latitude, l.longtitude, l.description, l.location_name" +
                 " from locations as l join posts " +
                 "on posts.location_id=l.location_id" +
                 " where post_id=?;");
