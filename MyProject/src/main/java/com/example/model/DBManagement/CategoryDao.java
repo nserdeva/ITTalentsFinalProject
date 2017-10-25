@@ -32,7 +32,7 @@ public class CategoryDao extends AbstractDao{
 
     //tested
     public Category insertNewCategory(Category category) throws CategoryException, SQLException {
-        try (PreparedStatement ps = this.getCon().prepareStatement(
+        try (PreparedStatement ps = connection.prepareStatement(
                 "insert into categories(category_name) value (?);",
                 Statement.RETURN_GENERATED_KEYS)){
             ps.setString(1, category.getName());
@@ -48,7 +48,7 @@ public class CategoryDao extends AbstractDao{
 
     //tested
     public Category getCategoryById(long categoryId) throws SQLException, CategoryException {
-        PreparedStatement ps = this.getCon().prepareStatement(
+        PreparedStatement ps = connection.prepareStatement(
                 "select category_name from categories where category_id= ?  ;");
         ps.setLong(1, categoryId);
         ResultSet rs = ps.executeQuery();
@@ -59,7 +59,6 @@ public class CategoryDao extends AbstractDao{
 
     //tested
     public void deleteCategory(Category category) throws SQLException, CategoryException {
-        Connection connection=this.getCon();
         PreparedStatement deleteCategory=null;
         PreparedStatement deleteFromPostsCategories=null;
         try {
@@ -84,7 +83,7 @@ public class CategoryDao extends AbstractDao{
 
     //tested
     public HashSet<Category> getCategoriesForPost(Post post) throws SQLException, CategoryException {
-        PreparedStatement ps = this.getCon().prepareStatement("select category_id from posts_categories where post_id= ?;");
+        PreparedStatement ps = connection.prepareStatement("select category_id from posts_categories where post_id= ?;");
         ps.setLong(1, post.getId());
         ResultSet rs=ps.executeQuery();
         HashSet<Category> categories=new HashSet<>();
@@ -98,7 +97,7 @@ public class CategoryDao extends AbstractDao{
     public void addAllCategoriesToPost(Post post,Set<Category> set) throws CategoryException {
         //TODO IF ENTRY EXISTS- THROWS EXCEPTION!!!
         try {
-            PreparedStatement ps = this.getCon().prepareStatement("INSERT into posts_categories(post_id, category_id) values (?,?);");
+            PreparedStatement ps = connection.prepareStatement("INSERT into posts_categories(post_id, category_id) values (?,?);");
             for (Category category : set) {
                 ps.setLong(1,post.getId());
                 ps.setLong(2,category.getId());

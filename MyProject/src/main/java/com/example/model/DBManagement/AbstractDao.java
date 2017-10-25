@@ -13,6 +13,6 @@ public abstract class AbstractDao {
     DBManager dbManager;
     @Autowired
     Connection connection=dbManager.getConnection();
-
+    
 
 }
