@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.example.model.exceptions.*;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,6 +45,9 @@ public final class User {
         this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
+    }
+
+    public User() {
     }
 
     // ::::::::: constructor to be used when loading an existing user from db

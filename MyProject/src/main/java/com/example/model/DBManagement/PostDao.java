@@ -1,4 +1,4 @@
-﻿package com.example.model.DBManagement;
+package com.example.model.DBManagement;
 import com.example.model.*;
 import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Marina on 15.10.2017 Рі..
+ * Created by Marina on 15.10.2017 ??..
  */
 @Component
 public class PostDao extends AbstractDao{

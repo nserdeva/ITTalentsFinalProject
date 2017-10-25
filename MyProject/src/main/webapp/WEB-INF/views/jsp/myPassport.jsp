@@ -33,7 +33,13 @@
 						</c:forEach>
 					</div>
 					<div id="PICTURES" class="w3-cell-row w3-border">
-						<p>${post.description}</p>
+						<div class="w3-row">
+						<c:forEach var="img" items="${images}">
+							<div class="w3-half">
+								<img src="${url}" style="width:100%" class="w3-margin-bottom">
+							</div>
+						</c:forEach>
+						</div>
 					</div>
 				</div>
 				<div id="RIGHT_MAP_VIDEO"

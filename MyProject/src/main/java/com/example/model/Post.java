@@ -70,6 +70,9 @@ public class Post implements Comparable<Post> {
                 long location_id) {
     }
 
+    public Post() {
+    }
+
     public long getId() {
         return this.id;
     }

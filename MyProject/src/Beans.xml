@@ -1,0 +1,27 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context = "http://www.springframework.org/schema/context"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:annotation-config/>
+
+    <bean id = "abstractDao" class = "com.example.model.DBManagement.AbstractDao"></bean>
+    <bean id = "categoryDao" class = "com.example.model.DBManagement.CategoryDao"></bean>
+    <bean id = "commentDao" class = "com.example.model.DBManagement.CommentDao"></bean>
+    <bean id = "locationDao" class = "com.example.model.DBManagement.LocationDao"></bean>
+    <bean id = "multimediaDao" class = "com.example.model.DBManagement.MultimediaDao"></bean>
+    <bean id = "postDao" class = "com.example.model.DBManagement.PostDao"></bean>
+    <bean id = "userDao" class = "com.example.model.DBManagement.UserDao"></bean>
+    <bean id = "category" class = "com.example.model.Category"></bean>
+    <bean id = "comment" class = "com.example.model.Comment"></bean>
+    <bean id = "location" class = "com.example.model.Location"></bean>
+    <bean id = "multimedia" class = "com.example.model.Multimedia"></bean>
+    <bean id = "post" class = "com.example.model.Post"></bean>
+    <bean id = "user" class = "com.example.model.User"></bean>
+
+</beans>

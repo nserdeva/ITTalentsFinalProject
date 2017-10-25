@@ -18,6 +18,9 @@ public class CategoryDao extends AbstractDao{
 
     public static ConcurrentSkipListSet<Category> cachedCategories;
 
+    public CategoryDao() {
+
+    }
 
     public static ConcurrentSkipListSet<Category> getCachedCategories() {
         return cachedCategories;

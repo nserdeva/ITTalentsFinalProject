@@ -1,5 +1,6 @@
 package com.example.model.DBManagement;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -10,8 +11,10 @@ final class DBManager {
 
 	//private static DBManager instance;
 	private Connection con;
-	
+
+	@Autowired
 	public DBManager(){
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -29,18 +32,25 @@ final class DBManager {
 			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER, DB_PASS);
 		} catch (SQLException e) {
 			//TODO
-			e.printStackTrace();
+			System.out.println("Error with your connection to database");
 		}
 		
 	}
-	
+
+
+
+
+	/**/
+
 	/*static synchronized DBManager getInstance(){
 		if(instance == null){
 			instance = new DBManager();
 		}
 		return instance;
 	}*/
-	
+
+
+	@Autowired
 	Connection getConnection(){
 		return this.con;
 	}

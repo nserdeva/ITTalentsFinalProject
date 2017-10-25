@@ -1,4 +1,4 @@
-﻿package com.example.model.DBManagement;
+package com.example.model.DBManagement;
 
 import com.example.model.Multimedia;
 import com.example.model.Post;
@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.HashSet;
 
 /**
- * Created by Marina on 15.10.2017 Рі..
+ * Created by Marina on 15.10.2017 ??..
  */
 @Component
 public class MultimediaDao extends AbstractDao {

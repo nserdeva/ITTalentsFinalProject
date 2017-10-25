@@ -26,7 +26,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
         registry.addResourceHandler("/img/**").addResourceLocations("/static/img/");
-        registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
+        registry.addResourceHandler("/pdf/**").addResourceLocations("/static/pdf/");
         registry.addResourceHandler("/html/**").addResourceLocations("/static/html/");
     }
 	
@@ -60,6 +60,9 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		LocaleChangeInterceptor changeInterceptor = new LocaleChangeInterceptor();
 		changeInterceptor.setParamName("language");
 		registry.addInterceptor(changeInterceptor);
+		//LoginInterceptor loginInterceptor=new LoginInterceptor();
+		//loginInterceptor.setParamName("login");
+		//registry.addInterceptor(loginInterceptor);
 }
 	
 }
