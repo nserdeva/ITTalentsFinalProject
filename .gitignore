@@ -8,3 +8,8 @@ target
 src/main/webapp/META-INF
 .idea
 *.iml
+MyProject/mvnw
+MyProject/mvnw.cmd
+MyProject/.mvn/wrapper/maven-wrapper.jar
+MyProject/.mvn/wrapper/maven-wrapper.properties
+MyProject/.springBeans
