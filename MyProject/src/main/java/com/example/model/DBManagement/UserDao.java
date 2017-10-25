@@ -32,7 +32,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// ::::::::: inserting user in db :::::::::
 	// * TESTED *
 	public void insertUser(User u) throws SQLException, UserException {
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"insert into users (username, password, email) value (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, u.getUsername());
 			ps.setString(2, u.getPassword()); // hashing required
@@ -48,7 +48,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// to be modified - should check for username OR email !!!
 	// * TESTED *
 	public boolean existsUser(String username, String password) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("select count(*) as count from users where username = ? and password = ?;");) {
 			ps.setString(1, username);
 			ps.setString(2, password); // hashing required
@@ -61,7 +61,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// ::::::::: check if username is taken :::::::::
 	// * TESTED *
 	public boolean existsUsername(String username) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("select count(*) as count from users where username = ?;");) {
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
@@ -73,7 +73,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// ::::::::: check if email is taken :::::::::
 	// * TESTED *
 	public boolean existsEmail(String email) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("select count(*) as count from users where email = ?;");) {
 			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
@@ -87,7 +87,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	public User getUserByUsername(String username)
 			throws SQLException, UserException, PostException, LocationException, CategoryException, CommentException {
 		User fetched = null;
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select user_id, username, password, email, profile_pic_id, description from users where username = ?;");) {
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
@@ -104,7 +104,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// * TESTED *
 	public User getUserById(long user_id) throws SQLException, UserException {
 		User fetched = null;
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select username, password, email, profile_pic_id, description from users where user_id = ?;");) {
 			ps.setLong(1, user_id);
 			ResultSet rs = ps.executeQuery();
@@ -120,7 +120,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// get followers
 	public HashSet<User> getFollowers(User u) throws SQLException, UserException {
 		HashSet<User> followers = new HashSet<User>();
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.follower_id) where uf.followed_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
@@ -135,7 +135,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// get following
 	public HashSet<User> getFollowing(User u) throws SQLException, UserException {
 		HashSet<User> following = new HashSet<User>();
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.followed_id) where uf.follower_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
@@ -150,7 +150,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// get visited locations
 	public TreeMap<Timestamp, Location> getVisitedLocations(User u) throws SQLException, LocationException {
 		TreeMap<Timestamp, Location> visitedLocations = new TreeMap<Timestamp, Location>();
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select vl.date_time, l.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations as l join visited_locations as vl on(l.location_id = vl.location_id) where user_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
@@ -166,7 +166,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// get wishlist locations
 	public HashSet<Location> getWishlistLocations(User u) throws SQLException, LocationException {
 		HashSet<Location> wishlistLocations = new HashSet<Location>();
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select l.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations as l join wishlists w on(l.location_id = w.location_id) where w.user_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
@@ -181,7 +181,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// get posts
 	public TreeSet<Post> getPosts(User u) throws SQLException, PostException, LocationException, CategoryException, UserException, CommentException {
 		TreeSet<Post> posts = new TreeSet<Post>(); // posts should be compared by datetime by default
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select post_id, user_id, description, likes_count, dislikes_count, date_time, location_id from posts where user_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
@@ -201,7 +201,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	}
 
 	private HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException {
-		PreparedStatement ps = connection.prepareStatement(
+		PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join tagged_users as tu on(u.user_id = tu.user_id) where post_id = ?;");
 		ps.setLong(1, post.getId());
 		ResultSet rs = ps.executeQuery();
@@ -244,7 +244,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// * TESTED *
 	public void changePassword(User u, String newPassword) throws SQLException, UserException {
 		if (u.setPassword(newPassword)) {
-			try (PreparedStatement ps = connection
+			try (PreparedStatement ps = this.getConnection()
 					.prepareStatement("update users set password = ? where user_id = ?;");) {
 				ps.setString(1, u.getPassword());
 				ps.setLong(2, u.getUserId());
@@ -256,7 +256,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// * TESTED *
 	public void changeEmail(User u, String newEmail) throws SQLException, UserException {
 		if (u.setEmail(newEmail)) {
-			try (PreparedStatement ps = connection
+			try (PreparedStatement ps = this.getConnection()
 					.prepareStatement("update users set email = ? where user_id = ?;");) {
 				ps.setString(1, u.getEmail());
 				ps.setLong(2, u.getUserId());
@@ -268,7 +268,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// !!! TO BE DISCUSSED !!!
 	public void changeProfilePicId(User u, Multimedia profilePic) throws SQLException, UserException {
 		if (u.setProfilePicId(profilePic.getId())) {
-			try (PreparedStatement ps = connection
+			try (PreparedStatement ps = this.getConnection()
 					.prepareStatement("update users set profile_pic_id = ? where user_id = ?;");) {
 				ps.setLong(1, u.getProfilePicId());
 				ps.setLong(2, u.getUserId());
@@ -279,7 +279,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	// * TESTED *
 	public void changeDescription(User u, String description) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("update users set description = ? where user_id = ?;");) {
 			u.setDescription(description);
 			ps.setString(1, u.getDescription());
@@ -290,7 +290,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	// ::::::::: methods for follow/unfollow operations :::::::::
 	public void follow(User follower, User followed) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("insert into users_followers (follower_id, followed_id) value (?, ?);");) {
 			ps.setLong(1, follower.getUserId());
 			ps.setLong(2, followed.getUserId());
@@ -300,7 +300,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	}
 
 	public void unfollow(User follower, User followed) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("delete from users_followers where follower_id = ? and followed_id = ?;");) {
 			ps.setLong(1, follower.getUserId());
 			ps.setLong(2, followed.getUserId());
@@ -313,7 +313,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// both metods to be used by 'PostDao'
 	public void addToVisitedLocations(User u, Location l, Timestamp t) throws SQLException {
 		u.addVisitedLocation(t, l);
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"insert into visited_locations (user_id, location_id, date_time) value (?, ?, ?);");) {
 			ps.setLong(1, u.getUserId());
 			ps.setLong(2, l.getId());
@@ -323,7 +323,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	public void removeFromVisitedLocations(User u, Location l, Timestamp t) throws SQLException {
 		u.removeVisitedLocation(t, l);
-		try (PreparedStatement ps = connection.prepareStatement(
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"delete from visited_locations where user_id = ? and location_id = ? and date_time = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ps.setLong(2, l.getId());
@@ -333,7 +333,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	// ::::::::: add/remove from wishlist :::::::::
 	public void addToWishlist(User u, Location l) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("insert into wishlists (user_id, location_id) value (?, ?);");) {
 			ps.setLong(1, u.getUserId());
 			ps.setLong(2, l.getId());
@@ -343,7 +343,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	}
 
 	public void removeFromWishlist(User u, Location l) throws SQLException {
-		try (PreparedStatement ps = connection
+		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("delete from wishlists (user_id, location_id) value (?, ?);");) {
 			ps.setLong(1, u.getUserId());
 			ps.setLong(2, l.getId());

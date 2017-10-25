@@ -14,6 +14,7 @@ final class DBManager {
 
 	@Autowired
 	public DBManager(){
+		System.out.println("==============VLIZASH LI TUK BE==================");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -32,28 +33,18 @@ final class DBManager {
 			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER, DB_PASS);
 		} catch (SQLException e) {
 			//TODO
-			System.out.println("Error with your connection to database");
+			System.out.println("Error with your this.getConnection() to database");
 		}
-		
+		System.out.println("==============suzdade li se==================");
+
 	}
-
-
-
-
-	/**/
-
-	/*static synchronized DBManager getInstance(){
-		if(instance == null){
-			instance = new DBManager();
-		}
-		return instance;
-	}*/
 
 
 	@Autowired
-	Connection getConnection(){
+	public Connection getCon(){
 		return this.con;
 	}
+
 	
 	void closeConnection(){
 		if(this.con != null){

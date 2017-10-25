@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.sql.Connection;
 
@@ -16,10 +17,14 @@ import java.sql.Connection;
 public abstract class AbstractDao {
     @Autowired
     DBManager dbManager;
-    Connection connection;
+    //this.getConnection() this.getConnection();
 
     public AbstractDao() {
-        dbManager=new DBManager();
-        this.connection=dbManager.getConnection();
+            dbManager=new DBManager();
+            //this.this.getConnection()=dbManager.getthis.getConnection()();
+        }
+
+    public Connection getConnection(){
+        return dbManager==null? null:dbManager.getCon();
     }
 }

@@ -9,6 +9,7 @@ import com.example.model.exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,8 +31,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/uploadPost", method = RequestMethod.POST)
-    public String insertPost(Model model){
-        Post post=new Post();
+    public String insertPost(@ModelAttribute Post post){
         try {
             postDao.insertNewPost(post);
         } catch (SQLException e) {
@@ -45,6 +45,6 @@ public class PostController {
         } catch (UserException e) {
             e.printStackTrace();
         }
-        return "myPassport";
+        return "redirect:myPassport";
     }
 }
