@@ -1,0 +1,166 @@
+@charset "UTF-8";
+body{
+	margin: 0;
+	padding: 0;
+	background: url(proba.jpg);
+	background-size: cover;
+	font-family: sans-serif;
+}.loginBox
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	width: 350px;
+	heigth: 420px;
+	padding: 80px 40px;
+	box-sizing: border-box;
+	background: rgba(0,0,0,.5);
+}.user{
+	width: 100px;
+	heigth: 100px;
+	border-radius: 50%;
+	overflow: hidden:
+	position: absolute;
+	top: calc(-100px/2);
+	left: calc(50%-50px);
+}
+h2
+{
+	margin: 0;
+	padding: 0 0 20px;
+	color: #efed40;
+	text-align: center;
+}
+.loginBox p
+{
+	margin: 0;
+	padding: 0;font-weight: bold:
+	color: #fff;
+}
+.loginBox input{
+	width: 100%;
+	margin-bottom: 20px;
+}
+.loginBox input[type="text"],
+.loginBox input[type="password"]
+{
+	border: none;
+	border-bottom: 1px solid #fff;
+	background: transparent;
+	outline: none;
+	height: 40px;
+	color: #fff;
+	font-size: 16px;
+}
+::placeholder
+{
+	color: rgba(255, 255, 255,.5);
+}
+.loginBox input[type="submit"]
+{
+border: none;
+outline: none;
+height: 40px;
+color: #fff;
+font-size: 16px;
+background: #ff267e;	
+cursor: pointer;
+border-radius: 20px;
+}
+.loginBox input[type="submit"]:hover
+{
+	background: #efed40;
+	color: #262626;
+}
+.loginBox a
+{
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+}
+.registerBox
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	width: 380px;
+	heigth: 420px;
+	padding: 40px 40px;
+	box-sizing: border-box;
+	background: rgba(0,0,0,.5);
+}
+.registerBox p
+{
+	margin: 0;
+	padding: 0;font-weight: bold:
+	color: #fff;
+}
+.registerBox input{
+	width: 100%;
+	margin-bottom: 20px;
+}
+.registerBox input[type="text"],
+.registerBox input[type="password"]
+{
+	border: none;
+	border-bottom: 1px solid #fff;
+	background: transparent;
+	outline: none;
+	height: 40px;
+	color: #fff;
+	font-size: 16px;
+}
+::placeholder
+{
+	color: rgba(255, 255, 255,.5);
+}
+.registerBox input[type="submit"]
+{
+border: none;
+outline: none;
+height: 40px;
+color: #fff;
+font-size: 16px;
+background: #ff267e;	
+cursor: pointer;
+border-radius: 20px;
+}
+.registerBox input[type="submit"]:hover
+{
+	background: #efed40;
+	color: #262626;
+}
+.registerBox a
+{
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%; 
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+
