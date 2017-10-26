@@ -46,8 +46,10 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// to be modified - should check for username OR email !!!
 	// * TESTED *
 	public boolean existsUser(String username, String password) throws SQLException {
+		if(this.getConnection()==null){
+		}
 		try (PreparedStatement ps = this.getConnection()
-				.prepareStatement("select count(*) as count from users where username = ? and password = ?;");) {
+				.prepareStatement("select count(*) as count from users where username = ? and password = ?;")) {
 			ps.setString(1, username);
 			ps.setString(2, password); // hashing required
 			ResultSet rs = ps.executeQuery();

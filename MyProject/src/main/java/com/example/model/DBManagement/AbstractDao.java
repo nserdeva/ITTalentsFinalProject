@@ -14,15 +14,14 @@ import java.sql.Connection;
  * Created by Marina on 19.10.2017 ?..
  */
 @Component
-public abstract class AbstractDao {
+public  class  AbstractDao {
     @Autowired
     DBManager dbManager;
-    //this.getConnection() this.getConnection();
+
 
     public AbstractDao() {
-            dbManager=new DBManager();
-            //this.this.getConnection()=dbManager.getConnection()();
-        }
+        dbManager=new DBManager();
+    }
 
 
     public Connection getConnection(){

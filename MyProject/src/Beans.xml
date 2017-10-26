@@ -9,7 +9,6 @@
    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:annotation-config/>
-
     <bean id = "abstractDao" class = "com.example.model.DBManagement.AbstractDao"></bean>
     <bean id = "categoryDao" class = "com.example.model.DBManagement.CategoryDao"></bean>
     <bean id = "commentDao" class = "com.example.model.DBManagement.CommentDao"></bean>

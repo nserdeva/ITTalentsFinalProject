@@ -1,4 +1,3 @@
-<%@ page import="model.UserDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -22,7 +21,7 @@
 					<div id="USER_INFO" class="w3-cell-row w3-border ">
 						<img src="${sessionScope.user.profilePic.url}" width=50px;>
 						${post.dateTime}
-						<p>${sessionScope.user.username}wasat
+						<p>${sessionScope.user.username} was at
 							${post.location.locationName} with</p>
 						<c:forEach var="taggedUser" items="${post.taggedPeople}">
 							${taggedUser.username};

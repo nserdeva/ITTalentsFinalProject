@@ -3,6 +3,8 @@ package com.example.model;
 import com.example.model.exceptions.*;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -17,6 +19,7 @@ import java.util.TreeSet;
 public final class User {
     // ::::::::: main object characteristics :::::::::
     private long userId = 0;
+    @Pattern(regexp = "([A-Za-z0-9-_]+)",message = "Username may contain numbers and letters")
     private String username = null;
     private String password = null;
     private String email = null;
@@ -245,11 +248,11 @@ public final class User {
     }
 
     // ::::::::: add/remove from wishlit :::::::::
-    public void addToWishlist(Location l) {
-        if (this.wishlist == null) {
-            this.wishlist = new HashSet<Location>();
-        }
-        this.wishlist.add(l);
+        public void addToWishlist(Location l) {
+            if (this.wishlist == null) {
+                this.wishlist = new HashSet<Location>();
+            }
+            this.wishlist.add(l);
     }
 
     public void removeFromWihslist(Location l) {

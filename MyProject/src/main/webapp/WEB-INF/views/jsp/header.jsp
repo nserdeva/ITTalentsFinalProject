@@ -13,17 +13,17 @@
 <div class="w3-container w3-right-align">
     <div class="w3-bar w3-border w3-light-grey">
         <div class="w3-dropdown-hover">
-            <button class="w3-button">Dropdown</button>
+            <button class="w3-button">${sessionScope.user.username}</button>
             <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                <a href="#" class="w3-bar-item w3-button">Logout</a>
-                <a href="#" class="w3-bar-item w3-button">Settings</a>
+                <a href="/logout" class="w3-bar-item w3-button">Logout</a>
+                <a href="/settings" class="w3-bar-item w3-button">Settings</a>
             </div>
         </div>
-        <a href="explore.jsp" class="w3-bar-item w3-button w3-hover-teal w3-right">Explore</a>
-        <a href="uploadPost.jsp" class="w3-bar-item w3-button w3-hover-teal w3-right">Share experience</a>
-        <a href="newsfeed.jsp" class="w3-bar-item w3-button w3-hover-teal w3-right">Get inspiration</a>
-        <a href="myPassport.jsp" class="w3-bar-item w3-button w3-hover-teal w3-right">My Passport</a>
-        <a href="index.jsp" class="w3-bar-item w3-button w3-hover-teal w3-right">World of Wanderlust</a>
+        <a href="/explore" class="w3-bar-item w3-button w3-hover-teal w3-right">Explore</a>
+        <a href="/uploadPost" class="w3-bar-item w3-button w3-hover-teal w3-right">Share experience</a>
+        <a href="/newsfeed" class="w3-bar-item w3-button w3-hover-teal w3-right">Get inspiration</a>
+        <a href="/myPassport" class="w3-bar-item w3-button w3-hover-teal w3-right">My Passport</a>
+        <a href="/wanderlust" class="w3-bar-item w3-button w3-hover-teal w3-right">World of Wanderlust</a>
     </div>
 </div>
 </body>

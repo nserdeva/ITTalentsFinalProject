@@ -77,7 +77,7 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 	// currently comments are not keeping data for the users who liked/disliked them
 	public void incrementLikes(Comment c) throws SQLException, CommentException {
 		try (PreparedStatement ps = this.getConnection()
-				.prepareStatement("update comments set likes_counter = ? where id = ?;");) {
+				.prepareStatement("update comments set likes_counter = ? where id = ?;")) {
 			ps.setInt(1, c.getLikesCount());
 			ps.setLong(2, c.getId());
 			c.incrementLikes();

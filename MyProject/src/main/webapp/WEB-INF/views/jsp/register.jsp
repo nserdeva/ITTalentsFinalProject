@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -5,14 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Wanderlust - Register</title>
-<link rel="stylesheet" href="../../../static/css/style.css">
+	<link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div class="registerBox">
 		<h2>Register</h2>
 		<form method="post" action="register">
 			<div class="tooltip">
-				usename <span class="tooltiptext"><font size="2">at
+				username <span class="tooltiptext"><font size="2">at
 						least 5 characters long, a-Z, 0-9, '-', '_' allowed</font></span>
 			</div>
 			<input type="text" name="user" placeholder="enter username">

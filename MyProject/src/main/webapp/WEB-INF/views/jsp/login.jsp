@@ -11,7 +11,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Wanderlust - Start exploring now!</title>
-<link rel="stylesheet" href="../../../static/css/style.css">
+	<link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div class="loginBox">
@@ -33,7 +33,7 @@
 				<font color="white">password</font>
 			</p>
 			<input type="password" placeholder="••••••••••••••" name="pass">
-			<input type="submit" value="Sign in"> <a href="register.jsp">New
+			<input type="submit" value="Sign in"> <a href="<c:url value="/register" /> ">New
 				to the travelling world? Join now!</a>
 		</form>
 	</div>

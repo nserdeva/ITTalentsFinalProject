@@ -61,12 +61,12 @@ public class MultimediaDao extends AbstractDao {
 
     public HashSet<Multimedia> getAllMultimediaForPost(Post post) throws SQLException {
         PreparedStatement ps = this.getConnection().prepareStatement(
-                "select multimedia_id from multimedia where post_id= ?  ;");
+                "select multimedia_id,file_url, is_video from multimedia where post_id= ?  ;");
         ps.setLong(1, post.getId());
         ResultSet rs=ps.executeQuery();
         HashSet<Multimedia> multimedia=new HashSet<>();
         while (rs.next()){
-            multimedia.add(new Multimedia(rs.getLong("multimedia_id"), rs.getString("file_dir"), rs.getBoolean("is_video"),post));
+            multimedia.add(new Multimedia(rs.getLong("multimedia_id"), rs.getString("file_url"), rs.getBoolean("is_video"),post));
         }
         return multimedia;
     }

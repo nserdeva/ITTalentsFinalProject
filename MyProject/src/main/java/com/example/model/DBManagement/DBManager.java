@@ -13,8 +13,6 @@ final class DBManager {
 	private Connection con;
 
 	public DBManager(){
-		System.out.println("==============VLIZASH LI TUK BE==================");
-
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -34,8 +32,6 @@ final class DBManager {
 			//TODO
 			System.out.println("Error with your this.getConnection() to database");
 		}
-		System.out.println("==============suzdade li se==================");
-
 	}
 
 
@@ -45,14 +41,14 @@ final class DBManager {
 
 	
 	void closeConnection(){
-		if(this.con != null){
-			try {
-				this.con.close();
-			} catch (SQLException e) {
-				//TODO
-				e.printStackTrace();
+			if(this.con != null){
+				try {
+					this.con.close();
+				} catch (SQLException e) {
+					//TODO
+					e.printStackTrace();
+				}
 			}
-		}
 	}
 	
 }
