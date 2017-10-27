@@ -1,4 +1,4 @@
-package com.example.controller;
+﻿package com.example.controller;
 
 import com.example.model.DBManagement.UserDao;
 import com.example.model.User;
@@ -6,8 +6,10 @@ import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -42,7 +44,6 @@ public class UserController {
                 userDao.setVisitedLocations(user);
                 userDao.setWishlistLocations(user);
                 session.setAttribute("user", user);
-                System.out.println(session.getAttribute("user").toString());
                 session.setAttribute("logged", true);
                 return "myPassport";
             }else{
@@ -110,12 +111,26 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = "/settings",method = RequestMethod.GET)
-    public String arrangeSettings(){
-        //TODO CHECK IF LOGGED
+    @RequestMapping(value = "/settings", method = RequestMethod.GET)
+    public String arrangeSettings( HttpSession session){
+	        //TODO CHECK IF LOGGED
         return "settings";
     }
+    
+    
+    @RequestMapping(value = "/settings/changeDescription",method = RequestMethod.GET)
+    public String getChangeDescriptionForm(HttpSession session, HttpServletRequest request) throws SQLException{   
+    	return "settings";
+    }
+    
 
+    @RequestMapping(value = "/settings/changeDescription",method = RequestMethod.POST)
+    public String changeDescription(HttpSession session, HttpServletRequest request ) throws SQLException{
+    	String newDescription = request.getParameter("descriptionTxt");
+    	System.out.println(newDescription==null);
+    	userDao.changeDescription((User)session.getAttribute("user"), newDescription);
+    	return "settings";
+    }
 
-
+    
 }

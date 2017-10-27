@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div class="loginBox">
-		<img src="../../../static/img/user.png" class="user">
+		<img src="img/user.png" class="user">
 		<h2>Start exploring!</h2>
 		<form action="login" method="post">
 			<p>
