@@ -17,10 +17,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("Pre handle");
         if((boolean)request.getSession().getAttribute("logged")){
-            return true;
-        }else{
-            //response.sendRedirect("login");
+            //if(request.getRequestURL().toString().equals(""));
             return false;
+        }else{
+            response.sendRedirect("login");
+            return true;
         }
     }
+
+
 }
