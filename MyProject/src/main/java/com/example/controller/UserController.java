@@ -42,8 +42,10 @@ public class UserController {
                 userDao.setVisitedLocations(user);
                 userDao.setWishlistLocations(user);
                 session.setAttribute("user", user);
-                System.out.println(session.getAttribute("user").toString());
+                System.out.println("=============================================="+
+                        session.getAttribute("user").toString()+"==============================================");
                 session.setAttribute("logged", true);
+                request.setAttribute("isValidData",true);
                 return "myPassport";
             }else{
                 request.setAttribute("isValidData",false);

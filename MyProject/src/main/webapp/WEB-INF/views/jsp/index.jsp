@@ -16,10 +16,8 @@
 </head>
 <body>
 
-<c:if test="${ sessionScope.user == null }">
-    <c:redirect url="login.jsp"></c:redirect>
-</c:if>
 <jsp:include page="header.jsp"></jsp:include>
+
 
 <div class="w3-content w3-display-container">
     <img class="mySlides" src="https://www.w3schools.com/w3css/img_fjords.jpg" style="width:100%">

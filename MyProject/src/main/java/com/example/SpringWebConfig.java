@@ -60,9 +60,6 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		LocaleChangeInterceptor changeInterceptor = new LocaleChangeInterceptor();
 		changeInterceptor.setParamName("language");
 		registry.addInterceptor(changeInterceptor);
-		//LoginInterceptor loginInterceptor=new LoginInterceptor();
-		//loginInterceptor.setParamName("login");
-		//registry.addInterceptor(loginInterceptor);
 }
 	
 }

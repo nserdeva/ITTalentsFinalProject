@@ -45,6 +45,6 @@ public class PostController {
         } catch (UserException e) {
             e.printStackTrace();
         }
-        return "redirect:myPassport";
+        return "myPassport";
     }
 }
