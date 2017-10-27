@@ -1,4 +1,4 @@
-﻿package com.example.controller;
+package com.example.controller;
 
 import com.example.model.DBManagement.UserDao;
 import com.example.model.User;
@@ -6,6 +6,7 @@ import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,10 +14,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.sql.SQLException;
 
 /**
- * Created by Marina on 26.10.2017 г..
+ * Created by Marina on 26.10.2017 ?..
  */
 @Controller
 public class UserController {
@@ -84,27 +86,22 @@ public class UserController {
         if(pass!= null && pass.equals(pass2)){
             try {
                 if(!userDao.existsUsername(username)){
-                    User user=new User(username, pass, email);
-                    userDao.insertUser(user);
-                    session.setAttribute("user",user);
-                    session.setAttribute("logged", true);
-                    return "myPassport";
-                }else{
-                    System.out.println("second if- else");
-                    return "register";
+                        User user=new User(username, pass, email);
+                        userDao.insertUser(user);
+                        session.setAttribute("user",user);
+                        session.setAttribute("logged", true);
+                        return "myPassport";
+                    }else{
+                        System.out.println("second if- else");
+                        return "register";
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (UserException e) {
                 e.printStackTrace();
             }
-        }else{
-            System.out.println("first if- else");
-
-            return "register";
         }
-        System.out.println("last if- else");
-        return "myPassport";
+            return "register";
     }
 
     @RequestMapping(value = "/logout",method = RequestMethod.GET)
@@ -135,5 +132,31 @@ public class UserController {
     	return "settings";
     }
 
+
+    @RequestMapping(value = "/settings/changeEmail",method = RequestMethod.GET)
+    public String getChangeEmailForm(HttpSession session, Model model) throws SQLException{
+        model.addAttribute("email", ((User)session.getAttribute("user")).getEmail());
+        return "settings";
+    }
+
+    @RequestMapping(value = "/settings/changeEmail",method = RequestMethod.POST)
+    public String changeEmail(HttpSession session, HttpServletRequest request, @Valid @ModelAttribute("email") String email, BindingResult result ) throws SQLException {
+       // String newEmail = request.getParameter("emailTxt");
+        //TODO CHECK FOR MISTAKEN EMAIL
+        //TODO AJAX
+        if (result.hasErrors()) {
+            System.out.println("================IMA LI GRESHKI==========================]");
+            return "settings";
+        } else {
+            //System.out.println(newEmail==null);
+            try {
+                System.out.println("=================//////////"+email+"///////////////===================================");
+                userDao.changeEmail((User) session.getAttribute("user"), email);
+            } catch (UserException e) {
+                return "settings";
+            }
+        }
+        return "settings";
+    }
     
 }

@@ -16,34 +16,27 @@
 	<jsp:include page="header.jsp"></jsp:include>
 
 	<div class="w3-container">
-		<button onclick="myFunction()" class="w3-btn w3-black">Toggle
-			hide and show</button>
-
-		<p>Paragraph 1.</p>
-		<p id="Demo" class="w3-hide w3-red"></p>
-		
-		
-	
-	
-		<button onclick="showDescription()" class="w3-btn w3-black">Description</button>
-			<form id="description" class="w3-hide w3-red" method="post" action="/settings/changeDescription">
+        <button onclick="showDescription()" class="w3-btn w3-black">Description</button>
+        <form id="description" class="w3-hide w3-red" method="post" action="/settings/changeDescription">
 			Change description: 
 			<input type="text" id="descriptionChange" name="descriptionTxt" placeholder="${sessionScope.user.description}">
-		
-		<input type="submit" value="Change weee"/>
+		    <input type="submit" value="Change description"/>
 		</form>
-		
-		<br>
-    <p>Paragraph 1.</p>
-    <p id="Demo" class="w3-hide w3-red">
+		<br> <br>
 
-
-
-	</div>
+        <button onclick="showEmail()" class="w3-btn w3-black">Email</button>
+        <form:form id="emailChange" modelAttribute="email" class="w3-hide w3-red" method="post" action="/settings/changeEmail"  >
+            Change email:
+            <input type="text"  name="email" placeholder="${sessionScope.user.email}" />
+            <form:errors path="email" id="email"/>
+            <input type="submit" value="Change email"/>
+        </form:form>
+        <br>
+    </div>
 
 	<script>
-		function myFunction() {
-			var x = document.getElementById("Demo");
+		function showEmail() {
+			var x = document.getElementById("emailChange");
 			if (x.className.indexOf("w3-show") == -1) {
 				x.className += " w3-show";
 			} else {
@@ -52,12 +45,12 @@
 		}
 		function showDescription() {
 			var x = document.getElementById("description");
-			if (x.className.indexOf("w3-show") == -1) {
-				x.className += " w3-show";
-			} else {
-				x.className = x.className.replace(" w3-show", "");
-			}
-		}
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+        }
 	</script>
 
 	<jsp:include page="footer.jsp"></jsp:include>
