@@ -2,7 +2,7 @@
 body{
 	margin: 0;
 	padding: 0;
-	background: url(/static/img/proba.jpg);
+	background: url(../img/proba.jpg);
 	background-size: cover;
 	font-family: sans-serif;
 }.loginBox
@@ -23,7 +23,7 @@ body{
 	overflow: hidden;
 	position: absolute;
 	top: calc(-100px/2);
-	left: calc(50%);
+	left: calc(35%);
 }
 h2
 {
@@ -44,6 +44,7 @@ h2
 }
 .loginBox input[type="text"],
 .loginBox input[type="password"]
+
 {
 	border: none;
 	border-bottom: 1px solid #fff;
@@ -53,7 +54,10 @@ h2
 	color: #fff;
 	font-size: 16px;
 }
-
+::placeholder
+{
+	color: rgba(255, 255, 255,.5);
+}
 .loginBox input[type="submit"]
 {
 border: none;
@@ -110,7 +114,10 @@ border-radius: 20px;
 	color: #fff;
 	font-size: 16px;
 }
-
+::placeholder
+{
+	color: rgba(255, 255, 255,.5);
+}
 .registerBox input[type="submit"]
 {
 border: none;
