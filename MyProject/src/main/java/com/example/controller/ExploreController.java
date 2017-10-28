@@ -34,7 +34,7 @@ public class ExploreController {
 		userDao.setBrowsedLocations((User) session.getAttribute("user"), request.getParameter("searchFormDataTxt"), getCategoriesIds(checkBoxValues));
 		return "explore";
 	}
-
+	
 	private String getCategoriesIds(ArrayList<String> checkBoxValues) {
 		checkBoxValues.trimToSize();
 		StringBuilder sb = new StringBuilder();
@@ -50,5 +50,12 @@ public class ExploreController {
 		}
 		return sb.toString();
 	}
+	
+
+    @RequestMapping(value = "/location",method = RequestMethod.GET)
+    public String getLocationPage(){
+        return "location";
+    }
+
 
 }

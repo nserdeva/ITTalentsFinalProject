@@ -146,7 +146,7 @@ button:hover
     <td  width="10%"><img src="" width="100" height="100" align="middle">
     
 </td>
-<td >${location.locationName}<br><br>${location.description}</td>
+<td ><a target="_blank" href="/location">${location.locationName}</a><br><br>${location.description}</td>
   </tr>
   <tr>
 	</c:forEach>
