@@ -28,7 +28,6 @@
         <form:form id="emailChange" modelAttribute="email" class="w3-hide w3-red" method="post" action="/settings/changeEmail"  >
             Change email:
             <input type="text"  name="email" placeholder="${sessionScope.user.email}" />
-            <form:errors path="email" id="email"/>
             <input type="submit" value="Change email"/>
         </form:form>
         <br>

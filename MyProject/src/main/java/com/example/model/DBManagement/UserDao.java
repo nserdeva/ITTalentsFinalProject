@@ -11,6 +11,7 @@ import java.util.TreeSet;
 
 import com.example.model.*;
 import com.example.model.exceptions.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +26,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	LocationDao locationDao;
 	@Autowired
 	CommentDao commentDao;
-
-
+	
 	// ::::::::: inserting user in db :::::::::
 	// * TESTED *
 	public void insertUser(User u) throws SQLException, UserException {
@@ -240,6 +240,11 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		u.setPosts(this.getPosts(u));
 	}
 
+	// set browsed locations
+	public void setBrowsedLocations(User u,String searchFormText, String categoriesIds ) throws LocationException, SQLException {
+		u.setBrowsedLocations(locationDao.getFilteredLocations(searchFormText, categoriesIds));		
+	}
+	
 	// ::::::::: methods for updating user data :::::::::
 	// * TESTED *
 	public void changePassword(User u, String newPassword) throws SQLException, UserException {

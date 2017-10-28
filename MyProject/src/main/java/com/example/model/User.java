@@ -1,9 +1,7 @@
 package com.example.model;
 
 import com.example.model.exceptions.*;
-import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.sql.SQLException;
@@ -37,6 +35,8 @@ public final class User {
     private HashSet<Location> wishlist = null;
     private TreeSet<Post> posts = new TreeSet<>(); // order by date and time of post submition required
     // !!! overriding of compareTo() in 'Post' required !!!
+	private HashSet<Location> browsedLocations = new HashSet<Location>();
+
 
     // ::::::::: additional object characteristics :::::::::
     private static final int MIN_USERNAME_LENGTH = 5;
@@ -96,10 +96,6 @@ public final class User {
         return this.email;
     }
 
-	/*
-     * public Multimedia getProfilePic() { return this.profilePic; }
-	 */
-
     public Set<User> getFollowers() {
         return Collections.unmodifiableSet(this.followers);
     }
@@ -120,6 +116,11 @@ public final class User {
         return Collections.unmodifiableSortedSet(this.posts);
     }
 
+
+	public Set<Location> getBrowsedLocations(){
+		return Collections.unmodifiableSet(this.browsedLocations);
+	}
+    
     // ::::::::: mutators :::::::::
     public void setUserId(long userId) throws UserException {
         if (userId > 0) {
@@ -222,6 +223,10 @@ public final class User {
     public void setPosts(TreeSet<Post> posts) {
         this.posts = posts;
     }
+    
+	public void setBrowsedLocations(HashSet<Location> browsedLocations) {
+		this.browsedLocations = browsedLocations;
+	}
 
     // ::::::::: follow/unfollow :::::::::
     public void follow(User followed) {
@@ -275,7 +280,7 @@ public final class User {
     public void removePost(Post p) {
         this.posts.remove(p);
     }
-
+    
     // ::::::::: overriding of 'hashCode()' and 'equals()' methods :::::::::
     // only 'userId' field is used for user distinction
     // (duplicate usernames and emails must not be assigned)
