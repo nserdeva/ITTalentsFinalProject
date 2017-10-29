@@ -212,7 +212,7 @@ public class UserController {
             file.transferTo(f);
             Multimedia newAvatar=new Multimedia(avatarUrl,false);
             multimediaDao.changeAvatar(user, newAvatar); //insert in multimedia table and UPDATE USER HAVE THE NEWLY INSERTED AVATAR
-            //userDao.changeProfilePicId(user,newAvatar); //insert in user the new avatar
+            //insert in user the new avatar
             session.setAttribute("avatar", avatarUrl);
         } catch (IOException e) {
             e.printStackTrace();

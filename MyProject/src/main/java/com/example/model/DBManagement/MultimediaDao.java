@@ -18,6 +18,8 @@ import java.util.HashSet;
 public class MultimediaDao extends AbstractDao {
     @Autowired
     PostDao postDao;
+    @Autowired
+    UserDao userDao;
 
     public static Multimedia AVATAR=new Multimedia(0,"avatar.jpg",false, null);
 
@@ -99,6 +101,7 @@ public class MultimediaDao extends AbstractDao {
                 ps.setLong(3,post.getId());
                 ps.executeUpdate();
                 ResultSet resultSet=ps.getGeneratedKeys();
+                resultSet.next();
                 m.setId(resultSet.getLong(1));
                 this.getConnection().commit();
             }
@@ -136,8 +139,11 @@ public class MultimediaDao extends AbstractDao {
             resultSet.next();
             newAvatar.setId(resultSet.getLong(1));
             user.setProfilePic(newAvatar);
+            userDao.changeProfilePicId(user,newAvatar);
         }catch (SQLException e ){
             throw new MultimediaException("Avatar could not be inserted in database.Reason: "+e.getMessage());
+        } catch (UserException e) {
+            System.out.println("Avatar could not be inserted. Reason: "+e.getMessage());
         }
     }
 
@@ -152,8 +158,12 @@ public class MultimediaDao extends AbstractDao {
                 ps.setLong(2,user.getProfilePic().getId());
                 ps.executeUpdate();
                 newAvatar.setId(user.getProfilePic().getId());
+                user.setProfilePic(newAvatar);
+                userDao.changeProfilePicId(user,newAvatar);
             }catch (SQLException e ){
                 throw new MultimediaException("Avatar could not be inserted in database.Reason: "+e.getMessage());
+            } catch (UserException e) {
+                System.out.println("Avatar could not be inserted. Reason: "+e.getMessage());
             }
         }
 
