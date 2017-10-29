@@ -133,6 +133,7 @@ public class MultimediaDao extends AbstractDao {
             ps.setBoolean(2,newAvatar.isVideo());
             ps.executeUpdate();
             ResultSet resultSet=ps.getGeneratedKeys();
+            resultSet.next();
             newAvatar.setId(resultSet.getLong(1));
             user.setProfilePic(newAvatar);
         }catch (SQLException e ){

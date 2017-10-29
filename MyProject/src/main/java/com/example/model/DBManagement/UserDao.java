@@ -48,6 +48,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// * TESTED *
 	public boolean existsUser(String username, String password) throws SQLException {
 		if(this.getConnection()==null){
+			System.out.println("connection is null");
 		}
 		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("select count(*) as count from users where username = ? and password = ?;")) {
@@ -92,8 +93,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				"select user_id, username, password, email, profile_pic_id, description from users where username = ?;")) {
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
-			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			if (rs.next()) {
+				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				fetched = new User(rs.getLong("user_id"), username, rs.getString("password"), rs.getString("email"),
 						avatar, rs.getString("description"));
 				//fetched.setProfilePic(multimediaDao.getMultimediaById(rs.getLong("profile_pic_id")));
@@ -110,8 +111,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				"select username, password, email, profile_pic_id, description from users where user_id = ?;");) {
 			ps.setLong(1, user_id);
 			ResultSet rs = ps.executeQuery();
-			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			if (rs.next()) {
+				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				fetched = new User(user_id, rs.getString("username"), rs.getString("password"), rs.getString("email"),
 						avatar, rs.getString("description"));
 			}
@@ -127,8 +128,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.follower_id) where uf.followed_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
-			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			while (rs.next()) {
+				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				followers.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
 						rs.getString("email"), avatar, rs.getString("description")));
 			}
@@ -143,8 +144,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.followed_id) where uf.follower_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
-			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			while (rs.next()) {
+				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				following.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
 						rs.getString("email"), avatar, rs.getString("description")));
 			}
@@ -211,8 +212,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		ps.setLong(1, post.getId());
 		ResultSet rs = ps.executeQuery();
 		HashSet<User> taggedUsers = new HashSet<User>();
-		Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 		while (rs.next()) {
+			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			taggedUsers.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
 					rs.getString("email"), avatar, rs.getString("description")));
 		}

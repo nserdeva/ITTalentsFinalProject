@@ -60,8 +60,14 @@ public class UserController {
                 userDao.setWishlistLocations(user);
                 //userDao.setProfilePic(user);
                 session.setAttribute("user", user);
-                System.out.println("=============================================="+
-                        session.getAttribute("user").toString()+"==============================================");
+                if (user == null) {
+                    System.out.println("user is null");
+                }else{
+                    System.out.println(user.getUserId());
+                    System.out.println(user.getPassword());
+                    System.out.println(user.getEmail());
+                }
+
                 session.setAttribute("logged", true);
                 request.setAttribute("isValidData",true);
                 return "myPassport";

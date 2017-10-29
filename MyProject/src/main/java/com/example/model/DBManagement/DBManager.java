@@ -1,6 +1,4 @@
 package com.example.model.DBManagement;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -25,7 +23,7 @@ final class DBManager {
 		final String DB_PORT = "3306";
 		final String DB_DBNAME = "traveller";
 		final String DB_USER = "root";
-		final String DB_PASS = "0109";
+		final String DB_PASS = "poncho";
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER, DB_PASS);
 		} catch (SQLException e) {
