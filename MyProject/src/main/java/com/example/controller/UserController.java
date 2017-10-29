@@ -1,6 +1,9 @@
 package com.example.controller;
 
+import com.example.WebInitializer;
+import com.example.model.DBManagement.MultimediaDao;
 import com.example.model.DBManagement.UserDao;
+import com.example.model.Multimedia;
 import com.example.model.User;
 import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +13,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 
 /**
@@ -24,6 +35,8 @@ import java.sql.SQLException;
 public class UserController {
     @Autowired
     UserDao userDao;
+    @Autowired
+    MultimediaDao multimediaDao;
 
     @RequestMapping(value = "*",method = RequestMethod.GET)
     public String login(Model model){
@@ -45,6 +58,7 @@ public class UserController {
                 userDao.setFollowing(user);
                 userDao.setVisitedLocations(user);
                 userDao.setWishlistLocations(user);
+                //userDao.setProfilePic(user);
                 session.setAttribute("user", user);
                 System.out.println("=============================================="+
                         session.getAttribute("user").toString()+"==============================================");
@@ -150,12 +164,58 @@ public class UserController {
         } else {
             //System.out.println(newEmail==null);
             try {
+                //TODO GOING HERE BUT GETTING NULL EMAIL
                 System.out.println("=================//////////"+email+"///////////////===================================");
                 userDao.changeEmail((User) session.getAttribute("user"), email);
             } catch (UserException e) {
                 return "settings";
             }
         }
+        return "settings";
+    }
+    @RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.GET)
+    public String getAvatar(){
+        return "settings";
+    }
+
+    @RequestMapping(value = "/settings/getAvatar", method = RequestMethod.GET)
+        public void getChangeAvatar(HttpSession session, HttpServletResponse resp,Model model) {
+            User u = (User) session.getAttribute("user");
+            String avatarUrl = u.getProfilePic().getUrl();
+        try {
+            File myFile = new File(WebInitializer.LOCATION +WebInitializer.AVATAR_LOCATION+File.separator+avatarUrl);
+            OutputStream out = resp.getOutputStream();
+            Path path = myFile.toPath();
+            Files.copy(path, out);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.POST)
+    public String changeAvatar(HttpSession session, HttpServletResponse resp, @RequestParam("avatar") MultipartFile file, Model model) {
+                User user = (User) session.getAttribute("user");
+                String avatarUrl = user.getUsername()+".jpg";
+                try {
+                    if(file.isEmpty()){
+                        //TODO NOT SURE HERE
+                return "settings";
+            }
+            File f = new File(WebInitializer.LOCATION + WebInitializer.AVATAR_LOCATION+File.separator + avatarUrl);
+            file.transferTo(f);
+            Multimedia newAvatar=new Multimedia(avatarUrl,false);
+            multimediaDao.changeAvatar(user, newAvatar); //insert in multimedia table and UPDATE USER HAVE THE NEWLY INSERTED AVATAR
+            //userDao.changeProfilePicId(user,newAvatar); //insert in user the new avatar
+            session.setAttribute("avatar", avatarUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (MultimediaException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return "settings";
     }
     

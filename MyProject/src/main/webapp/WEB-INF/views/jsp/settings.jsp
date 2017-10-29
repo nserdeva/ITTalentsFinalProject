@@ -16,22 +16,28 @@
 	<jsp:include page="header.jsp"></jsp:include>
 
 	<div class="w3-container">
+
+        <button onclick="showAvatar()" class="w3-btn w3-black">Avatar</button>
+        <img src="/settings/getAvatar" class="w3-circle" height="10%" width="auto">
+        <form id="avatarChange" class="w3-hide w3-red" method="post" action="/settings/changeAvatar"  enctype="multipart/form-data">
+            Change avatar:
+            <input type="file" name="avatar" accept="image/*">
+            <input type="submit" value="Change avatar"/>
+        </form><br>
+
         <button onclick="showDescription()" class="w3-btn w3-black">Description</button>
-        <form id="description" class="w3-hide w3-red" method="post" action="/settings/changeDescription">
+        <form id="descriptionChange" class="w3-hide w3-red" method="post" action="/settings/changeDescription">
 			Change description: 
-			<input type="text" id="descriptionChange" name="descriptionTxt" placeholder="${sessionScope.user.description}">
+			<input type="text" name="descriptionTxt" placeholder="${sessionScope.user.description}">
 		    <input type="submit" value="Change description"/>
-		</form>
-		<br> <br>
+		</form><br>
 
         <button onclick="showEmail()" class="w3-btn w3-black">Email</button>
-        <form:form id="emailChange" modelAttribute="email" class="w3-hide w3-red" method="post" action="/settings/changeEmail"  >
+        <form id="emailChange" name="email" class="w3-hide w3-red" method="post" action="/settings/changeEmail"  >
             Change email:
             <input type="text"  name="email" placeholder="${sessionScope.user.email}" />
-            <form:errors path="email" id="email"/>
             <input type="submit" value="Change email"/>
-        </form:form>
-        <br>
+        </form><br>
     </div>
 
 	<script>
@@ -44,12 +50,20 @@
 			}
 		}
 		function showDescription() {
-			var x = document.getElementById("description");
-        if (x.className.indexOf("w3-show") == -1) {
-            x.className += " w3-show";
-        } else {
-            x.className = x.className.replace(" w3-show", "");
+            var x = document.getElementById("descriptionChange");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
         }
+        function showAvatar() {
+            var x = document.getElementById("avatarChange");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
         }
 	</script>
 

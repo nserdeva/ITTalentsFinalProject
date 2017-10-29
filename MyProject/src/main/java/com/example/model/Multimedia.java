@@ -15,6 +15,8 @@ post_id INT(11)*/
     private boolean isVideo;
     private Post post;
 
+
+
     //constructor to be used when fetching from database
     public Multimedia(long id, String url, boolean isVideo, Post post) {
         this(url, isVideo, post);

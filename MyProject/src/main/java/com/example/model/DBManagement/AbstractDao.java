@@ -18,7 +18,6 @@ public  class  AbstractDao {
     @Autowired
     DBManager dbManager;
 
-
     public AbstractDao() {
         dbManager=new DBManager();
     }

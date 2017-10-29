@@ -64,7 +64,7 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				User sentBy =  userDao.getUserById(rs.getLong("user_id"));
-				sentBy.setProfilePic(multimediaDao.getMultimediaById(sentBy.getProfilePicId()));
+				sentBy.setProfilePic(multimediaDao.getMultimediaById(sentBy.getProfilePic().getId()));
 				comments.add(new Comment(rs.getLong("comment_id"), rs.getString("content"), rs.getInt("likes_counter"),
 						rs.getInt("dislikes_counter"), p.getId(), rs.getLong("user_id"),
 						rs.getTimestamp("date_time"),sentBy));

@@ -2,6 +2,7 @@ package com.example.model.DBManagement;
 
 import com.example.model.Multimedia;
 import com.example.model.Post;
+import com.example.model.User;
 import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,10 @@ public class MultimediaDao extends AbstractDao {
     @Autowired
     PostDao postDao;
 
+    public static Multimedia AVATAR=new Multimedia(0,"avatar.jpg",false, null);
+
     //tested
-    public void insertMultimedia(Post post, Multimedia multimedia) throws SQLException, MultimediaException {
+    public void insertMultimediaInPost(Post post, Multimedia multimedia) throws SQLException, MultimediaException {
         try {
             PreparedStatement ps = this.getConnection().prepareStatement(
                     "insert into multimedia(file_url,is_video, post_id) value (?,?,?);",
@@ -83,25 +86,6 @@ public class MultimediaDao extends AbstractDao {
         return multimedia;
     }*/
 
-
-
-    public void addMultimediaToPost(Post post, Multimedia multimedia) throws SQLException, MultimediaException {
-        try{
-            PreparedStatement ps = this.getConnection().prepareStatement(
-                    "insert into multimedia(file_dir, is_video, post_id) values(?,?,?);",
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,multimedia.getUrl());
-            ps.setBoolean(2,multimedia.isVideo());
-            ps.setLong(3,post.getId());
-            ps.executeUpdate();
-            ResultSet rs=ps.getGeneratedKeys();
-            multimedia.setId(rs.getLong(1));
-        }catch (SQLException e){
-            throw new MultimediaException("multimedia could not be put to post. Reason: "+e.getMessage());
-        }
-
-    }
-
     public void addAllMultimediaToPost(Post post, HashSet<Multimedia> multimedia) throws SQLException, MultimediaException {
         PreparedStatement ps = null;
         try {
@@ -140,5 +124,37 @@ public class MultimediaDao extends AbstractDao {
 			return fetched;
 		}
 	}
-    
+
+    public void insertMultimedia(User user, Multimedia newAvatar) throws SQLException, MultimediaException {
+        try{
+            PreparedStatement ps=this.getConnection().prepareStatement(
+                    "INSERT INTO multimedia(file_url, is_video) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1,newAvatar.getUrl());
+            ps.setBoolean(2,newAvatar.isVideo());
+            ps.executeUpdate();
+            ResultSet resultSet=ps.getGeneratedKeys();
+            newAvatar.setId(resultSet.getLong(1));
+            user.setProfilePic(newAvatar);
+        }catch (SQLException e ){
+            throw new MultimediaException("Avatar could not be inserted in database.Reason: "+e.getMessage());
+        }
+    }
+
+    public void changeAvatar(User user, Multimedia newAvatar) throws SQLException, MultimediaException {
+        if(user.getProfilePic().getId()==0){
+                insertMultimedia(user,newAvatar);
+        }else{
+            try{
+                PreparedStatement ps=this.getConnection().prepareStatement(
+                        "UPDATE  multimedia SET  file_url=? WHERE multimedia_id=?");
+                ps.setString(1,newAvatar.getUrl());
+                ps.setLong(2,user.getProfilePic().getId());
+                ps.executeUpdate();
+                newAvatar.setId(user.getProfilePic().getId());
+            }catch (SQLException e ){
+                throw new MultimediaException("Avatar could not be inserted in database.Reason: "+e.getMessage());
+            }
+        }
+
+    }
 }

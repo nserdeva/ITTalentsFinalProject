@@ -31,10 +31,11 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// * TESTED *
 	public void insertUser(User u) throws SQLException, UserException {
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"insert into users (username, password, email) value (?, ?, ?);", Statement.RETURN_GENERATED_KEYS);) {
+				"insert into users (username, password, email, profile_pic_id) value (?, ?, ?,?);", Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, u.getUsername());
 			ps.setString(2, u.getPassword()); // hashing required
 			ps.setString(3, u.getEmail());
+			ps.setLong(4,0); //default profile pic id=0
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
@@ -88,13 +89,14 @@ public class UserDao extends AbstractDao { // operates with the following tables
 			throws SQLException, UserException, PostException, LocationException, CategoryException, CommentException {
 		User fetched = null;
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"select user_id, username, password, email, profile_pic_id, description from users where username = ?;");) {
+				"select user_id, username, password, email, profile_pic_id, description from users where username = ?;")) {
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
+			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			if (rs.next()) {
 				fetched = new User(rs.getLong("user_id"), username, rs.getString("password"), rs.getString("email"),
-						rs.getLong("profile_pic_id"), rs.getString("description"));
-				fetched.setProfilePic(multimediaDao.getMultimediaById(rs.getLong("profile_pic_id")));
+						avatar, rs.getString("description"));
+				//fetched.setProfilePic(multimediaDao.getMultimediaById(rs.getLong("profile_pic_id")));
 			}
 			this.setPosts(fetched);
 			return fetched;
@@ -102,15 +104,16 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	}
 
 	// * TESTED *
-	public User getUserById(long user_id) throws SQLException, UserException {
+	public User getUserById(long user_id) throws SQLException, UserException, PostException {
 		User fetched = null;
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select username, password, email, profile_pic_id, description from users where user_id = ?;");) {
 			ps.setLong(1, user_id);
 			ResultSet rs = ps.executeQuery();
+			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			if (rs.next()) {
 				fetched = new User(user_id, rs.getString("username"), rs.getString("password"), rs.getString("email"),
-						rs.getLong("profile_pic_id"), rs.getString("description"));
+						avatar, rs.getString("description"));
 			}
 			return fetched;
 		}
@@ -118,30 +121,32 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	// ::::::::: loading user data from db :::::::::
 	// get followers
-	public HashSet<User> getFollowers(User u) throws SQLException, UserException {
+	public HashSet<User> getFollowers(User u) throws SQLException, UserException, PostException {
 		HashSet<User> followers = new HashSet<User>();
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.follower_id) where uf.followed_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
+			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			while (rs.next()) {
 				followers.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
-						rs.getString("email"), rs.getLong("profile_pic_id"), rs.getString("description")));
+						rs.getString("email"), avatar, rs.getString("description")));
 			}
 		}
 		return followers;
 	}
 
 	// get following
-	public HashSet<User> getFollowing(User u) throws SQLException, UserException {
+	public HashSet<User> getFollowing(User u) throws SQLException, UserException, PostException {
 		HashSet<User> following = new HashSet<User>();
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.followed_id) where uf.follower_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
+			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			while (rs.next()) {
 				following.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
-						rs.getString("email"), rs.getLong("profile_pic_id"), rs.getString("description")));
+						rs.getString("email"), avatar, rs.getString("description")));
 			}
 		}
 		return following;
@@ -151,7 +156,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	public TreeMap<Timestamp, Location> getVisitedLocations(User u) throws SQLException, LocationException {
 		TreeMap<Timestamp, Location> visitedLocations = new TreeMap<Timestamp, Location>();
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"select vl.date_time, l.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations as l join visited_locations as vl on(l.location_id = vl.location_id) where user_id = ?;");) {
+				"select vl.date_time, l.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations as l join visited_locations as vl on(l.location_id = vl.location_id) where user_id = ?;")) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -200,27 +205,28 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		return posts;
 	}
 
-	private HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException {
+	private HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException, PostException {
 		PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join tagged_users as tu on(u.user_id = tu.user_id) where post_id = ?;");
 		ps.setLong(1, post.getId());
 		ResultSet rs = ps.executeQuery();
 		HashSet<User> taggedUsers = new HashSet<User>();
+		Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 		while (rs.next()) {
 			taggedUsers.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
-					rs.getString("email"), rs.getLong("profile_pic_id"), rs.getString("description")));
+					rs.getString("email"), avatar, rs.getString("description")));
 		}
 		return taggedUsers;
 	}
 
 	// ::::::::: setting user data :::::::::
 	// set followers
-	public void setFollowers(User u) throws SQLException, UserException {
+	public void setFollowers(User u) throws SQLException, UserException, PostException {
 		u.setFollowers(this.getFollowers(u));
 	}
 
 	// set following
-	public void setFollowing(User u) throws SQLException, UserException {
+	public void setFollowing(User u) throws SQLException, UserException, PostException {
 		u.setFollowing(this.getFollowing(u));
 	}
 
@@ -238,6 +244,11 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	public void setPosts(User u)
 			throws SQLException, UserException, PostException, LocationException, CategoryException, CommentException {
 		u.setPosts(this.getPosts(u));
+	}
+
+	public void setProfilePic(User u)
+			throws SQLException, UserException, PostException, LocationException, CategoryException, CommentException {
+		u.setProfilePic(multimediaDao.getMultimediaById(u.getProfilePic().getId()));
 	}
 
 	// ::::::::: methods for updating user data :::::::::
@@ -267,20 +278,18 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	// !!! TO BE DISCUSSED !!!
 	public void changeProfilePicId(User u, Multimedia profilePic) throws SQLException, UserException {
-		if (u.setProfilePicId(profilePic.getId())) {
 			try (PreparedStatement ps = this.getConnection()
-					.prepareStatement("update users set profile_pic_id = ? where user_id = ?;");) {
-				ps.setLong(1, u.getProfilePicId());
+					.prepareStatement("update users set profile_pic_id = ? where user_id = ?;")) {
+				ps.setLong(1, profilePic.getId());
 				ps.setLong(2, u.getUserId());
 				ps.executeUpdate();
 			}
-		}
 	}
 
 	// * TESTED *
 	public void changeDescription(User u, String description) throws SQLException {
 		try (PreparedStatement ps = this.getConnection()
-				.prepareStatement("update users set description = ? where user_id = ?;");) {
+				.prepareStatement("update users set description = ? where user_id = ?;")) {
 			u.setDescription(description);
 			ps.setString(1, u.getDescription());
 			ps.setLong(2, u.getUserId());

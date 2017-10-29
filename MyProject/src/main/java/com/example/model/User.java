@@ -1,9 +1,8 @@
 package com.example.model;
 
+import com.example.model.DBManagement.MultimediaDao;
 import com.example.model.exceptions.*;
 import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.sql.SQLException;
@@ -28,7 +27,6 @@ public final class User {
     private String password = null;
     @Pattern(regexp = EMAIL_VALIDATION_REGEX,message = "Invalid email address")
     private String email = null;
-    private long profilePicId = 0; // default profile pic id must be 0
     private String description = "";
     private Multimedia profilePic = null;
     private HashSet<User> followers = null;
@@ -53,6 +51,7 @@ public final class User {
         this.setUsername(username);
         this.setPassword(password);
         this.setEmail(email);
+        this.setProfilePic(MultimediaDao.AVATAR);
     }
 
     public User() {
@@ -60,10 +59,10 @@ public final class User {
 
     // ::::::::: constructor to be used when loading an existing user from db
     // :::::::::
-    public User(long userId, String username, String password, String email, long profilePicId, String description) throws UserException {
+    public User(long userId, String username, String password, String email, Multimedia profilePic, String description) throws UserException {
         this(username, password, email);
         this.setUserId(userId);
-        this.setProfilePicId(profilePicId);
+        this.setProfilePic(profilePic);
         this.setDescription(description);
     }
 
@@ -78,10 +77,6 @@ public final class User {
 
     public String getPassword() {
         return this.password;
-    }
-
-    public long getProfilePicId() {
-        return this.profilePicId;
     }
 
     public String getDescription() {
@@ -177,15 +172,6 @@ public final class User {
             return true;
         } else {
             throw new UserException("Invalid e-mail address!");
-        }
-    }
-
-    public boolean setProfilePicId(long profilePicId) throws UserException {
-        if (profilePicId >= 0) {
-            this.profilePicId = profilePicId;
-            return true;
-        } else {
-            throw new UserException("Invalid profile picture id!");
         }
     }
 
