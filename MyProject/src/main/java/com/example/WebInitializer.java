@@ -42,4 +42,9 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
 
     public static final String AVATAR_LOCATION="/profilePics";
+    
+    public static final String MULTIMEDIA_LOCATION = "/multimedia";
+    
+    public static final String LOCATIONS_PICTURES_LOCATION = "/locationsPics";
+    
 }

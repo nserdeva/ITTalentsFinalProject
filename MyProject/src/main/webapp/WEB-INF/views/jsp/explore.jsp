@@ -10,6 +10,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>Wanderlust</title>
+<style type="text/css" media="screen">
+
+
+.subContainer {
+position: right;
+align: right;
+height: 30px;
+width: 80%;
+margin-bottom:0px;
+margin-left: 150px;
+padding:0;
+background-color: #b3e6cc;
+border:2px solid #ddd;
+}
+.container {
+position: center;
+height: 160px;
+align: center;
+width: 70%;
+margin-bottom:25px;
+padding:1em;
+background-color:#eee;
+border:3px solid #ddd;
+}
+.floatedbox {
+float:left;
+width:125px;
+height:125px;
+margin-right:1em;
+padding:0 10px;
+background-color:#fff;
+border:3px solid #bbb;
+}
+
+.clearfix:after {
+content: ".";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+</style>
 </head>
 <body>
 
@@ -37,28 +79,6 @@ input[type=text]:focus {
 }
 </style>
 
-	<style>
-
-
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 80%;
-            border: 1px solid #909090;
-    
-}
-
-td, .th {
-        border: 1px solid #909090;
-    text-align: left;
-    padding: 5px;
-}
-
-tr {
-    background-color: #dddddd;
-    
-}
-</style>
 
 	<form method="post" action="/search">
 		<input type="text" name="searchFormDataTxt" placeholder="Search..">
@@ -74,7 +94,6 @@ tr {
 			<button  onclick="changeCheckBoxesValues()">explore</button>
 		
 	</form>
-
 
 <style>
 button
@@ -136,21 +155,50 @@ button:hover
 
 
 <br><br>
-<table align="center">
-	<c:forEach var="location" items="${sessionScope.user.browsedLocations}">
+
 	
+<style>
+.submitLink {
+  background-color: transparent;
+  text-decoration: underline;
+  border: none;
+  color: blue;
+  cursor: pointer;
+}
+submitLink:focus {
+  outline: none;
+}
+submitLink:hover {
+  outline: none;
+  color: #990099;
+}
+
+</style>
 
 
-				
-<tr >
-    <td  width="10%"><img src="" width="100" height="100" align="middle">
-    
-</td>
-<td ><a target="_blank" href="/location">${location.locationName}</a><br><br>${location.description}</td>
-  </tr>
-  <tr>
+
+
+
+
+	<c:forEach var="location" items="${sessionScope.user.browsedLocations}">				
+     <div class="container" width=70% >
+<div class="floatedbox">
+<p><img src="/location/getMainPic/${location.id}" width="120" height="120" align="middle"></p>
+</div>
+<h3>
+<img src="img/location_tag.png" width="30" height="30"> 
+<a target="_blank" href="/location/${location.id}">${location.locationName}</a></h3>
+<p>${location.shortDescription} 
+<div class="subContainer"> categories: 
+<c:forEach var="category" items="${location.categories}">
+${category.name};
+</c:forEach>
+</div>
+</p>
+
+</div>
 	</c:forEach>
-</table>
+
 
 
 

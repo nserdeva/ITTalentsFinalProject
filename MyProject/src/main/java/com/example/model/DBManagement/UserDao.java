@@ -253,7 +253,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	}
 
 	// set browsed locations
-	public void setBrowsedLocations(User u,String searchFormText, String categoriesIds ) throws LocationException, SQLException {
+	public void setBrowsedLocations(User u,String searchFormText, String categoriesIds ) throws LocationException, SQLException, CategoryException {
 		u.setBrowsedLocations(locationDao.getFilteredLocations(searchFormText, categoriesIds));		
 	}
 

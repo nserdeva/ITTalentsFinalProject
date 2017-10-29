@@ -2,8 +2,10 @@ package com.example.model.DBManagement;
 
 import com.example.model.Location;
 import com.example.model.Post;
+import com.example.model.User;
 import com.example.model.exceptions.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -15,6 +17,11 @@ import java.util.HashSet;
 
 @Component
 public class LocationDao extends AbstractDao {
+	
+	@Autowired
+	CategoryDao categoryDao;
+	@Autowired
+	MultimediaDao multimediaDao;
 
 	// tested
 	public void insertLocation(Location location) throws SQLException, LocationException {
@@ -35,7 +42,7 @@ public class LocationDao extends AbstractDao {
 	}
 
 	// tested
-	public Location getLocationById(long id) throws SQLException, LocationException {
+	public Location getLocationById(long id) throws SQLException, LocationException, CategoryException {
 		Location location;
 		try {
 			PreparedStatement ps = this.getConnection().prepareStatement(
@@ -45,6 +52,8 @@ public class LocationDao extends AbstractDao {
 			rs.next();
 			location = new Location(id, rs.getString("latitude"), rs.getString("longtitude"),
 					rs.getString("description"), rs.getString("location_name"));
+			this.setPictures(location);
+			this.setCategories(location);
 		} catch (SQLException e) {
 			throw new LocationException("Location could not be loaded. Reason: " + e.getMessage());
 		}
@@ -66,7 +75,7 @@ public class LocationDao extends AbstractDao {
 	}
 
 	public HashSet<Location> getFilteredLocations(String searchFormText, String categoriesIds)
-			throws LocationException, SQLException {
+			throws LocationException, SQLException, CategoryException {
 		Statement st = this.getConnection().createStatement(); //PreparedStatement gets wrong results
 		String query = null;
 		HashSet<Location> filteredLocations = new HashSet<Location>();
@@ -92,12 +101,22 @@ public class LocationDao extends AbstractDao {
 		ResultSet rs = st.executeQuery(query);
 		if (rs != null) {
 			while (rs.next()) {
-				filteredLocations.add(new Location(rs.getLong("location_id"), rs.getString("latitude"),
-						rs.getString("longtitude"), rs.getString("description"), rs.getString("location_name")));
+				Location location = new Location(rs.getLong("location_id"), rs.getString("latitude"),
+						rs.getString("longtitude"), rs.getString("description"), rs.getString("location_name"));
+				this.setPictures(location);
+				this.setCategories(location);
+				filteredLocations.add(location);
 
 			}
 		}
 		return filteredLocations;
 	}
 	
+	public void setCategories(Location l) throws SQLException, CategoryException{
+		l.setCategories(categoryDao.getCategoriesForLocation(l));
+	}
+	
+	public void setPictures(Location l) throws SQLException, CategoryException{
+		l.setPictures(multimediaDao.getPicturesForLocation(l));
+	}
 }

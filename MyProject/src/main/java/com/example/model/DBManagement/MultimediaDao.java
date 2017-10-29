@@ -1,5 +1,7 @@
 package com.example.model.DBManagement;
 
+import com.example.model.Category;
+import com.example.model.Location;
 import com.example.model.Multimedia;
 import com.example.model.Post;
 import com.example.model.User;
@@ -168,4 +170,19 @@ public class MultimediaDao extends AbstractDao {
         }
 
     }
+
+
+	public HashSet<Multimedia> getPicturesForLocation(Location l) throws SQLException {
+		HashSet<Multimedia> locationPictures = new HashSet<Multimedia>();
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
+				"select multimedia_id, file_url from multimedia where location_id = ?;");) {
+			ps.setLong(1, l.getId());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				locationPictures.add(new Multimedia(rs.getLong("multimedia_id"), rs.getString("file_url"), false, null));
+			}
+		}
+		return locationPictures;
+	}
+	
 }
