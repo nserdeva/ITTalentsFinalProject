@@ -34,8 +34,6 @@ public final class User {
     private HashSet<Location> wishlist = null;
     private TreeSet<Post> posts = new TreeSet<>(); // order by date and time of post submition required
     // !!! overriding of compareTo() in 'Post' required !!!
-	private HashSet<Location> browsedLocations = new HashSet<Location>();
-
 
     // ::::::::: additional object characteristics :::::::::
     private static final int MIN_USERNAME_LENGTH = 5;
@@ -55,6 +53,13 @@ public final class User {
         this.setProfilePic(MultimediaDao.AVATAR);
     }
 
+    public User(long userId, String username, Multimedia profilePic, String description) throws UserException {
+        this.setUserId(userId);
+    	this.setUsername(username);
+        this.setProfilePic(profilePic);
+        this.setDescription(description);
+    }
+    
     public User() {
     }
 
@@ -111,11 +116,6 @@ public final class User {
     public SortedSet<Post> getPosts() throws SQLException, PostException {
         return Collections.unmodifiableSortedSet(this.posts);
     }
-
-
-	public Set<Location> getBrowsedLocations(){
-		return Collections.unmodifiableSet(this.browsedLocations);
-	}
     
     // ::::::::: mutators :::::::::
     public void setUserId(long userId) throws UserException {
@@ -210,10 +210,6 @@ public final class User {
     public void setPosts(TreeSet<Post> posts) {
         this.posts = posts;
     }
-    
-	public void setBrowsedLocations(HashSet<Location> browsedLocations) {
-		this.browsedLocations = browsedLocations;
-	}
 
     // ::::::::: follow/unfollow :::::::::
     public void follow(User followed) {

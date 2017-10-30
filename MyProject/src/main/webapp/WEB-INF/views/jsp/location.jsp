@@ -75,7 +75,6 @@ tr {
 </table>
 
 
-<<<<<<< HEAD
     <div id="googleMap" style="width:100%;height:400px;"></div>
 
     <script>
@@ -88,15 +87,12 @@ tr {
         }
     </script>
 
-=======
-
 			<div id="map" style="width:400px;height:400px"></div>
 			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
 			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />
 			ai stiga we
 			${sessionScope.location.latitude}
 		    ${sessionScope.location.longtitude}<br>
->>>>>>> 9a16c13528560cda2c2c2d04c035923aa1507c82
 	<jsp:include page="footer.jsp"></jsp:include>
 	
 	
@@ -110,9 +106,8 @@ var longtitude = parseFloat(longtitudeString);
 
       
 var locations = [
-    ['Na maika ti location-a', latitude, longtitude, 4],
+    ['', latitude, longtitude, 4],
 ];
-      
       
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,

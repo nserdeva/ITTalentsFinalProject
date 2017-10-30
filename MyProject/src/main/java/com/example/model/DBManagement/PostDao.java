@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Marina on 15.10.2017 ??..
@@ -283,5 +284,51 @@ public class PostDao extends AbstractDao{
     public void deleteComment(Post postById, Comment c) throws SQLException {
         postById.deleteComment(c);
     }
+
+	public TreeSet<Post> getFilteredPosts(String searchFormText, String categoriesIds) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+ 
+    
+    /*
+    public HashSet<Location> getFilteredLocations(String searchFormText, String categoriesIds)
+			throws LocationException, SQLException, CategoryException {
+		Statement st = this.getConnection().createStatement(); //PreparedStatement gets wrong results
+		String query = null;
+		HashSet<Location> filteredLocations = new HashSet<Location>();
+		if (searchFormText == null || searchFormText.isEmpty()) {
+			if (categoriesIds != null && !categoriesIds.isEmpty()) {
+
+				query = "select distinct lc.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations_categories as lc join locations as l on(lc.location_id = l.location_id)where lc.location_id in (select lc_.location_id from locations_categories as lc_ where lc_.category_id in("
+						+ categoriesIds + ")group by lc_.location_id having count(lc_.location_id)>"
+						+ (categoriesIds.split("[,]").length - 1) + ");";
+			}
+		} else {
+			if (categoriesIds != null && !categoriesIds.isEmpty()) {
+				query = "select distinct lc.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations_categories as lc join locations as l on(lc.location_id = l.location_id)where lc.location_id in (select lc_.location_id from locations_categories as lc_ where lc_.category_id in(" 
+						+ categoriesIds + ") group by lc_.location_id having count(lc_.location_id)>"
+						+ (categoriesIds.split("[,]").length - 1) + ") and (l.location_name like '%" + searchFormText 
+						+ "%' or l.description like '%" + searchFormText + "%');";
+						
+			} else {
+				query = "select distinct l.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations as l where (l.location_name like '%"
+						+ searchFormText + "%' or l.description like '%" + searchFormText + "%');";						
+			}
+		}
+		ResultSet rs = st.executeQuery(query);
+		if (rs != null) {
+			while (rs.next()) {
+				Location location = new Location(rs.getLong("location_id"), rs.getString("latitude"),
+						rs.getString("longtitude"), rs.getString("description"), rs.getString("location_name"));
+				this.setPictures(location);
+				this.setCategories(location);
+				filteredLocations.add(location);
+
+			}
+		}
+		return filteredLocations;
+	}
+	*/
     
 }
