@@ -12,13 +12,10 @@
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 
-<form name="newPost" class="w3-container">
+<form  class="w3-container">
     <div id="global">
         <form name="images" action="/uploadPost/uploadImg" method="post" enctype="multipart/form-data">
-                <p>
-                    <label>Images: </label>
-                    <input type="file" name="images" accept="image/*" multiple="multiple"/>
-                </p>
+
                 <p>
                     <input type="reset" value="Reset">
                     <input type="submit" value="Add Product">
@@ -28,9 +25,48 @@
             <img src="/getImage/${image.originalFileName}"/>
         </c:forEach>
     </div>
-    <input type="submit" value="Share experience!">
 </form>
 
+
+<form name="newPost" class="w3-container" action="/uploadPost" method="post" enctype="multipart/form-data">
+    Description: <textarea  name="description" rows="4" cols="50"></textarea> <br>
+    Location: <input type="text" name="location"><br>
+    Tag people: <input type="text" name="taggedPeople"><br>
+    Add tags: <input type="text" name="tags"><br>
+    Add categories:
+    <div class="w3-dropdown-hover">
+        <button class="w3-button w3-black">Categories</button>
+        <select id="categoriesDropdown" class="w3-dropdown-content w3-bar-block w3-border" onchange="addCategory()">
+            <c:forEach var="category" items="${applicationScope.categories}">
+                <option value="${category.key}"> ${category.key} </option>
+            </c:forEach>
+        </select>
+    </div>
+    <input type="text" name="categories" id="chosenCat" value="" style="width: 800px" readonly>
+    <br>
+    Upload image: <input type="file" name="image1" accept="image/*"/><br>
+    Upload image: <input type="file" name="image2" accept="image/*"/><br>
+    Upload image: <input type="file" name="image3" accept="image/*"/><br>
+    Upload video: <input type="file" name="video" accept="video/*"><br>
+    <input type="submit" value="Share experience!">
+
+</form>
+
+<script type="text/javascript">
+    function addCategory() {
+        var chosenCatInput=document.getElementById("chosenCat");
+        var chosenCatString=chosenCatInput.value;
+        var categoriesDropdown = document.getElementById("categoriesDropdown");
+        var selectedValue = categoriesDropdown.options[categoriesDropdown.selectedIndex].value;
+        if(chosenCatString.indexOf(selectedValue) === -1){
+            var chosenCategories=chosenCatString.concat(" "+selectedValue);
+            chosenCatInput.setAttribute("value",chosenCategories);
+            alert(chosenCategories);
+        }else{
+            alert("You already added that category!");
+        }
+    }
+</script>
 
 <jsp:include page="footer.jsp"></jsp:include>
 </body>

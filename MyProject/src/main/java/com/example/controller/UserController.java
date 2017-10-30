@@ -1,10 +1,13 @@
 package com.example.controller;
 
 import com.example.WebInitializer;
+import com.example.model.Category;
 import com.example.model.DBManagement.CategoryDao;
 import com.example.model.DBManagement.MultimediaDao;
+import com.example.model.DBManagement.TagDao;
 import com.example.model.DBManagement.UserDao;
 import com.example.model.Multimedia;
+import com.example.model.Tag;
 import com.example.model.User;
 import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -42,6 +46,8 @@ public class UserController {
     MultimediaDao multimediaDao;
     @Autowired
     ServletContext servletContext;
+    @Autowired
+    TagDao tagDao;
     @Autowired
     CategoryDao categoryDao;
 
@@ -74,9 +80,11 @@ public class UserController {
                 session.setAttribute("logged", true);
                 request.setAttribute("isValidData",true);
                 HashSet<String> usernames=userDao.getAllUsernames();
-                HashSet<String> tags=categoryDao.getAllTags();
+                HashSet<String> tags=tagDao.getAllTags();
+                HashMap<String,Category> categories=categoryDao.getAllCategories();
                 servletContext.setAttribute("usernames", usernames);
                 servletContext.setAttribute("tags",tags);
+                servletContext.setAttribute("categories",categories);
                 return "myPassport";
             }else{
                 request.setAttribute("isValidData",false);
@@ -208,7 +216,7 @@ public class UserController {
 }
 
     @RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.POST)
-    public String changeAvatar(HttpSession session, HttpServletResponse resp, @RequestParam("avatar") MultipartFile file, Model model) {
+    public String changeAvatar(HttpSession session, @RequestParam("avatar") MultipartFile file, Model model) {
                 User user = (User) session.getAttribute("user");
                 String avatarUrl = user.getUsername()+".jpg";
                 try {

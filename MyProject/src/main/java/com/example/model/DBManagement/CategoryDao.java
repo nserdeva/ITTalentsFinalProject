@@ -3,10 +3,12 @@ package com.example.model.DBManagement;
 import com.example.model.Category;
 import com.example.model.Location;
 import com.example.model.Post;
+import com.example.model.Tag;
 import com.example.model.exceptions.*;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -125,19 +127,22 @@ public class CategoryDao extends AbstractDao{
 
     }
 
-    public HashSet<String> getAllTags() {
-        HashSet<String> tags=new HashSet<>();
+
+    public HashMap<String,Category> getAllCategories() {
+        HashMap<String,Category> categories=new HashMap<>();
         try{
-            PreparedStatement ps=this.getConnection().prepareStatement("SELECT tag_name" +
-                    "FROM tags");
+            PreparedStatement ps=this.getConnection().prepareStatement("SELECT category_id, category_name " +
+                    "FROM categories");
             ResultSet rs=ps.executeQuery();
             while (rs.next()){
-                String tagName=rs.getString("tag_name");
-                tags.add(tagName);
+                Category category=new Category(rs.getLong("category_id"), rs.getString("category_name"));
+                categories.put(rs.getString("category_name"),category);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (CategoryException e) {
+            e.printStackTrace();
         }
-        return tags;
+        return categories;
     }
 }

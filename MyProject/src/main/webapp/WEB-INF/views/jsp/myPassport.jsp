@@ -32,10 +32,6 @@
 				</c:forEach>
 			</div>
 		</c:if>
-		<div class="w3-cell-row w3-border " style="width: 75%">
-			<div id="map"  style="float: left; width: 500px; height: 400px;"></div>
-			<br> <br> <br>
-		</div>
 		<c:if test="${post.categories.size()>0}">
 			<div id="CATEGORIES" class="w3-cell-row w3-border w3-pink" style="width: 75%">
 				<p>categories:</p>

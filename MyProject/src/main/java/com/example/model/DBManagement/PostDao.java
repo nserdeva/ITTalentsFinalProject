@@ -23,6 +23,8 @@ public class PostDao extends AbstractDao{
     UserDao userDao;
     @Autowired
     LocationDao locationDao;
+    @Autowired
+    TagDao tagDao;
 
 
     //tested
@@ -38,7 +40,7 @@ public class PostDao extends AbstractDao{
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             post.setId(rs.getLong(1));
-
+            post.setDateTime(getTimeStampFromPost(post));
             categoryDao.addAllCategoriesToPost(post, post.getCategories()); //not sure if it is correct this way
             multimediaDao.addAllMultimediaToPost(post, (HashSet<Multimedia>)post.getMultimedia());
             if(null!=post.getVideo()){
@@ -46,6 +48,7 @@ public class PostDao extends AbstractDao{
             }
             User user=userDao.getUserById(post.getUser().getUserId());
             userDao.addPost(user, post);
+            tagDao.addTagsToPost(post, post.getTags());
             this.tagAllUsers(post, post.getTaggedPeople());
             this.getConnection().commit();
         } catch (SQLException e) {
@@ -54,6 +57,20 @@ public class PostDao extends AbstractDao{
             this.getConnection().rollback();
             this.getConnection().setAutoCommit(true);
         }
+    }
+
+    private Timestamp getTimeStampFromPost(Post post) {
+        Timestamp timestamp=null;
+        try{
+            PreparedStatement ps=this.getConnection().prepareStatement("SELECT date_time FROM posts WHERE post_id=?");
+            ps.setLong(1,post.getId());
+            ResultSet rs=ps.executeQuery();
+            rs.next();
+            timestamp=rs.getTimestamp("date_time");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return timestamp;
     }
 
     //tested

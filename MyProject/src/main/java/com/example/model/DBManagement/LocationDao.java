@@ -5,6 +5,7 @@ import com.example.model.Post;
 import com.example.model.User;
 import com.example.model.exceptions.*;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -106,7 +107,6 @@ public class LocationDao extends AbstractDao {
 				this.setPictures(location);
 				this.setCategories(location);
 				filteredLocations.add(location);
-
 			}
 		}
 		return filteredLocations;
@@ -118,5 +118,23 @@ public class LocationDao extends AbstractDao {
 	
 	public void setPictures(Location l) throws SQLException, CategoryException{
 		l.setPictures(multimediaDao.getPicturesForLocation(l));
+	}
+
+    public Location getLocationByName(String locationName) {
+		Location location=null;
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT location_id, latitude, " +
+					"longtitude, description FROM locations WHERE location_name=?");
+			ps.setString(1,locationName);
+			ResultSet rs=ps.executeQuery();
+			rs.next();
+			location=new Location(rs.getLong("location_id"), rs.getString("latitude"),
+					rs.getString("longtitude"),rs.getString("description"),locationName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (LocationException e) {
+			e.printStackTrace();
+		}
+		return location;
 	}
 }

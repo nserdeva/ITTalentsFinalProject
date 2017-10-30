@@ -1,7 +1,6 @@
 package com.example.model;
 
 import com.example.model.exceptions.*;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -24,31 +23,25 @@ public class Post implements Comparable<Post> {
     private Timestamp dateTime;
     private Location location;
     private HashSet<Category> categories;
+    //TODO SET TAGS EVERYWHERE
+    private HashSet<Tag> tags;
     private HashSet<Multimedia> multimedia;
     private HashSet<User> taggedPeople;
     private TreeSet<Comment> comments;
 
     // constructor to be used when putting object in database
-    public Post(User user, String description,Multimedia video, Timestamp dateTime, Location location, HashSet<Category> categories,
-                HashSet<Multimedia> multimedia, HashSet<User> taggedPeople) throws PostException {
+    public Post(User user, String description,Multimedia video, Location location, HashSet<Category> categories,
+                HashSet<Multimedia> multimedia, HashSet<User> taggedPeople, HashSet<Tag> tags) throws PostException {
         this.user = user;
         this.setDescription(description);
-        this.dateTime = dateTime;
         this.location = location;
         this.categories = categories;
         this.multimedia = multimedia;
         this.taggedPeople = taggedPeople;
+        this.tags=tags;
         this.likesCount = 0;
         this.dislikesCount = 0;
-    }
-
-    public Post(User user, HashSet<Category> categories, HashSet<User> taggedPeople) throws PostException {
-        this.user = user;
-        this.categories = categories;
-        this.taggedPeople = taggedPeople;
-        this.likesCount = 0;
-        this.dislikesCount = 0;
-        this.description = "trial_description";
+        this.comments=new TreeSet<>();
     }
 
     // constructor to be used when fetching from database
@@ -59,8 +52,7 @@ public class Post implements Comparable<Post> {
         this.setDescription(description);
         this.dateTime = dateTime;
         // have to make methods in post dao for:
-        // HashSet<Category> categories, HashSet<Multimedia> multimedia, HashSet<User>
-        // taggedPeople
+        // HashSet<Category> categories, HashSet<Multimedia> multimedia, HashSet<User>, HashSet<Tag>
     }
 
     public Post(User user, long user_id, String description, long likes_count, long dislikes_count, Timestamp date_time,
@@ -98,6 +90,16 @@ public class Post implements Comparable<Post> {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public Set<Tag> getTags() {
+        return Collections.unmodifiableSet(this.tags);
+    }
+
+    public void setTags(HashSet<Tag> tags) {
+        if(tags!=null){
+            this.tags = tags;
+        }
     }
 
     public void setDescription(String description) throws PostException {

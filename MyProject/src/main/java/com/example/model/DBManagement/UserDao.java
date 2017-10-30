@@ -26,6 +26,9 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	LocationDao locationDao;
 	@Autowired
 	CommentDao commentDao;
+	@Autowired
+	TagDao tagDao;
+
 	
 	// ::::::::: inserting user in db :::::::::
 	// * TESTED *
@@ -100,12 +103,14 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		}
 		this.setPosts(fetched);
 		this.setFollowers(fetched);
-			this.setFollowing(fetched);
-			this.setVisitedLocations(fetched);
-			this.setWishlistLocations(fetched);
-			return fetched;
+		this.setFollowing(fetched);
+		this.setVisitedLocations(fetched);
+		this.setWishlistLocations(fetched);
+		return fetched;
 		}
 	}
+
+
 
 	// * TESTED *
 	public User getUserById(long user_id) throws SQLException, UserException, PostException {
@@ -204,6 +209,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				post.setMultimedia(multimediaDao.getAllMultimediaForPost(post));
 				post.setTaggedPeople(this.getAllTaggedUsersForPost(post));
 				post.setComments(commentDao.getCommentsForPost(post));
+				post.setTags(tagDao.getTagsForPost(post));
 				posts.add(post);
 			}
 		}
