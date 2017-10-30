@@ -95,11 +95,14 @@ public class UserDao extends AbstractDao { // operates with the following tables
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
-				fetched = new User(rs.getLong("user_id"), username, rs.getString("password"), rs.getString("email"),
-						avatar, rs.getString("description"));
-				//fetched.setProfilePic(multimediaDao.getMultimediaById(rs.getLong("profile_pic_id")));
-			}
-			this.setPosts(fetched);
+			fetched = new User(rs.getLong("user_id"), username, rs.getString("password"), rs.getString("email"),
+					avatar, rs.getString("description"));
+		}
+		this.setPosts(fetched);
+		this.setFollowers(fetched);
+			this.setFollowing(fetched);
+			this.setVisitedLocations(fetched);
+			this.setWishlistLocations(fetched);
 			return fetched;
 		}
 	}
@@ -188,13 +191,14 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	public TreeSet<Post> getPosts(User u) throws SQLException, PostException, LocationException, CategoryException, UserException, CommentException {
 		TreeSet<Post> posts = new TreeSet<Post>(); // posts should be compared by datetime by default
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"select post_id, user_id, description, likes_count, dislikes_count, date_time, location_id from posts where user_id = ?;");) {
+				"select post_id, user_id, description, likes_count, dislikes_count, date_time, location_id from posts where user_id = ?")) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Post post = new Post(rs.getLong("post_id"), rs.getString("description"), rs.getInt("likes_count"),
 						rs.getInt("dislikes_count"), rs.getTimestamp("date_time"));
 				post.setUser(u);
+				post.setVideo(multimediaDao.getVideoForPost(post));
 				post.setLocation(locationDao.getLocationByPost(post));
 				post.setCategories(categoryDao.getCategoriesForPost(post));
 				post.setMultimedia(multimediaDao.getAllMultimediaForPost(post));

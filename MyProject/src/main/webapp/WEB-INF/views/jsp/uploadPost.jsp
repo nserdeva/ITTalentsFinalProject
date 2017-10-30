@@ -6,35 +6,31 @@
     <meta charset="UTF-8">
     <title>Wanderlust - Register</title>
     <link rel="stylesheet" href="../../../static/css/style.css">
-    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 
-<form:form commandName="newPost">
-    <form:input path="description" placeholder="description"></form:input>
-    <form:input path="locationName" placeholder="location name"></form:input>
-    <form:input path="taggedPeople" placeholder="tagged people"></form:input>
-    <form:input path="categories" placeholder="categories"></form:input>
+<form name="newPost" class="w3-container">
     <div id="global">
-        <form:form commandName="img" action="uploadImg" method="post" enctype="multipart/form-data">
-            <fieldset>
-               Add images
+        <form name="images" action="/uploadPost/uploadImg" method="post" enctype="multipart/form-data">
                 <p>
                     <label>Images: </label>
-                    <input type="file" name="images" multiple="multiple"/>
+                    <input type="file" name="images" accept="image/*" multiple="multiple"/>
                 </p>
-                <p id="buttons">
-                    <input id="reset" type="reset" tabindex="4">
-                    <input id="submit" type="submit" tabindex="5" value="Add image">
+                <p>
+                    <input type="reset" value="Reset">
+                    <input type="submit" value="Add Product">
                 </p>
-            </fieldset>
-        </form:form>
+        </form><br>
+        <c:forEach var="image" items="${sessionScope.images}">
+            <img src="/getImage/${image.originalFileName}"/>
+        </c:forEach>
     </div>
     <input type="submit" value="Share experience!">
-</form:form>
+</form>
+
 
 <jsp:include page="footer.jsp"></jsp:include>
 </body>

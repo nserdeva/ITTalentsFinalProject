@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.example.model.exceptions.*;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -14,16 +15,12 @@ import java.util.TreeSet;
 public class Post implements Comparable<Post> {
     private static final int MIN_LENGTH = 5;
     private static final int MAX_LENGTH = 255;
-    /*
-	 * post_id INT(11) user_id INT(11) adescription VARCHAR(1000) likes_count INT(11)
-	 * dislikes_count INT(11) date_time TIMESTAMP location_id INT(11)
-	 */
-
     private long id;
     private User user;
     private String description;
     private int likesCount;
     private int dislikesCount;
+    private Multimedia video;
     private Timestamp dateTime;
     private Location location;
     private HashSet<Category> categories;
@@ -32,7 +29,7 @@ public class Post implements Comparable<Post> {
     private TreeSet<Comment> comments;
 
     // constructor to be used when putting object in database
-    public Post(User user, String description, Timestamp dateTime, Location location, HashSet<Category> categories,
+    public Post(User user, String description,Multimedia video, Timestamp dateTime, Location location, HashSet<Category> categories,
                 HashSet<Multimedia> multimedia, HashSet<User> taggedPeople) throws PostException {
         this.user = user;
         this.setDescription(description);
@@ -71,6 +68,16 @@ public class Post implements Comparable<Post> {
     }
 
     public Post() {
+    }
+
+    public Multimedia getVideo() {
+        return this.video;
+    }
+
+    public void setVideo(Multimedia video) {
+        if(null!=video){
+            this.video = video;
+        }
     }
 
     public long getId() {
@@ -148,8 +155,8 @@ public class Post implements Comparable<Post> {
         this.categories = categories;
     }
 
-    public HashSet<Multimedia> getMultimedia() {
-        return (HashSet<Multimedia>) Collections.unmodifiableSet(this.multimedia);
+    public Set<Multimedia> getMultimedia() {
+        return  Collections.unmodifiableSet(this.multimedia);
     }
 
     public void setMultimedia(HashSet<Multimedia> multimedia) {

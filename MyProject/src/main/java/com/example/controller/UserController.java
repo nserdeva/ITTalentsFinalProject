@@ -53,11 +53,7 @@ public class UserController {
         try {
             if(userDao.existsUser(username, password)){
                 User user=userDao.getUserByUsername(username);
-                userDao.setPosts(user);
-                userDao.setFollowers(user);
-                userDao.setFollowing(user);
-                userDao.setVisitedLocations(user);
-                userDao.setWishlistLocations(user);
+
                 //userDao.setProfilePic(user);
                 session.setAttribute("user", user);
                 if (user == null) {
@@ -179,6 +175,7 @@ public class UserController {
         }
         return "settings";
     }
+
     @RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.GET)
     public String getAvatar(){
         return "settings";
@@ -188,16 +185,16 @@ public class UserController {
         public void getChangeAvatar(HttpSession session, HttpServletResponse resp,Model model) {
             User u = (User) session.getAttribute("user");
             String avatarUrl = u.getProfilePic().getUrl();
-        try {
-            File myFile = new File(WebInitializer.LOCATION +WebInitializer.AVATAR_LOCATION+File.separator+avatarUrl);
-            OutputStream out = resp.getOutputStream();
-            Path path = myFile.toPath();
-            Files.copy(path, out);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+        File newAvatar = new File(WebInitializer.LOCATION +WebInitializer.AVATAR_LOCATION+File.separator+avatarUrl);
+        OutputStream out = resp.getOutputStream();
+        Path path = newAvatar.toPath();
+        Files.copy(path, out);
+        out.flush();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
 
     @RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.POST)
     public String changeAvatar(HttpSession session, HttpServletResponse resp, @RequestParam("avatar") MultipartFile file, Model model) {

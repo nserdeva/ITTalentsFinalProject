@@ -7,7 +7,8 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
- 
+
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[] { SpringWebConfig.class };
@@ -42,4 +43,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
 
     public static final String AVATAR_LOCATION="/profilePics";
+
+    public static final String MULTIMEDIA_LOCATION ="/multimedia";
+
 }

@@ -66,7 +66,7 @@ public class MultimediaDao extends AbstractDao {
 
     public HashSet<Multimedia> getAllMultimediaForPost(Post post) throws SQLException {
         PreparedStatement ps = this.getConnection().prepareStatement(
-                "select multimedia_id,file_url, is_video from multimedia where post_id= ?  ;");
+                "select multimedia_id,file_url, is_video from multimedia where post_id= ? AND is_video=1 ;");
         ps.setLong(1, post.getId());
         ResultSet rs=ps.executeQuery();
         HashSet<Multimedia> multimedia=new HashSet<>();
@@ -167,5 +167,42 @@ public class MultimediaDao extends AbstractDao {
             }
         }
 
+    }
+
+    public void addVideoToPost(Post post, Multimedia video) {
+        try{
+            PreparedStatement ps=this.getConnection().prepareStatement(
+                    "INSERT INTO multimedia(file_url,is_video,post_id) VALUES (?,1,?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1,video.getUrl());
+            ps.setLong(2,post.getId());
+            ps.executeUpdate();
+            ResultSet resultSet=ps.getGeneratedKeys();
+            resultSet.next();
+            video.setId(resultSet.getLong(1));
+            post.setVideo(video);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Multimedia getVideoForPost(Post post) {
+        Multimedia multimedia=null;
+        try{
+            PreparedStatement ps=this.getConnection().prepareStatement(
+                    "SELECT multimedia.multimedia_id, multimedia.file_url " +
+                            "FROM multimedia WHERE post_id=? AND multimedia.is_video=1");
+            ps.setLong(1,post.getId());
+            ResultSet resultSet=ps.executeQuery();
+            if(resultSet.next()){
+                multimedia=new Multimedia(resultSet.getLong("multimedia.multimedia_id"),
+                        resultSet.getString("multimedia.file_url"),
+                        true,post);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return multimedia;
     }
 }

@@ -3,6 +3,7 @@ import com.example.model.*;
 import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.sql.*;
@@ -39,7 +40,10 @@ public class PostDao extends AbstractDao{
             post.setId(rs.getLong(1));
 
             categoryDao.addAllCategoriesToPost(post, post.getCategories()); //not sure if it is correct this way
-            multimediaDao.addAllMultimediaToPost(post, post.getMultimedia());
+            multimediaDao.addAllMultimediaToPost(post, (HashSet<Multimedia>)post.getMultimedia());
+            if(null!=post.getVideo()){
+                multimediaDao.addVideoToPost(post, post.getVideo());
+            }
             User user=userDao.getUserById(post.getUser().getUserId());
             userDao.addPost(user, post);
             this.tagAllUsers(post, post.getTaggedPeople());
