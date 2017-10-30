@@ -44,6 +44,8 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     public static final String AVATAR_LOCATION="/profilePics";
 
-    public static final String MULTIMEDIA_LOCATION ="/multimedia";
-
+    public static final String MULTIMEDIA_LOCATION = "/multimedia";
+    
+    public static final String LOCATIONS_PICTURES_LOCATION = "/locationsPics";
+    
 }
