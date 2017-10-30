@@ -30,7 +30,7 @@ public class Location {
 
 	// constructor to be used when putting object in database
 
-	Location(String latitude, String longtitute, String description, String locationName) throws LocationException {
+	Location(String latitude, String longtitude, String description, String locationName) throws LocationException {
 		this.setLatitude(latitude);
 		this.setLongtitude(longtitude);
 		this.setDescription(description);
@@ -40,9 +40,9 @@ public class Location {
 	}
 
 	// constructor to be used when fetching from database
-	public Location(long id, String latitude, String longtitute, String description, String locationName)
+	public Location(long id, String latitude, String longtitude, String description, String locationName)
 			throws LocationException {
-		this(latitude, longtitute, description, locationName);
+		this(latitude, longtitude, description, locationName);
 		this.id = id;
 	}
 

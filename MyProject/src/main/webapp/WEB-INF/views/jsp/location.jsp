@@ -8,6 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>${sessionScope.location.locationName}</title>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
+			type="text/javascript"></script>
 
 <style>
 .image{
@@ -47,7 +49,8 @@ tr {
     
 }
 </style>
-
+			</head>
+<body>
 <table align="center">
 <tr >
     <td > 
@@ -60,6 +63,7 @@ tr {
   </tr>
   <tr>
 </table>
+
 <table align="center">
 <tr>
  <td > 
@@ -71,6 +75,7 @@ tr {
 </table>
 
 
+<<<<<<< HEAD
     <div id="googleMap" style="width:100%;height:400px;"></div>
 
     <script>
@@ -83,7 +88,53 @@ tr {
         }
     </script>
 
+=======
+
+			<div id="map" style="width:400px;height:400px"></div>
+			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
+			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />
+			ai stiga we
+			${sessionScope.location.latitude}
+		    ${sessionScope.location.longtitude}<br>
+>>>>>>> 9a16c13528560cda2c2c2d04c035923aa1507c82
 	<jsp:include page="footer.jsp"></jsp:include>
+	
+	
+<script type="text/javascript">
+      
+var latitudeString = document.getElementById("latitude").value;
+var longtitudeString = document.getElementById("longtitude").value;
+
+var latitude = parseFloat(latitudeString);
+var longtitude = parseFloat(longtitudeString);
+
+      
+var locations = [
+    ['Na maika ti location-a', latitude, longtitude, 4],
+];
+      
+      
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: new google.maps.LatLng(latitude, longtitude),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+        var infowindow = new google.maps.InfoWindow();
+        var marker, i;
+        for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+            });
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infowindow.setContent(locations[i][0]);
+                    infowindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+	</script>
+
 
 </body>
 </html>

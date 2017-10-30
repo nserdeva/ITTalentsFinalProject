@@ -189,17 +189,13 @@ submitLink:hover {
 <img src="img/location_tag.png" width="30" height="30"> 
 <a target="_blank" href="/location/${location.id}">${location.locationName}</a></h3>
 <p>${location.shortDescription} 
-<div class="subContainer"> categories: 
-<c:forEach var="category" items="${location.categories}">
-${category.name};
-</c:forEach>
+<div class="subContainer"> 
+0 adventure seekers were here.
 </div>
 </p>
 
 </div>
 	</c:forEach>
-
-
 
 
 
