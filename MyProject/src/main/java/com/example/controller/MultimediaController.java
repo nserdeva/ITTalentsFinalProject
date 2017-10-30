@@ -1,6 +1,10 @@
 package com.example.controller;
 
 import com.example.WebInitializer;
+import com.example.model.DBManagement.MultimediaDao;
+import com.example.model.Multimedia;
+import com.example.model.exceptions.PostException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +17,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.SQLException;
 
 /**
  * Created by Marina on 29.10.2017 г..
  */
 @Controller
 public class MultimediaController {
+    @Autowired
+    MultimediaDao multimediaDao;
 
     @RequestMapping(value = "/getVideo/{url}", method = RequestMethod.GET)
     public void getUploadedImagesForm(@PathVariable("url") String tempUrl, HttpSession session, HttpServletResponse resp) {
@@ -34,16 +41,20 @@ public class MultimediaController {
         }
     }
 
-    @RequestMapping(value = "/getMultimedia/{url}", method = RequestMethod.GET)
-    public void getVideo(@PathVariable("url") String tempUrl, HttpSession session, HttpServletResponse resp) {
+    @RequestMapping(value = "/getMultimedia/{id}", method = RequestMethod.GET)
+    public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) {
         try {
-            String url=tempUrl+".jpg";
-            File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+url);
+            Multimedia multimedia=multimediaDao.getMultimediaById(id);
+            File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+multimedia.getUrl());
             OutputStream out = resp.getOutputStream();
             Path path = tempImage.toPath();
             Files.copy(path, out);
             out.flush();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
             e.printStackTrace();
         }
     }

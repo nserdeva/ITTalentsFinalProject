@@ -8,14 +8,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>Wanderlust</title>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
-			type="text/javascript"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvyBZwme7_jzLC85kY0OCv_5SXfFuc-qw&callback=map" type="text/javascript"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp"></jsp:include>
-
+	<c:set var="i" value="0" scope="page" />
 	<c:forEach var="post" items="${sessionScope.user.posts}">
-	<div class="w3-container w3-pink w3-border" style="width: 75%">
+		<div class="w3-container w3-pink w3-border" style="width: 75%">
 		<div id="USER_INFO" class="w3-cell-row w3-pink w3-border " style="width: 75%">
 			<img src="/settings/getAvatar" class="w3-circle" height="50px" width="auto">
 				${post.dateTime}
@@ -33,8 +32,8 @@
 				</c:forEach>
 			</div>
 		</c:if>
-		<div id="mapp" class="w3-cell-row w3-border " style="width: 75%">
-			<div id="map" style="float: left; width: 500px; height: 400px;"></div>
+		<div class="w3-cell-row w3-border " style="width: 75%">
+			<div id="map"  style="float: left; width: 500px; height: 400px;"></div>
 			<br> <br> <br>
 		</div>
 		<c:if test="${post.categories.size()>0}">
@@ -49,7 +48,7 @@
 			<div class="w3-row">
 				<c:forEach var="multimedia" items="${post.multimedia}">
 					<div class="w3-half">
-						<img src="/getMultimedia/${multimedia.url}" style="width:50%" class="w3-margin-bottom">
+						<img src="/getMultimedia/${multimedia.id}" style="width:50%" class="w3-margin-bottom">
 					</div>
 				</c:forEach>
 			</div>
@@ -74,42 +73,148 @@
 				</div>
 			</c:forEach>
 		</div>
+		<div id="like/dislike" >
+			<button style="background-color: green" id="likeButton ${i}" onclick="handleLike(${post.id},i)" >Like</button>
+			<button style="background-color: green" id="dislikeButton ${i}" onclick="handleDislike(${post.id},i)" >Dislike</button>
+		</div>
 	</div>
 		<br><br>
+		<c:set var="i" value="${i + 1}" scope="page"/>
 	</c:forEach>
-
-
 	<jsp:include page="footer.jsp"></jsp:include>
 
 	<script type="text/javascript">
-        var locations = [
-            ['Musagenica', 42.661723, 23.360285, 4],
-            ['Stud. grad', 42.653884, 23.345965, 5],
-            ['Geo Milev', 42.680135, 23.356985, 3],
-            ['Lozenec', 42.674448, 23.309441, 2],
-            ['Center', 42.697180, 23.316997, 1]
-        ];
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            center: new google.maps.LatLng(42.661723, 23.360285),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-        var infowindow = new google.maps.InfoWindow();
-        var marker, i;
-        for (i = 0; i < locations.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                map: map
+
+            var locations = [
+                ['Center', 42.697180, 23.316997, 1]
+            ];
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: new google.maps.LatLng(42.661723, 23.360285),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
             });
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infowindow.setContent(locations[i][0]);
-                    infowindow.open(map, marker);
-                }
-            })(marker, i));
-        }
+            var infowindow = new google.maps.InfoWindow();
+            var marker, i;
+            for (i = 0; i < locations.length; i++) {
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                    map: map
+                });
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    return function () {
+                        infowindow.setContent(locations[i][0]);
+                        infowindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
 	</script>
 
+<script>
+    function handleLike(postId,i){
+        var str="likeButton ".concat(i);
+        var button = document.getElementById(str);
+        var title = button.innerHTML;
+        if(title == "Like"){
+            likePost(postId,i);
+        }
+        else{
+            unlikePost(postId,i);
+        }
+    }
+
+    function handleDislike(postId, i) {
+        var str="dislikeButton ".concat(i);
+        var button=document.getElementById(str);
+        var title=button.innerHTML;
+        if(title=='Dislike'){
+            dislikePost(postId, i);
+		}
+		else{
+            unDislikePost(postId,i);
+		}
+    }
+
+    function likePost(postId,i) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var str="likeButton ".concat(i);
+                var button = document.getElementById(str);
+                button.innerHTML = "Unlike";
+                button.style.background='red';
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("post", "like/"+postId, true);
+        request.send();
+    }
+
+    function unlikePost(postId,i) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var str="likeButton ".concat(i);
+                var button = document.getElementById(str);
+                button.innerHTML = "Like";
+                button.style.background='green';
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("post", "unlike/"+postId, true);
+        request.send();
+    }
+
+    function dislikePost(postId,i) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var str="dislikeButton ".concat(i);
+                var button = document.getElementById(str);
+                button.innerHTML = "Undislike";
+                button.style.background='red';
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("post", "dislike/"+postId, true);
+        request.send();
+    }
+
+    function unDislikePost(postId,i) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var str="dislikeButton ".concat(i);
+                var button = document.getElementById(str);
+                button.innerHTML = "Dislike";
+                button.style.background='green';
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("post", "undislike/"+postId, true);
+        request.send();
+    }
+
+
+
+
+
+</script>
 
 </body>
 </html>

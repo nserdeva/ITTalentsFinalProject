@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.WebInitializer;
+import com.example.model.DBManagement.CategoryDao;
 import com.example.model.DBManagement.MultimediaDao;
 import com.example.model.DBManagement.UserDao;
 import com.example.model.Multimedia;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,6 +29,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 /**
  * Created by Marina on 26.10.2017 ?..
@@ -37,6 +40,10 @@ public class UserController {
     UserDao userDao;
     @Autowired
     MultimediaDao multimediaDao;
+    @Autowired
+    ServletContext servletContext;
+    @Autowired
+    CategoryDao categoryDao;
 
     @RequestMapping(value = "*",method = RequestMethod.GET)
     public String login(Model model){
@@ -66,6 +73,10 @@ public class UserController {
 
                 session.setAttribute("logged", true);
                 request.setAttribute("isValidData",true);
+                HashSet<String> usernames=userDao.getAllUsernames();
+                HashSet<String> tags=categoryDao.getAllTags();
+                servletContext.setAttribute("usernames", usernames);
+                servletContext.setAttribute("tags",tags);
                 return "myPassport";
             }else{
                 request.setAttribute("isValidData",false);

@@ -380,4 +380,19 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		u.removePost(p);
 	}
 
+    public HashSet<String> getAllUsernames() {
+		HashSet<String> usernames=new HashSet<>();
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT " +
+					"users.username FROM users ;");
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()){
+				String username=rs.getString("users.username");
+				usernames.add(username);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return usernames;
+	}
 }

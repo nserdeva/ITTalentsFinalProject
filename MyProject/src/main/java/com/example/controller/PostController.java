@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Created by Marina on 25.10.2017 г..
+ * Created by Marina on 25.10.2017 ?..
  */
 @Controller
 public class PostController {
@@ -69,6 +69,68 @@ public class PostController {
             }
             images.add(image);
     }
+
+
+
+    @RequestMapping(value = "/like/{postId}",method = RequestMethod.POST)
+    public void likePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+        try {
+            System.out.println("=================================="+postId);
+            Post post=postDao.getPostById(postId);
+            postDao.incrementLikes(post);
+            resp.setStatus(200);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @RequestMapping(value = "/unlike/{postId}",method = RequestMethod.POST)
+    public void unlikePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+        try {
+            System.out.println("=================================="+postId);
+            Post post=postDao.getPostById(postId);
+            postDao.decrementLikes(post);
+            resp.setStatus(200);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @RequestMapping(value = "/dislike/{postId}",method = RequestMethod.POST)
+    public void dislikePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+        try {
+            System.out.println("=================================="+postId);
+            Post post=postDao.getPostById(postId);
+            postDao.incrementDislikes(post);
+            resp.setStatus(200);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/undislike/{postId}",method = RequestMethod.POST)
+    public void undislikePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+        try {
+            System.out.println("=================================="+postId);
+            Post post=postDao.getPostById(postId);
+            postDao.decrementDislikes(post);
+            resp.setStatus(200);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
 

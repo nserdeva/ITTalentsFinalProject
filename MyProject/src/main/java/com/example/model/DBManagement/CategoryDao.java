@@ -124,4 +124,20 @@ public class CategoryDao extends AbstractDao{
         }
 
     }
+
+    public HashSet<String> getAllTags() {
+        HashSet<String> tags=new HashSet<>();
+        try{
+            PreparedStatement ps=this.getConnection().prepareStatement("SELECT tag_name" +
+                    "FROM tags");
+            ResultSet rs=ps.executeQuery();
+            while (rs.next()){
+                String tagName=rs.getString("tag_name");
+                tags.add(tagName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tags;
+    }
 }
