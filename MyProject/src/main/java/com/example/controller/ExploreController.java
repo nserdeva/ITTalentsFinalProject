@@ -25,10 +25,12 @@ import com.example.model.Multimedia;
 import com.example.model.User;
 import com.example.model.DBManagement.LocationDao;
 import com.example.model.DBManagement.MultimediaDao;
+import com.example.model.DBManagement.PostDao;
 import com.example.model.DBManagement.UserDao;
 import com.example.model.exceptions.CategoryException;
 import com.example.model.exceptions.LocationException;
 import com.example.model.exceptions.PostException;
+import com.example.model.exceptions.UserException;
 
 @Controller
 public class ExploreController {
@@ -38,9 +40,35 @@ public class ExploreController {
 	LocationDao locationDao;
 	@Autowired
 	MultimediaDao multimediaDao;
+	@Autowired
+	PostDao postDao;
 
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public String search(HttpSession session, HttpServletRequest request)
+	@RequestMapping(value = "/searchAdventurers", method = RequestMethod.POST)
+	public String searchAdventurers(HttpSession session, HttpServletRequest request)
+			throws SQLException, LocationException, CategoryException {
+		try {
+			session.setAttribute("browsedAdventurers",
+					userDao.getFilteredUsers(request.getParameter("searchFormDataTxt")));
+		} catch (UserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "exploreAdventurers";
+	}
+
+	@RequestMapping(value = "/searchDestinations", method = RequestMethod.POST)
+	public String searchDestinations(HttpSession session, HttpServletRequest request)
+			throws SQLException, LocationException, CategoryException {
+		session.setAttribute("browsedLocations",
+				locationDao.getFilteredLocations(request.getParameter("searchFormDataTxt")));
+		return "exploreDestinations";
+	}
+
+	@RequestMapping(value = "/searchAdventures", method = RequestMethod.POST)
+	public String searchAdventures(HttpSession session, HttpServletRequest request)
 			throws SQLException, LocationException, CategoryException {
 		ArrayList<String> checkBoxValues = new ArrayList<String>();
 		checkBoxValues.add(request.getParameter("natureCheckBox")); // category_id must be '1' in db
@@ -50,10 +78,9 @@ public class ExploreController {
 		checkBoxValues.add(request.getParameter("landmarkCheckBox")); // category_id must be '5' in db
 		checkBoxValues.add(request.getParameter("resortCheckBox")); // category_id must be '6' in db
 		checkBoxValues.add(request.getParameter("cityCheckBox")); // category_id must be '7' in db
-		System.out.println("'" + request.getParameter("searchFormDataTxt") + "'");
-		userDao.setBrowsedLocations((User) session.getAttribute("user"), request.getParameter("searchFormDataTxt"),
-				getCategoriesIds(checkBoxValues));
-		return "explore";
+		session.setAttribute("browsedPosts", postDao.getFilteredPosts(request.getParameter("searchFormDataTxt"),
+				this.getCategoriesIds(checkBoxValues)));
+		return "explorePosts";
 	}
 
 	private String getCategoriesIds(ArrayList<String> checkBoxValues) {
@@ -101,20 +128,42 @@ public class ExploreController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value = "/location/picture/{id}", method = RequestMethod.GET)
 	public void getLocationPicture(@PathVariable("id") int id, HttpServletResponse response)
 			throws SQLException, LocationException, CategoryException {
 		try {
 			File myFile = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION
-					+ WebInitializer.LOCATIONS_PICTURES_LOCATION + File.separator + multimediaDao.getMultimediaById(id).getUrl());
+					+ WebInitializer.LOCATIONS_PICTURES_LOCATION + File.separator
+					+ multimediaDao.getMultimediaById(id).getUrl());
 			OutputStream out = response.getOutputStream();
 			Path path = myFile.toPath();
 			Files.copy(path, out);
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (PostException e) { //e stiga we ?????
+		} catch (PostException e) { // e stiga we ?????
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@RequestMapping(value = "/user/picture/{id}", method = RequestMethod.GET)
+	public void getUserPicture(@PathVariable("id") int id, HttpServletResponse response)
+			throws SQLException, LocationException, CategoryException {
+		try {
+			File myFile = new File(WebInitializer.LOCATION + WebInitializer.AVATAR_LOCATION + File.separator
+					+ userDao.getUserById(id).getProfilePic().getUrl());
+			OutputStream out = response.getOutputStream();
+			Path path = myFile.toPath();
+			Files.copy(path, out);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (PostException e) { // e stiga we ?????
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

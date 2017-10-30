@@ -16,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserDao extends AbstractDao { // operates with the following tables: 'users', 'users_followers','visited_locations', 'wishlists', 'posts'
+public class UserDao extends AbstractDao { // operates with the following tables: 'users',
+											// 'users_followers','visited_locations', 'wishlists', 'posts'
 
 	@Autowired
 	CategoryDao categoryDao;
@@ -29,16 +30,17 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	@Autowired
 	TagDao tagDao;
 
-	
+
 	// ::::::::: inserting user in db :::::::::
 	// * TESTED *
 	public void insertUser(User u) throws SQLException, UserException {
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"insert into users (username, password, email, profile_pic_id) value (?, ?, ?,?);", Statement.RETURN_GENERATED_KEYS);) {
+				"insert into users (username, password, email, profile_pic_id) value (?, ?, ?,?);",
+				Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, u.getUsername());
 			ps.setString(2, u.getPassword()); // hashing required
 			ps.setString(3, u.getEmail());
-			ps.setLong(4,0); //default profile pic id=0
+			ps.setLong(4, 0); // default profile pic id=0
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
@@ -50,7 +52,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	// to be modified - should check for username OR email !!!
 	// * TESTED *
 	public boolean existsUser(String username, String password) throws SQLException {
-		if(this.getConnection()==null){
+		if (this.getConnection() == null) {
 			System.out.println("connection is null");
 		}
 		try (PreparedStatement ps = this.getConnection()
@@ -97,16 +99,16 @@ public class UserDao extends AbstractDao { // operates with the following tables
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
-			fetched = new User(rs.getLong("user_id"), username, rs.getString("password"), rs.getString("email"),
-					avatar, rs.getString("description"));
-		}
-		this.setPosts(fetched);
-		this.setFollowers(fetched);
-		this.setFollowing(fetched);
-		this.setVisitedLocations(fetched);
-		this.setWishlistLocations(fetched);
-		return fetched;
+				Multimedia avatar = multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
+				fetched = new User(rs.getLong("user_id"), username, rs.getString("password"), rs.getString("email"),
+						avatar, rs.getString("description"));
+			}
+			this.setPosts(fetched);
+			this.setFollowers(fetched);
+			this.setFollowing(fetched);
+			this.setVisitedLocations(fetched);
+			this.setWishlistLocations(fetched);
+			return fetched;
 		}
 	}
 
@@ -120,7 +122,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 			ps.setLong(1, user_id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
+				Multimedia avatar = multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				fetched = new User(user_id, rs.getString("username"), rs.getString("password"), rs.getString("email"),
 						avatar, rs.getString("description"));
 			}
@@ -137,7 +139,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
+				Multimedia avatar = multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				followers.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
 						rs.getString("email"), avatar, rs.getString("description")));
 			}
@@ -153,7 +155,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
+				Multimedia avatar = multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 				following.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
 						rs.getString("email"), avatar, rs.getString("description")));
 			}
@@ -193,7 +195,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	}
 
 	// get posts
-	public TreeSet<Post> getPosts(User u) throws SQLException, PostException, LocationException, CategoryException, UserException, CommentException {
+	public TreeSet<Post> getPosts(User u)
+			throws SQLException, PostException, LocationException, CategoryException, UserException, CommentException {
 		TreeSet<Post> posts = new TreeSet<Post>(); // posts should be compared by datetime by default
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select post_id, user_id, description, likes_count, dislikes_count, date_time, location_id from posts where user_id = ?")) {
@@ -223,7 +226,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		ResultSet rs = ps.executeQuery();
 		HashSet<User> taggedUsers = new HashSet<User>();
 		while (rs.next()) {
-			Multimedia avatar=multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
+			Multimedia avatar = multimediaDao.getMultimediaById(rs.getLong("profile_pic_id"));
 			taggedUsers.add(new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"),
 					rs.getString("email"), avatar, rs.getString("description")));
 		}
@@ -262,11 +265,6 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		u.setProfilePic(multimediaDao.getMultimediaById(u.getProfilePic().getId()));
 	}
 
-	// set browsed locations
-	public void setBrowsedLocations(User u,String searchFormText, String categoriesIds ) throws LocationException, SQLException, CategoryException {
-		u.setBrowsedLocations(locationDao.getFilteredLocations(searchFormText, categoriesIds));		
-	}
-
 	// ::::::::: methods for updating user data :::::::::
 	// * TESTED *
 	public void changePassword(User u, String newPassword) throws SQLException, UserException {
@@ -294,12 +292,12 @@ public class UserDao extends AbstractDao { // operates with the following tables
 
 	// !!! TO BE DISCUSSED !!!
 	public void changeProfilePicId(User u, Multimedia profilePic) throws SQLException, UserException {
-			try (PreparedStatement ps = this.getConnection()
-					.prepareStatement("update users set profile_pic_id = ? where user_id = ?;")) {
-				ps.setLong(1, profilePic.getId());
-				ps.setLong(2, u.getUserId());
-				ps.executeUpdate();
-			}
+		try (PreparedStatement ps = this.getConnection()
+				.prepareStatement("update users set profile_pic_id = ? where user_id = ?;")) {
+			ps.setLong(1, profilePic.getId());
+			ps.setLong(2, u.getUserId());
+			ps.executeUpdate();
+		}
 	}
 
 	// * TESTED *
@@ -386,14 +384,13 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		u.removePost(p);
 	}
 
-    public HashSet<String> getAllUsernames() {
-		HashSet<String> usernames=new HashSet<>();
-		try{
-			PreparedStatement ps=this.getConnection().prepareStatement("SELECT " +
-					"users.username FROM users ;");
-			ResultSet rs=ps.executeQuery();
-			while (rs.next()){
-				String username=rs.getString("users.username");
+	public HashSet<String> getAllUsernames() {
+		HashSet<String> usernames = new HashSet<>();
+		try {
+			PreparedStatement ps = this.getConnection().prepareStatement("SELECT " + "users.username FROM users ;");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String username = rs.getString("users.username");
 				usernames.add(username);
 			}
 		} catch (SQLException e) {
@@ -401,4 +398,26 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		}
 		return usernames;
 	}
+
+	public HashSet<User> getFilteredUsers(String searchFormText)
+			throws LocationException, SQLException, CategoryException, UserException, PostException {
+		HashSet<User> filteredUsers = new HashSet<User>();
+		if (searchFormText != null && !searchFormText.isEmpty()) {
+			try (PreparedStatement ps = this.getConnection().prepareStatement(
+					"select distinct user_id, username, profile_pic_id, description from users where username like ? or description like ?;");) {
+				ps.setString(1, "%" + searchFormText + "%");
+				ps.setString(2, "%" + searchFormText + "%");
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					User user = new User(rs.getLong("user_id"), rs.getString("username"),
+							multimediaDao.getMultimediaById(rs.getLong("profile_pic_id")), rs.getString("description"));
+					this.setFollowers(user);
+					this.setFollowing(user);
+					filteredUsers.add(user);
+				}
+			}
+		}
+		return filteredUsers;
+	}
+
 }

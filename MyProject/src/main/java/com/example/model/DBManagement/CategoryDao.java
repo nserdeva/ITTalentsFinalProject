@@ -98,17 +98,6 @@ public class CategoryDao extends AbstractDao{
         }
         return categories;
     }
-
-    public HashSet<Category> getCategoriesForLocation(Location location) throws SQLException, CategoryException {
-        PreparedStatement ps = this.getConnection().prepareStatement("select category_id from locations_categories where location_id= ?;");
-        ps.setLong(1, location.getId());
-        ResultSet rs=ps.executeQuery();
-        HashSet<Category> categories=new HashSet<>();
-        while (rs.next()){
-            categories.add(this.getCategoryById(rs.getLong("category_id")));
-        }
-        return categories;
-    }
     
     //tested
     public void addAllCategoriesToPost(Post post,Set<Category> set) throws CategoryException {

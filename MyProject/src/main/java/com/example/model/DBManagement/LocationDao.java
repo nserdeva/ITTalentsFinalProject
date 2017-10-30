@@ -18,7 +18,7 @@ import java.util.HashSet;
 
 @Component
 public class LocationDao extends AbstractDao {
-	
+
 	@Autowired
 	CategoryDao categoryDao;
 	@Autowired
@@ -54,7 +54,6 @@ public class LocationDao extends AbstractDao {
 			location = new Location(id, rs.getString("latitude"), rs.getString("longtitude"),
 					rs.getString("description"), rs.getString("location_name"));
 			this.setPictures(location);
-			this.setCategories(location);
 		} catch (SQLException e) {
 			throw new LocationException("Location could not be loaded. Reason: " + e.getMessage());
 		}
@@ -75,48 +74,27 @@ public class LocationDao extends AbstractDao {
 		return location;
 	}
 
-	public HashSet<Location> getFilteredLocations(String searchFormText, String categoriesIds)
+	public HashSet<Location> getFilteredLocations(String searchFormText)
 			throws LocationException, SQLException, CategoryException {
-		Statement st = this.getConnection().createStatement(); //PreparedStatement gets wrong results
-		String query = null;
 		HashSet<Location> filteredLocations = new HashSet<Location>();
-		if (searchFormText == null || searchFormText.isEmpty()) {
-			if (categoriesIds != null && !categoriesIds.isEmpty()) {
-
-				query = "select distinct lc.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations_categories as lc join locations as l on(lc.location_id = l.location_id)where lc.location_id in (select lc_.location_id from locations_categories as lc_ where lc_.category_id in("
-						+ categoriesIds + ")group by lc_.location_id having count(lc_.location_id)>"
-						+ (categoriesIds.split("[,]").length - 1) + ");";
-			}
-		} else {
-			if (categoriesIds != null && !categoriesIds.isEmpty()) {
-				query = "select distinct lc.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations_categories as lc join locations as l on(lc.location_id = l.location_id)where lc.location_id in (select lc_.location_id from locations_categories as lc_ where lc_.category_id in(" 
-						+ categoriesIds + ") group by lc_.location_id having count(lc_.location_id)>"
-						+ (categoriesIds.split("[,]").length - 1) + ") and (l.location_name like '%" + searchFormText 
-						+ "%' or l.description like '%" + searchFormText + "%');";
-						
-			} else {
-				query = "select distinct l.location_id, l.latitude, l.longtitude, l.description, l.location_name from locations as l where (l.location_name like '%"
-						+ searchFormText + "%' or l.description like '%" + searchFormText + "%');";						
-			}
-		}
-		ResultSet rs = st.executeQuery(query);
-		if (rs != null) {
-			while (rs.next()) {
-				Location location = new Location(rs.getLong("location_id"), rs.getString("latitude"),
-						rs.getString("longtitude"), rs.getString("description"), rs.getString("location_name"));
-				this.setPictures(location);
-				this.setCategories(location);
-				filteredLocations.add(location);
+		if (searchFormText != null && !searchFormText.isEmpty()) {
+			try (PreparedStatement ps = this.getConnection().prepareStatement(
+					"select distinct location_id, latitude, longtitude, description, location_name from locations where location_name like ? or description like ?;");) {
+				ps.setString(1, "%" + searchFormText+"%");
+				ps.setString(2, "%" + searchFormText+"%");
+				ResultSet rs = ps.executeQuery();
+				while (rs.next()) {
+					Location location = new Location(rs.getLong("location_id"), rs.getString("latitude"),
+							rs.getString("longtitude"), rs.getString("description"), rs.getString("location_name"));
+					this.setPictures(location);
+					filteredLocations.add(location);
+				}
 			}
 		}
 		return filteredLocations;
 	}
-	
-	public void setCategories(Location l) throws SQLException, CategoryException{
-		l.setCategories(categoryDao.getCategoriesForLocation(l));
-	}
-	
-	public void setPictures(Location l) throws SQLException, CategoryException{
+
+	public void setPictures(Location l) throws SQLException, CategoryException {
 		l.setPictures(multimediaDao.getPicturesForLocation(l));
 	}
 
