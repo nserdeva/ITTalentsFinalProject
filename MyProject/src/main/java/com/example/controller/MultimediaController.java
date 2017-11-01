@@ -4,6 +4,8 @@ import com.example.WebInitializer;
 import com.example.model.DBManagement.MultimediaDao;
 import com.example.model.Multimedia;
 import com.example.model.exceptions.PostException;
+import com.example.model.exceptions.UserException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +44,7 @@ public class MultimediaController {
     }
 
     @RequestMapping(value = "/getMultimedia/{id}", method = RequestMethod.GET)
-    public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) {
+    public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) throws UserException {
         try {
             Multimedia multimedia=multimediaDao.getMultimediaById(id);
             File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+multimedia.getUrl());

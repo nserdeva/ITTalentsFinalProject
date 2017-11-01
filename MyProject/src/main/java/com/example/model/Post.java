@@ -55,8 +55,8 @@ public class Post implements Comparable<Post> {
         // HashSet<Category> categories, HashSet<Multimedia> multimedia, HashSet<User>, HashSet<Tag>
     }
 
-    public Post(User user, long user_id, String description, long likes_count, long dislikes_count, Timestamp date_time,
-                long location_id) {
+    public Post(User user, long user_id, String description, int likes_count, int dislikes_count, Timestamp date_time,
+                long location_id) throws PostException {    	
     }
 
     public Post() {
@@ -168,6 +168,10 @@ public class Post implements Comparable<Post> {
     public Set<User> getTaggedPeople() {
         return Collections.unmodifiableSet(this.taggedPeople);
     }
+    
+	public Multimedia getMainPic() {
+		return this.multimedia != null && this.multimedia.iterator().hasNext() ? this.multimedia.iterator().next() : null;
+	}
 
     public void setTaggedPeople(HashSet<User> taggedPeople) {
         this.taggedPeople = taggedPeople;
@@ -230,8 +234,9 @@ public class Post implements Comparable<Post> {
     }
 
     @Override
-    public int compareTo(Post o) {
-        return this.dateTime.compareTo(o.dateTime);
+    public int compareTo(Post p) {
+        return p.dateTime.compareTo(this.dateTime);
 
     }
+
 }

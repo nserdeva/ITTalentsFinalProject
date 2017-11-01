@@ -45,7 +45,7 @@ public class MultimediaDao extends AbstractDao {
 
 
     //TODO not working
-    public void deleteMultimedia(Multimedia multimedia) throws SQLException, PostException {
+    public void deleteMultimedia(Multimedia multimedia) throws SQLException, PostException, UserException {
         try {
             this.getConnection().setAutoCommit(false);
             PreparedStatement ps = this.getConnection().prepareStatement(
@@ -62,7 +62,7 @@ public class MultimediaDao extends AbstractDao {
         }
     }
 
-    public void deleteMultimediaFromPost(Multimedia multimedia) throws SQLException, PostException {
+    public void deleteMultimediaFromPost(Multimedia multimedia) throws SQLException, PostException, UserException {
         postDao.getPostById(multimedia.getPost().getId()).deleteMultimedia(multimedia);
     }
 
@@ -115,7 +115,7 @@ public class MultimediaDao extends AbstractDao {
         }
     }
     
-    public Multimedia getMultimediaById(long id) throws SQLException, PostException {
+    public Multimedia getMultimediaById(long id) throws SQLException, PostException, UserException {
 		Multimedia fetched = null;
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"select file_url, is_video, post_id from multimedia where multimedia_id = ?;");) {

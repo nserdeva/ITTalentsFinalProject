@@ -61,11 +61,12 @@ visibility: hidden;
 	<c:forEach var="user" items="${sessionScope.browsedAdventurers}">				
      <div class="container" width=70% >
 <div class="floatedbox">
-<p><img src="/user/picture/${user.userId}" width="120" height="120" align="middle" style="border-radius: 80px;"></p>
+<p><img src="/user/picture/${user.userId}" border="3" width="120" height="120" align="middle" style="border-radius: 80px;"></p>
 </div>
 <h3>
 <img src="img/user_icon_search.png" width="30" height="30"> 
-<a target="_blank" href="/user/passport/${user.userId}">${user.username}</a></h3>
+<a target="_blank" href="/showPassport/${user.userId}">	
+				${user.username}</a></h3>
 <p>${user.description} 
 <div class="subContainer"> 
 Followers: ${user.followers.size()} Following: ${user.following.size()}

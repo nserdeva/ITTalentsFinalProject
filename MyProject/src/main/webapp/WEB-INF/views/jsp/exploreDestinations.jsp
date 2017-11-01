@@ -60,7 +60,7 @@ visibility: hidden;
 	<c:forEach var="location" items="${sessionScope.browsedLocations}">				
      <div class="container" width=70% >
 <div class="floatedbox">
-<p><img src="/location/getMainPic/${location.id}" width="120" height="120" align="middle"></p>
+<p><img src="/location/getMainPic/${location.id}" border="3" width="120" height="120" align="middle"></p>
 </div>
 <h3>
 <img src="img/location_tag.png" width="30" height="30"> 

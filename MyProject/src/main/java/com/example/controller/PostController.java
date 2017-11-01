@@ -170,7 +170,7 @@ public class PostController {
 
 
     @RequestMapping(value = "/like/{postId}",method = RequestMethod.POST)
-    public void likePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+    public void likePost(HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
         try {
             System.out.println("=================================="+postId);
             Post post=postDao.getPostById(postId);
@@ -185,7 +185,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/unlike/{postId}",method = RequestMethod.POST)
-    public void unlikePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+    public void unlikePost(HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
         try {
             System.out.println("=================================="+postId);
             Post post=postDao.getPostById(postId);
@@ -200,7 +200,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/dislike/{postId}",method = RequestMethod.POST)
-    public void dislikePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+    public void dislikePost(HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
         try {
             System.out.println("=================================="+postId);
             Post post=postDao.getPostById(postId);
@@ -214,7 +214,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/undislike/{postId}",method = RequestMethod.POST)
-    public void undislikePost(HttpServletResponse resp ,@PathVariable("postId") long postId){
+    public void undislikePost(HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
         try {
             System.out.println("=================================="+postId);
             Post post=postDao.getPostById(postId);

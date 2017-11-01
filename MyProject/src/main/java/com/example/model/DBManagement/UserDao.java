@@ -151,7 +151,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	public HashSet<User> getFollowing(User u) throws SQLException, UserException, PostException {
 		HashSet<User> following = new HashSet<User>();
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join users_followers as uf on(u.user_id = uf.followed_id) where uf.follower_id = ?;");) {
+				"select users.user_id, users.username, users.password, users.email, users.profile_pic_id, users.description from users join users_followers on(users.user_id = users_followers.followed_id) where users_followers.follower_id = ?;");) {
 			ps.setLong(1, u.getUserId());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -206,7 +206,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				Post post = new Post(rs.getLong("post_id"), rs.getString("description"), rs.getInt("likes_count"),
 						rs.getInt("dislikes_count"), rs.getTimestamp("date_time"));
 				post.setUser(u);
-				post.setVideo(multimediaDao.getVideoForPost(post));
+				//post.setVideo(multimediaDao.getVideoForPost(post));
 				post.setLocation(locationDao.getLocationByPost(post));
 				post.setCategories(categoryDao.getCategoriesForPost(post));
 				post.setMultimedia(multimediaDao.getAllMultimediaForPost(post));
@@ -216,10 +216,11 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				posts.add(post);
 			}
 		}
+		System.out.println("::::::::::: FETCHED POSTS FOR USER: " + u.getUsername() + " : " + posts.size());
 		return posts;
 	}
 
-	private HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException, PostException {
+	public HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException, PostException {
 		PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join tagged_users as tu on(u.user_id = tu.user_id) where post_id = ?;");
 		ps.setLong(1, post.getId());

@@ -85,7 +85,7 @@ public class UserController {
                 servletContext.setAttribute("usernames", usernames);
                 servletContext.setAttribute("tags",tags);
                 servletContext.setAttribute("categories",categories);
-                return "myPassport";
+                return "index";
             }else{
                 request.setAttribute("isValidData",false);
                 return "login";
@@ -103,7 +103,7 @@ public class UserController {
         } catch (CategoryException e) {
             e.printStackTrace();
         }
-        return "myPassport";
+        return "index";
     }
 
     @RequestMapping(value="/register", method=RequestMethod.GET)
@@ -125,7 +125,7 @@ public class UserController {
                         userDao.insertUser(user);
                         session.setAttribute("user",user);
                         session.setAttribute("logged", true);
-                        return "myPassport";
+                        return "index";
                     }else{
                         System.out.println("second if- else");
                         return "register";
