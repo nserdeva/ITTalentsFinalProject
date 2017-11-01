@@ -62,13 +62,13 @@ public class LocationDao extends AbstractDao {
 
 	// tested
 	public Location getLocationByPost(Post post) throws SQLException, LocationException {
+		Location location = null;
 		PreparedStatement ps = this.getConnection()
 				.prepareStatement("select locations.location_id,locations.latitude, locations.longtitude," +
 						"locations.description, locations.location_name from locations  " +
 						"join posts on posts.location_id=locations.location_id where posts.post_id=?;");
 		ps.setLong(1, post.getId());
 		ResultSet rs = ps.executeQuery();
-		Location location=null;
 		if(rs.next()){
 			location = new Location(rs.getLong("locations.location_id"), rs.getString("locations.latitude"),
 					rs.getString("locations.longtitude"), rs.getString("locations.description"), rs.getString("locations.location_name"));

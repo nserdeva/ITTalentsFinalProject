@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<title>Newsfeed</title>
+<title>${sessionScope.selectedUser.username}</title>
 <style type="text/css" media="screen">
 .subContainer {
 	position: right;
@@ -53,17 +53,48 @@
 	visibility: hidden;
 }
 </style>
+
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+            border: 2px solid #909090;
+    
+}
+
+td, .th {
+        border: 2px solid #909090;
+    text-align: left;
+    padding: 5px;
+}
+
+tr {
+    background-color: #dddddd;
+    
+}
+</style>
+
 </head>
 <body>
 
 	<jsp:include page="header.jsp"></jsp:include><br>
-
-<form id="searchForm" method="post" action="/showMostPopular">
-			<button>Show most popular first</button>		
-	</form>
-
-
-	<c:forEach var="post" items="${sessionScope.newsfeedPosts}">
+	
+<table align="center">
+<tr>
+ <td > 
+				<img src="/user/picture/${sessionScope.selectedUser.userId}" border="3" width="200"
+					height="200" align="middle"
+					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+					${sessionScope.selectedUser.username}
+					Followers: ${sessionScope.selectedUser.followers.size()} Following: ${sessionScope.selectedUser.following.size()}
+					${sessionScope.selectedUser.description}
+					
+				</td>
+				</tr>
+				</table>	
+					<br><br><br>
+	<c:forEach var="post" items="${sessionScope.selectedUser.posts}">
 		<div class="container" width=70%>
 			<div class="floatedbox">
 				<p>
@@ -73,11 +104,8 @@
 				</p>
 			</div>
 			<h3>
-				<img src="/user/picture/${post.user.userId}" border="3" width="45"
-					height="45" align="middle"
-					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-				${post.dateTime} <a target="_blank" href="/showPassport/${post.user.userId}">	
-				${post.user.username}</a>
+
+				${post.dateTime} <a target="_blank" href="/showPost/${post.id}">${post.user.username}</a>
 				<c:if test="${post.location!=null}">
  was at 
  <a target="_blank" href="/location/${post.location.id}">${post.location.locationName}</a>
@@ -116,7 +144,6 @@ ${tag.tag_name};
 		<br>
 		<br>
 	</c:forEach>
-
 
 	<jsp:include page="footer.jsp"></jsp:include>
 

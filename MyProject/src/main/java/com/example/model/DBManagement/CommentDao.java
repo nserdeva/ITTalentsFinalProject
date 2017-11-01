@@ -21,7 +21,7 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 	PostDao postDao;
 
 	// ::::::::: insert/remove from db :::::::::
-	public void insertComment(Comment c, User u) throws SQLException, PostException {
+	public void insertComment(Comment c, User u) throws SQLException, PostException, UserException {
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"insert into comments (content, post_id, user_id, date_time) values (?, ?, ?, now());",
 				Statement.RETURN_GENERATED_KEYS);) {
@@ -37,7 +37,7 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 		}
 	}
 
-	public void deleteComment(Comment c) throws SQLException, PostException {
+	public void deleteComment(Comment c) throws SQLException, PostException, UserException {
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"delete from comments where id = ? and content = ? and post_id = ? and user_id = ? and date_time = ?;",
 				Statement.RETURN_GENERATED_KEYS);) {

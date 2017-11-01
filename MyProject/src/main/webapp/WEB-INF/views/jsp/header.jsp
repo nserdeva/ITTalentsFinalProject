@@ -19,7 +19,6 @@
                 <a href="/settings" class="w3-bar-item w3-button">Settings</a>
             </div>
         </div>
-        <a href="/explore" class="w3-bar-item w3-button w3-hover-teal w3-right">Explore</a>
         <a href="/uploadPost" class="w3-bar-item w3-button w3-hover-teal w3-right">Share experience</a>
         <a href="/newsfeed" class="w3-bar-item w3-button w3-hover-teal w3-right">Get inspiration</a>
         <a href="/myPassport" class="w3-bar-item w3-button w3-hover-teal w3-right">My Passport</a>
@@ -50,26 +49,19 @@ input[type=text]:focus {
 }
 </style>
 
-
-<div id="show_categories" >Categories:
-<input type="checkbox" name="natureCheckBox" class="chb" value="false">Nature
-		<input type="checkbox" name="seaCheckBox" class="chb" value="false">Sea
-		<input type="checkbox" name="mountainsCheckBox" class="chb"
-			value="false">Mountains <input type="checkbox"
-			name="dessertCheckBox" class="chb" value="false">Dessert <input
-			type="checkbox" name="landmarkCheckBox" class="chb" value="false">Landmark
-		<input type="checkbox" name="resortCheckBox" class="chb" value="false">Resort
-		<input type="checkbox" name="cityCheckBox" class="chb" value="false">City
-
-
-</div>
-
-
-
-
 	<form id="searchForm" method="post" action="/search">
+	<div id="show_categories" >Categories:
+<input type="checkbox" name="natureCheckBox" class="chb" value="false">Nature
+		<input type="checkbox" onclick="changeCheckBoxesValues()"  name="seaCheckBox" class="chb" value="false">Sea
+		<input type="checkbox" onclick="changeCheckBoxesValues()" name="mountainsCheckBox" class="chb"
+			value="false">Mountains <input type="checkbox"
+			name="dessertCheckBox" onclick="changeCheckBoxesValues()" class="chb" value="false">Dessert <input
+			type="checkbox" onclick="changeCheckBoxesValues()" name="landmarkCheckBox" class="chb" value="false">Landmark
+		<input type="checkbox" onclick="changeCheckBoxesValues()" name="resortCheckBox" class="chb" value="false">Resort
+		<input type="checkbox" onclick="changeCheckBoxesValues()" name="cityCheckBox" class="chb" value="false">City
+</div>
 		<input type="text" name="searchFormDataTxt" placeholder="Search..">
-			<button  onclick="changeCheckBoxesValues()">explore</button>		
+			<button onclick="changeCheckBoxesValues()">explore</button>		
 	</form>
 	
  <div class="dropdown">
@@ -93,7 +85,7 @@ input[type=text]:focus {
 			  document.getElementById('browse_adventures').style.display= 'block' ;
 			  document.getElementById('browse_destinations').style.display= 'none' ;
 			  document.getElementById('browse_adventurers').style.display= 'none' ;
-			  document.getElementById('searchForm').action = '/searchAdventurers';
+			  document.getElementById('searchForm').action = '/searchAdventures';
 		}
 		
 		function searchInDestinations() {
@@ -243,12 +235,6 @@ button:hover
 			}
 		}
 	</script>
-
-
-
-
-
-
 
 </body>
 </html>

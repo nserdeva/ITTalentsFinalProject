@@ -74,9 +74,6 @@ tr {
   <tr>
 </table>
 
-<<<<<<< HEAD
-=======
-
     <div id="googleMap" style="width:100%;height:400px;"></div>
 
     <script>
@@ -89,7 +86,6 @@ tr {
         }
     </script>
 
->>>>>>> 9037f8ed29442fcba5bf43e4f4b9dd11038dd0dc
 			<div id="map" style="width:400px;height:400px"></div>
 			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
 			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />

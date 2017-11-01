@@ -46,7 +46,7 @@ public class MultimediaDao extends AbstractDao {
 
 
     //TODO not working
-    public void deleteMultimedia(Multimedia multimedia) throws SQLException, PostException {
+    public void deleteMultimedia(Multimedia multimedia) throws SQLException, PostException, UserException {
         try {
             this.getConnection().setAutoCommit(false);
             PreparedStatement ps = this.getConnection().prepareStatement(
@@ -63,7 +63,7 @@ public class MultimediaDao extends AbstractDao {
         }
     }
 
-    public void deleteMultimediaFromPost(Multimedia multimedia) throws SQLException, PostException {
+    public void deleteMultimediaFromPost(Multimedia multimedia) throws SQLException, PostException, UserException {
         postDao.getPostById(multimedia.getPost().getId()).deleteMultimedia(multimedia);
     }
 
@@ -91,20 +91,20 @@ public class MultimediaDao extends AbstractDao {
         return multimedia;
     }*/
 
-    public Multimedia getMultimediaById(long id) throws SQLException, PostException {
-		Multimedia fetched = null;
-		try (PreparedStatement ps = this.getConnection().prepareStatement(
-				"select file_url, is_video, post_id from multimedia where multimedia_id = ?;");) {
-			ps.setLong(1, id);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				fetched = new Multimedia(id, rs.getString("file_url"),
+    public Multimedia getMultimediaById(long id) throws SQLException, PostException, UserException {
+        Multimedia fetched = null;
+        try (PreparedStatement ps = this.getConnection().prepareStatement(
+                "select file_url, is_video, post_id from multimedia where multimedia_id = ?;");) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                fetched = new Multimedia(id, rs.getString("file_url"),
                         rs.getBoolean("is_video"),
                         postDao.getPostById(rs.getLong("post_id")));
-			}
-			return fetched;
-		}
-	}
+            }
+            return fetched;
+        }
+    }
 
     public void addAllMultimediaToPost(Post post, HashSet<Multimedia> multimedia) throws SQLException, MultimediaException {
         PreparedStatement ps = null;
@@ -130,6 +130,7 @@ public class MultimediaDao extends AbstractDao {
             this.getConnection().setAutoCommit(true);
         }
     }
+
 
     public void insertMultimedia(User user, Multimedia newAvatar) throws SQLException, MultimediaException {
         try{
