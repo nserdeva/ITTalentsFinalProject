@@ -82,8 +82,8 @@
 			<c:if test="${post.taggedPeople.size()>0}">
 with 	
 <c:forEach var="taggedUser" items="${post.taggedPeople}">			
-	${taggedUser.username};
-	</c:forEach>
+	<a target="_blank" href="/showPassport/${taggedUser.userId}">
+						${taggedUser.username}</a>; 	</c:forEach>
 			</c:if>
 			<p>${post.description}
 				<a target="_blank" href="/post/${post.id}"> explore
@@ -102,7 +102,6 @@ ${tag.tag_name};
 			</div>
 			<div class="subContainer">Likes: ${post.likesCount} Dislikes:
 				${post.dislikesCount}</div>
-			</p>
 
 		</div>
 		<br>

@@ -75,7 +75,7 @@ public class ExploreController {
 	@RequestMapping(value = "/showMostPopular", method = RequestMethod.POST)
 	public String showMostPopularFirst(HttpSession session, HttpServletRequest request)
 			throws SQLException, LocationException, CategoryException, PostException, UserException, CommentException {
-		TreeSet<Post> newsfeedPosts = new TreeSet<Post>((p1, p2)-> p2.getLikesCount()-p1.getLikesCount());
+		TreeSet<Post> newsfeedPosts = new TreeSet<Post>((p1, p2)-> (p2.getLikesCount()-p1.getLikesCount())!=0 ? (p2.getLikesCount()-p1.getLikesCount()) : (p2.getDateTime().compareTo(p1.getDateTime()))  );
 		User currentUser = (User) session.getAttribute("user");
 		userDao.setFollowing(currentUser);
 		for (User followed : currentUser.getFollowing()) {
@@ -176,9 +176,10 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/showPassport/{id}", method = RequestMethod.GET)
-	public String getPassportPage(@PathVariable("id") long id, HttpSession session)
+	public String getPassportPage(@PathVariable("id") long id, HttpSession session, HttpServletRequest request)
 			throws CategoryException, UserException {
 		try {
+			User current = (User)session.getAttribute("user");
 			User selectedUser = userDao.getUserById(id);
 			userDao.setFollowers(selectedUser);
 			userDao.setFollowing(selectedUser);
@@ -187,6 +188,11 @@ public class ExploreController {
 			// userDao.setVisitedLocations(selectedUser);
 			// userDao.setWishlistLocations(selectedUser);
 			session.setAttribute("selectedUser", selectedUser);
+			System.out.println("maikati_ follow kotkata_mi" + current.follows(selectedUser));
+            request.setAttribute("thisFollowsSelected", current.follows(selectedUser));
+            request.setAttribute("isMyPassport", current.equals(selectedUser));
+
+
 		} catch (NumberFormatException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

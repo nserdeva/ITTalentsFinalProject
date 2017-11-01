@@ -58,17 +58,19 @@ tr {
 					height="45" align="middle"
 					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
 				${post.dateTime}
-				<a target="_blank" href="/showPost/${post.id}">${post.user.username}</a>
+				<a target="_blank" href="/showPassport/${post.user.userId}">	
+				${post.user.username}</a>;
+				
 				<c:if test="${post.location!=null}">
  was at 
  <a target="_blank" href="/location/${post.location.id}">${post.location.locationName}</a>
 
 				</c:if>
-			</h3>
 			<c:if test="${post.taggedPeople.size()>0}">
 with 	
 <c:forEach var="taggedUser" items="${post.taggedPeople}">			
-	${taggedUser.username};
+	<a target="_blank" href="/showPassport/${taggedUser.userId}">	
+				${taggedUser.username}</a>; 
 	</c:forEach>
 			</c:if>
 			<p>${post.description}			
@@ -114,15 +116,6 @@ ${tag.tag_name};
 				</video>
     <div id="googleMap" style="width:100%;height:400px;"></div>
 
-    <script>
-        function myMap() {
-            var mapProp= {
-                center:new google.maps.LatLng(21.508742,-0.120850),
-                zoom:5,
-            };
-            var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-        }
-    </script>
 
 			<div id="map" style="width:400px;height:400px"></div>
 			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
@@ -169,7 +162,7 @@ var locations = [
 
 <div id="like/dislike" >
 			<button style="background-color: green" id="likeButton"  value="like" onclick="handleLike(${sessionScope.post.id})" >Like</button>
-			<button  style="background-color: green" id="dislikeButton " onclick="handleDislike(${sessionScope.post.id})" >Dislike</button>
+			<button  style="background-color: red" id="dislikeButton " onclick="handleDislike(${sessionScope.post.id})" >Dislike</button>
 		</div>
 
 
@@ -196,10 +189,10 @@ var locations = [
     }
 
     function likePost(postId) {
-        alert('i am in likePost');
+        alert(postId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
-            alert('i am in function ');
+            alert('i am in function');
 
             //when response is received
             if (this.readyState == 4 && this.status == 200) {
@@ -214,7 +207,7 @@ var locations = [
             }
         }
         alert('iii am sending the request');
-        request.open("post", "like/"+postId, true);
+        request.open("POST", "/like/"+postId, true);
         request.send();
         alert('iii made it');
 
@@ -273,9 +266,6 @@ var locations = [
         request.open("post", "undislike/"+postId, true);
         request.send();
     }
-
-
-
 
 
 </script>

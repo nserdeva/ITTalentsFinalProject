@@ -4,6 +4,7 @@ import com.example.WebInitializer;
 import com.example.model.Category;
 import com.example.model.DBManagement.*;
 import com.example.model.Multimedia;
+import com.example.model.Post;
 import com.example.model.Tag;
 import com.example.model.User;
 import com.example.model.exceptions.*;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -254,6 +256,48 @@ public class UserController {
         }
 
         return "settings";
+    }
+    
+
+    @RequestMapping(value = "/follow/{userId}",method = RequestMethod.POST)
+    public void followUser(HttpSession session, HttpServletResponse resp ,@PathVariable("userId") long userId) throws UserException{
+        try {
+            System.out.println("=================================="+userId);
+           
+            User follower=(User)session.getAttribute("user");
+            User followed = userDao.getUserById(userId);
+            userDao.follow(follower, followed);
+            
+            System.out.println(follower.getUsername() + " just followed " + followed.getUsername());
+          //  userDao.setFollowers(followed);
+            resp.setStatus(200);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/unfollow/{userId}",method = RequestMethod.POST)
+    public void unfollowUser(HttpSession session, HttpServletResponse resp ,@PathVariable("userId") long userId) throws UserException{
+        try {
+            System.out.println("=================================="+userId);
+       
+            User follower=(User)session.getAttribute("user");
+            User followed = userDao.getUserById(userId);
+            System.out.println("Follower is null:" + (follower==null) + "Followed is null:" + (followed==null));
+            if(follower!=null & followed!=null) {
+            userDao.unfollow(follower, followed);
+           // userDao.setFollowers(followed);
+            System.out.println(follower.getUsername() + " just unfollowed " + followed.getUsername());
+            
+            resp.setStatus(200);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
     }
     
 }

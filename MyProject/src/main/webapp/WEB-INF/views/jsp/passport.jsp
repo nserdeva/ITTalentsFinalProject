@@ -56,22 +56,20 @@
 
 <style>
 table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 80%;
-            border: 2px solid #909090;
-    
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 80%;
+	border: 2px solid #909090;
 }
 
 td, .th {
-        border: 2px solid #909090;
-    text-align: left;
-    padding: 5px;
+	border: 2px solid #909090;
+	text-align: left;
+	padding: 5px;
 }
 
 tr {
-    background-color: #dddddd;
-    
+	background-color: #dddddd;
 }
 </style>
 
@@ -79,21 +77,38 @@ tr {
 <body>
 
 	<jsp:include page="header.jsp"></jsp:include><br>
-	
-<table align="center">
-<tr>
- <td > 
-				<img src="/user/picture/${sessionScope.selectedUser.userId}" border="3" width="200"
-					height="200" align="middle"
-					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-					${sessionScope.selectedUser.username}
-					Followers: ${sessionScope.selectedUser.followers.size()} Following: ${sessionScope.selectedUser.following.size()}
-					${sessionScope.selectedUser.description}
-					
-				</td>
-				</tr>
-				</table>	
-					<br><br><br>
+
+	<table align="center">
+		<tr>
+			<td><img
+				src="/user/picture/${sessionScope.selectedUser.userId}" border="3"
+				width="200" height="200" align="middle"
+				style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+				${sessionScope.selectedUser.username} <c:if
+					test="${isMyPassport=='false' }">
+					<c:if test="${thisFollowsSelected!='false' }">
+						<div id="follow/unfollow">
+							<button style="background-color: blue" id="followButton"
+								onclick="handleFollow(${sessionScope.selectedUser.userId})">Unfollow</button>
+						</div>
+					</c:if>
+
+					<c:if test="${thisFollowsSelected=='false'}">
+						<div id="follow/unfollow">
+							<button style="background-color: pink" id="followButton"
+								onclick="handleFollow(${sessionScope.selectedUser.userId})">Follow</button>
+						</div>
+					</c:if>
+				</c:if> Followers:
+				<p id="selectedUserFollowers">
+					${sessionScope.selectedUser.followers.size()}</p> Following:
+				${sessionScope.selectedUser.following.size()}
+				${sessionScope.selectedUser.description}</td>
+		</tr>
+	</table>
+	<br>
+	<br>
+	<br>
 	<c:forEach var="post" items="${sessionScope.selectedUser.posts}">
 		<div class="container" width=70%>
 			<div class="floatedbox">
@@ -105,7 +120,7 @@ tr {
 			</div>
 			<h3>
 
-				${post.dateTime} <a target="_blank" href="/showPost/${post.id}">${post.user.username}</a>
+				${post.dateTime} ${post.user.username}
 				<c:if test="${post.location!=null}">
  was at 
  <a target="_blank" href="/location/${post.location.id}">${post.location.locationName}</a>
@@ -114,13 +129,13 @@ tr {
 			</h3>
 			<c:if test="${post.taggedPeople.size()>0}">
 with 	
-<c:forEach var="taggedUser" items="${post.taggedPeople}">			
-	${taggedUser.username};
-	</c:forEach>
+<c:forEach var="taggedUser" items="${post.taggedPeople}">
+					<a target="_blank" href="/showPassport/${taggedUser.userId}">
+						${taggedUser.username}</a>; </h3>
+				</c:forEach>
 			</c:if>
 			<p>${post.description}
-				<a target="_blank" href="/post/${post.id}"> explore
-					more...</a>
+				<a target="_blank" href="/post/${post.id}"> explore more...</a>
 			<div class="subContainer">
 				Categories:
 				<c:forEach var="category" items="${post.categories}">
@@ -144,6 +159,68 @@ ${tag.tag_name};
 		<br>
 		<br>
 	</c:forEach>
+
+
+
+
+	<script>
+
+//follow/unfollow handling
+
+function handleFollow(userId) {
+      var button=document.getElementById("followButton");
+      var title=button.innerHTML;
+      if(title=='Follow'){
+          followUser(userId);
+		}
+		else{
+          unfollowUser(userId);
+		}
+  }
+
+  function followUser(userId) {
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+          //when response is received
+          if (this.readyState == 4 && this.status == 200) {
+              var button = document.getElementById("followButton");
+              button.innerHTML = "Unfollow";
+              document.getElementById("selectedUserFollowers").innerHTML = ${sessionScope.selectedUser.followers.size()}+1;
+              button.style.background='blue';
+          }
+          else
+          if (this.readyState == 4 && this.status == 401) {
+              alert("Sorry, you must log in to like this video!");
+          }
+      }
+      request.open("POST", "/follow/"+userId, true);
+      request.send();
+  }
+
+  function unfollowUser(userId) {
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+          //when response is received
+          if (this.readyState == 4 && this.status == 200) {
+              var button = document.getElementById("followButton");
+              button.innerHTML = "Follow";
+              document.getElementById("selectedUserFollowers").innerHTML = ${sessionScope.selectedUser.followers.size()};
+              button.style.background='pink';
+          }
+          else
+          if (this.readyState == 4 && this.status == 401) {
+              alert("Sorry, you must log in to like this video!");
+          }
+      }
+      request.open("POST", "/unfollow/"+userId, true);
+      request.send();
+  }
+
+
+
+</script>
+
+
 
 	<jsp:include page="footer.jsp"></jsp:include>
 
