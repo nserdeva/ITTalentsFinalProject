@@ -63,14 +63,16 @@ public class LocationDao extends AbstractDao {
 	// tested
 	public Location getLocationByPost(Post post) throws SQLException, LocationException {
 		PreparedStatement ps = this.getConnection()
-				.prepareStatement("select l.location_id, l.latitude, l.longtitude, l.description, l.location_name"
-						+ " from locations as l join posts " + "on posts.location_id=l.location_id"
-						+ " where post_id=?;");
+				.prepareStatement("select locations.location_id,locations.latitude, locations.longtitude," +
+						"locations.description, locations.location_name from locations  " +
+						"join posts on posts.location_id=locations.location_id where posts.post_id=?;");
 		ps.setLong(1, post.getId());
 		ResultSet rs = ps.executeQuery();
-		rs.next();
-		Location location = new Location(rs.getLong("l.location_id"), rs.getString("l.latitude"),
-				rs.getString("l.longtitude"), rs.getString("l.description"), rs.getString("l.location_name"));
+		Location location=null;
+		if(rs.next()){
+			location = new Location(rs.getLong("locations.location_id"), rs.getString("locations.latitude"),
+					rs.getString("locations.longtitude"), rs.getString("locations.description"), rs.getString("locations.location_name"));
+		}
 		return location;
 	}
 
@@ -100,19 +102,34 @@ public class LocationDao extends AbstractDao {
 
     public Location getLocationByName(String locationName) {
 		Location location=null;
-		try{
-			PreparedStatement ps=this.getConnection().prepareStatement("SELECT location_id, latitude, " +
-					"longtitude, description FROM locations WHERE location_name=?");
-			ps.setString(1,locationName);
-			ResultSet rs=ps.executeQuery();
-			rs.next();
-			location=new Location(rs.getLong("location_id"), rs.getString("latitude"),
-					rs.getString("longtitude"),rs.getString("description"),locationName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (LocationException e) {
-			e.printStackTrace();
-		}
+			try{
+				PreparedStatement ps=this.getConnection().prepareStatement("SELECT location_id, latitude, longtitude, description FROM locations WHERE location_name LIKE ?");
+				ps.setString(1,locationName);
+				ResultSet rs=ps.executeQuery();
+				if(rs.next()){
+					location=new Location(rs.getLong("location_id"), rs.getString("latitude"),
+							rs.getString("longtitude"),rs.getString("description"),locationName);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (LocationException e) {
+				e.printStackTrace();
+			}
 		return location;
 	}
+
+    public HashSet<String> getAllLocationNames() {
+		HashSet<String> locations=new HashSet<>();
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT location_name FROM locations");
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()){
+				String locationName=rs.getString("location_name");
+				locations.add(locationName);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return locations;
+    }
 }

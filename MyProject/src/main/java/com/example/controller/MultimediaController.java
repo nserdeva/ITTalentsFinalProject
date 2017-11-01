@@ -45,7 +45,8 @@ public class MultimediaController {
     public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) {
         try {
             Multimedia multimedia=multimediaDao.getMultimediaById(id);
-            File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+multimedia.getUrl());
+            String url=multimedia.getUrl();
+            File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+url);
             OutputStream out = resp.getOutputStream();
             Path path = tempImage.toPath();
             Files.copy(path, out);

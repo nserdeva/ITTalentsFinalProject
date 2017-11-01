@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Marina on 15.10.2017 ??..
@@ -90,31 +91,6 @@ public class MultimediaDao extends AbstractDao {
         return multimedia;
     }*/
 
-    public void addAllMultimediaToPost(Post post, HashSet<Multimedia> multimedia) throws SQLException, MultimediaException {
-        PreparedStatement ps = null;
-        try {
-            for (Multimedia m : multimedia) {
-                this.getConnection().setAutoCommit(false);
-                ps = this.getConnection().prepareStatement(
-                        "insert into multimedia(file_dir,is_video, post_id) values (?,?,?);",
-                        Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1,m.getUrl());
-                ps.setBoolean(2,m.isVideo());
-                ps.setLong(3,post.getId());
-                ps.executeUpdate();
-                ResultSet resultSet=ps.getGeneratedKeys();
-                resultSet.next();
-                m.setId(resultSet.getLong(1));
-                this.getConnection().commit();
-            }
-        } catch (SQLException e) {
-            throw new MultimediaException("Multimedia could not be inserted. Reason: "+e.getMessage());
-        }finally {
-            this.getConnection().rollback();
-            this.getConnection().setAutoCommit(true);
-        }
-    }
-    
     public Multimedia getMultimediaById(long id) throws SQLException, PostException {
 		Multimedia fetched = null;
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
@@ -129,6 +105,31 @@ public class MultimediaDao extends AbstractDao {
 			return fetched;
 		}
 	}
+
+    public void addAllMultimediaToPost(Post post, HashSet<Multimedia> multimedia) throws SQLException, MultimediaException {
+        PreparedStatement ps = null;
+        this.getConnection().setAutoCommit(false);
+        try {
+            for (Multimedia m : multimedia) {
+                ps = this.getConnection().prepareStatement(
+                        "insert into multimedia(file_url,is_video, post_id) values (?,?,?);",
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1,m.getUrl());
+                ps.setBoolean(2,m.isVideo());
+                ps.setLong(3,post.getId());
+                ps.executeUpdate();
+                ResultSet resultSet=ps.getGeneratedKeys();
+                resultSet.next();
+                m.setId(resultSet.getLong(1));
+            }
+            this.getConnection().commit();
+        } catch (SQLException e) {
+            throw new MultimediaException("Multimedia could not be inserted. Reason: "+e.getMessage());
+        }finally {
+            this.getConnection().rollback();
+            this.getConnection().setAutoCommit(true);
+        }
+    }
 
     public void insertMultimedia(User user, Multimedia newAvatar) throws SQLException, MultimediaException {
         try{

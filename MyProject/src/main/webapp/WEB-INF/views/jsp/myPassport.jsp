@@ -70,8 +70,8 @@
 			</c:forEach>
 		</div>
 		<div id="like/dislike" >
-			<button style="background-color: green" id="likeButton ${i}" onclick="handleLike(${post.id},i)" >Like</button>
-			<button style="background-color: green" id="dislikeButton ${i}" onclick="handleDislike(${post.id},i)" >Dislike</button>
+			<button style="background-color: green" id="likeButton " onclick="handleLike(${post.id})" >Like</button>
+			<button style="background-color: green" id="dislikeButton " onclick="handleDislike(${post.id})" >Dislike</button>
 		</div>
 	</div>
 		<br><br>
@@ -106,37 +106,34 @@
 	</script>
 
 <script>
-    function handleLike(postId,i){
-        var str="likeButton ".concat(i);
-        var button = document.getElementById(str);
+    function handleLike(postId){
+        var button = document.getElementById("likeButton");
         var title = button.innerHTML;
         if(title == "Like"){
-            likePost(postId,i);
+            likePost(postId);
         }
         else{
-            unlikePost(postId,i);
+            unlikePost(postId);
         }
     }
 
-    function handleDislike(postId, i) {
-        var str="dislikeButton ".concat(i);
-        var button=document.getElementById(str);
+    function handleDislike(postId) {
+        var button=document.getElementById("dislikeButton");
         var title=button.innerHTML;
         if(title=='Dislike'){
-            dislikePost(postId, i);
+            dislikePost(postId);
 		}
 		else{
-            unDislikePost(postId,i);
+            unDislikePost(postId);
 		}
     }
 
-    function likePost(postId,i) {
+    function likePost(postId) {
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
             if (this.readyState == 4 && this.status == 200) {
-                var str="likeButton ".concat(i);
-                var button = document.getElementById(str);
+                var button = document.getElementById("likeButton");
                 button.innerHTML = "Unlike";
                 button.style.background='red';
             }
@@ -149,13 +146,12 @@
         request.send();
     }
 
-    function unlikePost(postId,i) {
+    function unlikePost(postId) {
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
             if (this.readyState == 4 && this.status == 200) {
-                var str="likeButton ".concat(i);
-                var button = document.getElementById(str);
+                var button = document.getElementById("likeButton");
                 button.innerHTML = "Like";
                 button.style.background='green';
             }
@@ -168,13 +164,12 @@
         request.send();
     }
 
-    function dislikePost(postId,i) {
+    function dislikePost(postId) {
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
             if (this.readyState == 4 && this.status == 200) {
-                var str="dislikeButton ".concat(i);
-                var button = document.getElementById(str);
+                var button = document.getElementById("dislikeButton");
                 button.innerHTML = "Undislike";
                 button.style.background='red';
             }
@@ -187,13 +182,12 @@
         request.send();
     }
 
-    function unDislikePost(postId,i) {
+    function unDislikePost(postId) {
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
             if (this.readyState == 4 && this.status == 200) {
-                var str="dislikeButton ".concat(i);
-                var button = document.getElementById(str);
+                var button = document.getElementById("dislikeButton");
                 button.innerHTML = "Dislike";
                 button.style.background='green';
             }

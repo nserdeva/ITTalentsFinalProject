@@ -33,9 +33,14 @@ public class Post implements Comparable<Post> {
     public Post(User user, String description,Multimedia video, Location location, HashSet<Category> categories,
                 HashSet<Multimedia> multimedia, HashSet<User> taggedPeople, HashSet<Tag> tags) throws PostException {
         this.user = user;
-        this.setDescription(description);
+        this.description=description;
+        this.video=video;
         this.location = location;
         this.categories = categories;
+        for (Category category: this.categories) {
+            System.out.println("POST CONSTRUCTOR SECOND*******************************");
+            System.out.println(category.getId());
+        }
         this.multimedia = multimedia;
         this.taggedPeople = taggedPeople;
         this.tags=tags;
@@ -103,18 +108,9 @@ public class Post implements Comparable<Post> {
     }
 
     public void setDescription(String description) throws PostException {
-        if (description != null && !description.isEmpty()) {
-            if (description.length() < MIN_LENGTH) {
-                throw new PostException(
-                        "Name of the category is too short. It should be more than " + MIN_LENGTH + " symbols.");
-            } else if (description.length() > MAX_LENGTH) {
-                throw new PostException(
-                        "Name of the category is too long. It should be less than" + MAX_LENGTH + " symbols");
-            }
-        } else {
-            throw new PostException("Name of the category should not be empty!");
+        if(description.length()<=MAX_LENGTH){
+            this.description = description;
         }
-        this.description = description;
     }
 
     public int getLikesCount() {
@@ -157,8 +153,8 @@ public class Post implements Comparable<Post> {
         this.categories = categories;
     }
 
-    public Set<Multimedia> getMultimedia() {
-        return  Collections.unmodifiableSet(this.multimedia);
+    public HashSet<Multimedia> getMultimedia() {
+        return  this.multimedia;
     }
 
     public void setMultimedia(HashSet<Multimedia> multimedia) {
@@ -231,7 +227,7 @@ public class Post implements Comparable<Post> {
 
     @Override
     public int compareTo(Post o) {
-        return this.dateTime.compareTo(o.dateTime);
+        return o.dateTime.compareTo(this.dateTime);
 
     }
 }

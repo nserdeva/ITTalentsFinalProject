@@ -33,8 +33,8 @@ post_id INT(11)*/
     }
 
     public Multimedia(String url, boolean isVideo) {
-        this.setUrl(url);
-        this.setVideo(isVideo);
+        this.url=url;
+        this.isVideo=isVideo;
     }
 
     public long getId() {
@@ -50,7 +50,6 @@ post_id INT(11)*/
     }
 
     public void setUrl(String url) {
-        //TODO regex for url
         this.url = url;
     }
 

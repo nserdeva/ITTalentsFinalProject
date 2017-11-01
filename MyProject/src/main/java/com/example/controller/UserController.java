@@ -2,10 +2,7 @@ package com.example.controller;
 
 import com.example.WebInitializer;
 import com.example.model.Category;
-import com.example.model.DBManagement.CategoryDao;
-import com.example.model.DBManagement.MultimediaDao;
-import com.example.model.DBManagement.TagDao;
-import com.example.model.DBManagement.UserDao;
+import com.example.model.DBManagement.*;
 import com.example.model.Multimedia;
 import com.example.model.Tag;
 import com.example.model.User;
@@ -34,6 +31,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Marina on 26.10.2017 ?..
@@ -50,6 +48,8 @@ public class UserController {
     TagDao tagDao;
     @Autowired
     CategoryDao categoryDao;
+    @Autowired
+    LocationDao locationDao;
 
     @RequestMapping(value = "*",method = RequestMethod.GET)
     public String login(Model model){
@@ -80,11 +80,25 @@ public class UserController {
                 session.setAttribute("logged", true);
                 request.setAttribute("isValidData",true);
                 HashSet<String> usernames=userDao.getAllUsernames();
+                for (String name:usernames) {
+                    System.out.println(name);
+                }
                 HashSet<String> tags=tagDao.getAllTags();
+                for (String tag:tags) {
+                    System.out.println(tag);
+                }
                 HashMap<String,Category> categories=categoryDao.getAllCategories();
+                for (Category category: categories.values()) {
+                    System.out.println(category.getId());
+                    System.out.println(category.getName());
+                }
+                Set<String> categoryNames=categories.keySet();
+                HashSet<String> locationNames=locationDao.getAllLocationNames();
+                servletContext.setAttribute("locations",locationNames);
                 servletContext.setAttribute("usernames", usernames);
                 servletContext.setAttribute("tags",tags);
                 servletContext.setAttribute("categories",categories);
+                servletContext.setAttribute("categoryNames",categoryNames);
                 return "myPassport";
             }else{
                 request.setAttribute("isValidData",false);
@@ -228,10 +242,10 @@ public class UserController {
             file.transferTo(f);
             Multimedia newAvatar=new Multimedia(avatarUrl,false);
             multimediaDao.changeAvatar(user, newAvatar); //insert in multimedia table and UPDATE USER HAVE THE NEWLY INSERTED AVATAR
-            //insert in user the new avatar
-            session.setAttribute("avatar", avatarUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
+                    //insert in user the new avatar
+                    session.setAttribute("avatar", avatarUrl);
+                } catch (IOException e) {
+                    e.printStackTrace();
         } catch (MultimediaException e) {
             e.printStackTrace();
         } catch (SQLException e) {

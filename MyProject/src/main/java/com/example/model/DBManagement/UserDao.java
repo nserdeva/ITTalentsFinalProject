@@ -219,7 +219,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		return posts;
 	}
 
-	private HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException, PostException {
+	public HashSet<User> getAllTaggedUsersForPost(Post post) throws SQLException, UserException, PostException {
 		PreparedStatement ps = this.getConnection().prepareStatement(
 				"select u.user_id, u.username, u.password, u.email, u.profile_pic_id, u.description from users as u join tagged_users as tu on(u.user_id = tu.user_id) where post_id = ?;");
 		ps.setLong(1, post.getId());

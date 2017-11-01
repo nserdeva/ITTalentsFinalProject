@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by Marina on 15.10.2017 ??..
@@ -26,12 +24,14 @@ public class PostDao extends AbstractDao{
     LocationDao locationDao;
     @Autowired
     TagDao tagDao;
+    @Autowired
+    CommentDao commentDao;
 
 
     //tested
     public void insertNewPost(Post post) throws SQLException, CategoryException, PostException, MultimediaException, UserException {
+       // this.getConnection().setAutoCommit(false);
         try {
-            this.getConnection().setAutoCommit(false);
             PreparedStatement ps =this.getConnection().prepareStatement(
                     "insert into posts(user_id, description, date_time) value (?,?,now());",
                     Statement.RETURN_GENERATED_KEYS);
@@ -40,10 +40,21 @@ public class PostDao extends AbstractDao{
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
+            System.out.println("/*/*//*/*/*/*/*/*/*   "+rs.getLong(1));
             post.setId(rs.getLong(1));
             post.setDateTime(getTimeStampFromPost(post));
             categoryDao.addAllCategoriesToPost(post, post.getCategories()); //not sure if it is correct this way
-            multimediaDao.addAllMultimediaToPost(post, (HashSet<Multimedia>)post.getMultimedia());
+            if(post.getMultimedia()==null){
+                System.out.println("MULTIMEDIA IS NULL IN POST DAO INSERT POST");
+            }
+            for (Iterator<Multimedia> iterator =post.getMultimedia().iterator(); iterator.hasNext();) {
+                if(iterator.hasNext()){
+                    System.out.println("ITERATOR HAS NEXT");
+                    Multimedia m=iterator.next();
+                    System.out.println(m.getUrl());
+                }
+            }
+            multimediaDao.addAllMultimediaToPost(post, post.getMultimedia());
             if(null!=post.getVideo()){
                 multimediaDao.addVideoToPost(post, post.getVideo());
             }
@@ -51,13 +62,13 @@ public class PostDao extends AbstractDao{
             userDao.addPost(user, post);
             tagDao.addTagsToPost(post, post.getTags());
             this.tagAllUsers(post, post.getTaggedPeople());
-            this.getConnection().commit();
+            //this.getConnection().commit();
         } catch (SQLException e) {
             throw new PostException("Post could not be added. Reason: "+e.getMessage());
-        }finally {
+        }/*finally {
             this.getConnection().rollback();
             this.getConnection().setAutoCommit(true);
-        }
+        }*/
     }
 
     private Timestamp getTimeStampFromPost(Post post) {
@@ -260,12 +271,12 @@ public class PostDao extends AbstractDao{
     }
 
     //tested
-    public HashSet<Post> getPostsForUser(User user) throws SQLException, VisitedLocationException, UserException, PostException, CategoryException, MultimediaException, LocationException {
+    public TreeSet<Post> getPostsForUser(User user) throws SQLException, VisitedLocationException, UserException, PostException, CategoryException, MultimediaException, LocationException, CommentException {
         PreparedStatement ps = this.getConnection().prepareStatement("select post_id, description, " +
                 "likes_count, dislikes_count, date_time from posts where user_id= ?;");
         ps.setLong(1, user.getUserId());
         ResultSet rs = ps.executeQuery();
-        HashSet<Post> posts=new HashSet<Post>();
+        TreeSet<Post> posts=new TreeSet<>();
         while(rs.next()){
             Post post=new Post(rs.getLong("post_id"),
                     rs.getString("description"), rs.getInt("likes_count"),
@@ -274,6 +285,8 @@ public class PostDao extends AbstractDao{
             post.setLocation(locationDao.getLocationByPost(post));
             post.setCategories(categoryDao.getCategoriesForPost(post));
             post.setMultimedia(multimediaDao.getAllMultimediaForPost(post));
+            post.setComments(commentDao.getCommentsForPost(post));
+            post.setTaggedPeople(userDao.getAllTaggedUsersForPost(post));
             posts.add(post);
         }
         return posts;

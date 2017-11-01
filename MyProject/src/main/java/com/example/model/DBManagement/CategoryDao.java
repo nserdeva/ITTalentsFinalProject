@@ -103,8 +103,12 @@ public class CategoryDao extends AbstractDao{
     public void addAllCategoriesToPost(Post post,Set<Category> set) throws CategoryException {
         //TODO IF ENTRY EXISTS- THROWS EXCEPTION!!!
         try {
+            for (Category category : set) {
+                System.out.println("******************"+category.getId());
+            }
             PreparedStatement ps = this.getConnection().prepareStatement("INSERT into posts_categories(post_id, category_id) values (?,?);");
             for (Category category : set) {
+                System.out.println();
                 ps.setLong(1,post.getId());
                 ps.setLong(2,category.getId());
                 ps.addBatch();

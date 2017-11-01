@@ -57,8 +57,7 @@ public class TagDao extends AbstractDao{
     public Tag getTagByTagName(String tagName) {
         Tag tag=null;
         try{
-            PreparedStatement ps=this.getConnection().prepareStatement("SELECT tag_id FROM tags" +
-                    "WHERE tag_name=?");
+            PreparedStatement ps=this.getConnection().prepareStatement("SELECT tag_id FROM tags WHERE tag_name LIKE ?");
             ps.setString(1, tagName);
             ResultSet rs=ps.executeQuery();
             rs.next();
@@ -98,5 +97,5 @@ public class TagDao extends AbstractDao{
         }catch (SQLException e){
             e.printStackTrace();
         }
-    }
+}
 }
