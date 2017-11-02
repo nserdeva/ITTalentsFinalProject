@@ -28,6 +28,8 @@ public class Post implements Comparable<Post> {
     private HashSet<Multimedia> multimedia;
     private HashSet<User> taggedPeople;
     private TreeSet<Comment> comments;
+    private HashSet<Long> peopleLiked;
+    private HashSet<Long> peopleDisliked;
 
     // constructor to be used when putting object in database
     public Post(User user, String description,Multimedia video, Location location, HashSet<Category> categories,
@@ -47,6 +49,8 @@ public class Post implements Comparable<Post> {
         this.likesCount = 0;
         this.dislikesCount = 0;
         this.comments=new TreeSet<>();
+        this.peopleDisliked=new HashSet<>();
+        this.peopleLiked=new HashSet<>();
     }
 
     // constructor to be used when fetching from database
@@ -54,10 +58,10 @@ public class Post implements Comparable<Post> {
         this.id = id;
         this.likesCount = likesCount;
         this.dislikesCount = dislikesCount;
-        this.setDescription(description);
+        this.description=description;
         this.dateTime = dateTime;
         // have to make methods in post dao for:
-        // HashSet<Category> categories, HashSet<Multimedia> multimedia, HashSet<User>, HashSet<Tag>
+        // HashSet<Category> categories, HashSet<Multimedia> multimedia, HashSet<User>, HashSet<Tag>, HashSet<Long> usersLiked/Disliked
     }
 
     public Post(User user, long user_id, String description, int likes_count, int dislikes_count, Timestamp date_time,
@@ -75,6 +79,22 @@ public class Post implements Comparable<Post> {
         if(null!=video){
             this.video = video;
         }
+    }
+
+    public Set<Long> getPeopleLiked() {
+        return Collections.unmodifiableSet(this.peopleLiked);
+    }
+
+    public void setPeopleLiked(HashSet<Long> peopleLiked) {
+        this.peopleLiked = peopleLiked;
+    }
+
+    public Set<Long> getPeopleDisliked() {
+        return Collections.unmodifiableSet(this.peopleDisliked);
+    }
+
+    public void setPeopleDisliked(HashSet<Long> peopleDisliked) {
+        this.peopleDisliked = peopleDisliked;
     }
 
     public long getId() {
@@ -234,4 +254,31 @@ public class Post implements Comparable<Post> {
         return o.dateTime.compareTo(this.dateTime);
     }
 
+    public void addPersonLiked(long userId) {
+        if(this.peopleLiked==null){
+            this.peopleLiked=new HashSet<>();
+        }
+       this.peopleLiked.add(userId);
+    }
+
+    public void removePersonLiked(long userId) {
+        if(this.peopleLiked==null){
+            this.peopleLiked=new HashSet<>();
+        }
+        this.peopleLiked.remove(userId);
+    }
+
+    public void removePersonDisliked(long userId) {
+        if(this.peopleDisliked==null){
+            this.peopleDisliked=new HashSet<>();
+        }
+        this.peopleDisliked.remove(userId);
+    }
+
+    public void addPersonDisliked(long userId) {
+        if(this.peopleDisliked==null){
+            this.peopleDisliked=new HashSet<>();
+        }
+        this.peopleDisliked.add(userId);
+    }
 }

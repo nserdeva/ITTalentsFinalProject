@@ -23,69 +23,68 @@
     opacity: 0.5;
     box-shadow: 0 0 2px 1px rgb(51, 51, 255);
 }
-</style>
-
-</head>
-<body>
-	<jsp:include page="header.jsp"></jsp:include><br>
-
-<style>
 table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 80%;
-            border: 2px solid #909090;
-    
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 80%;
+	border: 2px solid #909090;
+
 }
 
 td, .th {
-        border: 2px solid #909090;
-    text-align: left;
-    padding: 5px;
+	border: 2px solid #909090;
+	text-align: left;
+	padding: 5px;
 }
 
 tr {
-    background-color: #dddddd;
-    
+	background-color: #dddddd;
+
 }
 </style>
-			</head>
+</head>
 <body>
+
+
+	<jsp:include page="header.jsp"></jsp:include><br>
+
 <table align="center">
 <tr >
 <td >
-	<img src="/user/picture/${post.user.userId}" border="3" width="45"
+	<img src="/user/picture/${sessionScope.post.user.userId}" border="3" width="45"
 					height="45" align="middle"
 					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-				${post.dateTime}
-				<a target="_blank" href="/showPost/${post.id}">${post.user.username}</a>
-				<c:if test="${post.location!=null}">
+	${sessionScope.post.dateTime}
+				<a target="_blank" href="/showPost/${sessionScope.post.id}">${sessionScope.post.user.username}</a>
+				<c:if test="${sessionScope.post.location!=null}">
  was at 
- <a target="_blank" href="/location/${post.location.id}">${post.location.locationName}</a>
+ <a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
 
 				</c:if>
 			</h3>
-			<c:if test="${post.taggedPeople.size()>0}">
+			<c:if test="${sessionScope.post.taggedPeople.size()>0}">
 with 	
-<c:forEach var="taggedUser" items="${post.taggedPeople}">			
+<c:forEach var="taggedUser" items="${sessionScope.post.taggedPeople}">
 	${taggedUser.username};
 	</c:forEach>
 			</c:if>
-			<p>${post.description}			
+			<p>${sessionScope.post.description}
 			<div class="subContainer">
 				Categories:
-				<c:forEach var="category" items="${post.categories}">
+				<c:forEach var="category" items="${sessionScope.post.categories}">
 ${category.name};
 </c:forEach>
 			</div>
 			<div class="subContainer">
 				Tags:
-				<c:forEach var="tag" items="${post.tags}">
+				<c:forEach var="tag" items="${sessionScope.post.tags}">
 ${tag.tag_name};
 </c:forEach>
 			</div>
-			<div class="subContainer">Likes: ${post.likesCount} Dislikes:
-				${post.dislikesCount}</div>
+	<div class="subContainer">
+		Likes: <p id="likesCount"> ${sessionScope.post.peopleLiked.size()} </p>
+		Dislikes: <p id="dislikesCount"> ${sessionScope.post.peopleDisliked.size()}  </p>
+	</div>
 			</p>
 
 		</div></td>
@@ -97,54 +96,213 @@ ${tag.tag_name};
 <tr>
  <td > 
  	<c:forEach var="multimediaFile" items="${sessionScope.post.multimedia}">				
-    <a target="_blank" href="/post/multimedia/${multimediaFile.id}"> <img class="image" src="/post/multimedia/${multimediaFile.id}" alt="Paris" style="width:150px"></a>
+    <a target="_blank" href="/post/multimedia/${multimediaFile.id}"> <img class="image" src="/post/multimedia/${multimediaFile.id}" style="width:150px"></a>
 	</c:forEach>
-	
-				    <a target="_blank" href="/getVideo/${sessionScope.post.video.url}"> <video controls="controls" class="image"> 
-				    <source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4" style="width:150px">>
-				     </a>
-				
    </td>
   <tr>
 </table>
+	<c:if test="${sessionScope.post.video.url != null}">
+		<video width="320" height="240" controls="controls">
 
-<video width="320" height="240" controls="controls">
-					<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4">
-					Your browser does not support the video tag.
-				</video>
-    <div id="googleMap" style="width:100%;height:400px;"></div>
+			<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4">
+		Your browser does not support the video tag.
+		</video>
+	</c:if>
 
-    <script>
-        function myMap() {
-            var mapProp= {
-                center:new google.maps.LatLng(21.508742,-0.120850),
-                zoom:5,
-            };
-            var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+	<c:if test="${sessionScope.post.location !=null}">
+		<div id="map" style="width:400px;height:400px"></div>
+		<input type = "hidden" id = "latitude"  value="${sessionScope.post.location.latitude}" />
+		<input type = "hidden" id = "longtitude" value="${sessionScope.post.location.longtitude}" />
+	</c:if>
+
+	${sessionScope.post.location.latitude}
+	${sessionScope.post.location.longtitude}<br>
+
+	<div id="like/dislike" >
+		<c:set var="containsLiked" value="false" />
+		<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
+			<c:if test="${personLiked eq sessionScope.user.userId}">
+				<c:set var="containsLiked" value="true" />
+			</c:if>
+		</c:forEach>
+
+		<c:if test="${containsLiked}">
+			<button style="background-color: red" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Unlike</button>
+		</c:if>
+		<c:if test="${!containsLiked}">
+			<button style="background-color: green" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Like</button>
+		</c:if>
+
+		<c:set var="containsDisliked" value="false" />
+		<c:forEach var="personDisliked" items="${sessionScope.post.peopleDisliked}">
+			<c:if test="${personDisliked eq sessionScope.user.userId}">
+				<c:set var="contains" value="true" />
+			</c:if>
+		</c:forEach>
+
+		<c:if test="${containsDisliked}">
+			<button  style="background-color: red" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
+		</c:if>
+		<c:if test="${!containsDisliked}">
+			<button  style="background-color: green" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
+		</c:if>
+	</div>
+
+	<jsp:include page="footer.jsp"></jsp:include>
+
+
+<script>
+    function handleLike(postId){
+        var button = document.getElementById("likeButton");
+        var title = button.innerHTML;
+        if(title == 'Like'){
+            alert("I WANT TO LIKE THE POST");
+			likePost(postId);
         }
-    </script>
+        else{
+			alert("I WANT TO UNLIKE THE POST");
+			unlikePost(postId);
+        }
+    }
 
-			<div id="map" style="width:400px;height:400px"></div>
-			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
-			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />
-			ai stiga we
-			${sessionScope.location.latitude}
-		    ${sessionScope.location.longtitude}<br>
-	
-	
-<script type="text/javascript">
-      
-var latitudeString = document.getElementById("latitude").value;
-var longtitudeString = document.getElementById("longtitude").value;
+    function handleDislike(postId){
+        var button = document.getElementById("dislikeButton");
+        var title = button.innerHTML;
+        alert("AMA VLIZASH LI TUK?");
+        if(title == "Dislike"){
+            alert("I WANT TO DISLIKE THE POST");
+            dislikePost(postId);
+        }
+        else{
+            alert("I WANT TO UNDISLIKE THE POST");
+            undislikePost(postId);
+        }
+    }
 
-var latitude = parseFloat(latitudeString);
-var longtitude = parseFloat(longtitudeString);
+    function likePost(postId) {
+        alert("I WANT TO LIKE POST "+ postId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var likeButton = document.getElementById("likeButton");
+                likeButton.innerHTML = "Unlike";
+                likeButton.style.background='red';
+				alert("I JUST LIKED POST AND DISLIKED ANOTHER ONE");
+				var dislikeButton=document.getElementById("dislikeButton");
+				dislikeButton.innerHTML="Dislike";
+				dislikeButton.style.background="green";
+				document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
 
-      
-var locations = [
-    ['', latitude, longtitude, 4],
-];
-      
+            }
+            else if(this.readyState == 4 && this.status == 201){
+                var likeButton = document.getElementById("likeButton");
+                likeButton.innerHTML = "Unlike";
+                likeButton.style.background='red';
+                alert("I JUST LIKED POST AND CREATED NEW ENTRY");
+                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+            }
+			else if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you cannot like this video!");
+            }
+        }
+        request.open("post", "/like/"+postId, true);
+        request.send();
+    }
+
+    function unlikePost(postId) {
+        alert("I WANT TO UNLIKE POST "+ postId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var button = document.getElementById("likeButton");
+                button.innerHTML = "Like";
+                button.style.background='green';
+                alert("I JUST UNLIKED A POST AND DELETED THE ENTRY");
+                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("post", "/unlike/"+postId, true);
+        request.send();
+    }
+
+    function dislikePost(postId) {
+        alert("I WANT TO DISLIKE POST "+ postId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var dislikeButton = document.getElementById("dislikeButton");
+                dislikeButton.innerHTML = "Undislike";
+                dislikeButton.style.background='red';
+                var likeButton=document.getElementById("likeButton");
+                likeButton.innerHTML="Like";
+                likeButton.style.background="green";
+                alert("I JUST DISLIKED A POST AND UPDATED THE ENTRY");
+                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+            }
+            else if(this.readyState == 4 && this.status == 201){
+                var dislikeButton = document.getElementById("dislikeButton");
+                dislikeButton.innerHTML = "Undislike";
+                dislikeButton.style.background='red';
+                alert("I JUST DISLIKED A POST AND ADDED A NEW ENTRY");
+                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to dislike this video!");
+            }
+        }
+        request.open("post", "/dislike/"+postId, true);
+        request.send();
+    }
+
+    function undislikePost(postId) {
+        alert("I WANT TO UNDISLIKE POST "+ postId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var button = document.getElementById("dislikeButton");
+                button.innerHTML = "Dislike";
+                button.style.background='green';
+                alert("I JUST UNDISLIKED A POST AND DELETED THE NEW ENTRY");
+                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("post", "/undislike/"+postId, true);
+        request.send();
+    }
+</script>
+
+	<script type="text/javascript">
+
+        var latitudeString = document.getElementById("latitude").value;
+        var longtitudeString = document.getElementById("longtitude").value;
+
+        var latitude = parseFloat(latitudeString);
+        var longtitude = parseFloat(longtitudeString);
+
+
+        var locations = [
+            ['', latitude, longtitude, 4],
+        ];
+
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
             center: new google.maps.LatLng(latitude, longtitude),
@@ -166,121 +324,6 @@ var locations = [
         }
 	</script>
 
-
-<div id="like/dislike" >
-			<button style="background-color: green" id="likeButton"  value="like" onclick="handleLike(${sessionScope.post.id})" >Like</button>
-			<button  style="background-color: green" id="dislikeButton " onclick="handleDislike(${sessionScope.post.id})" >Dislike</button>
-		</div>
-
-
-<script>
-    function handleLike(postId){
-    	alert(document.getElementById("likeButton").value);
-        if( document.getElementById("likeButton").value == "like"){
-            likePost(postId);
-        }
-        else{
-            unlikePost(postId);
-        }
-    }
-
-    function handleDislike(postId) {
-        var button=document.getElementById("dislikeButton");
-        var title=button.innerHTML;
-        if(title=='Dislike'){
-            dislikePost(postId);
-		}
-		else{
-            unDislikePost(postId);
-		}
-    }
-
-    function likePost(postId) {
-        alert('i am in likePost');
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            alert('i am in function ');
-
-            //when response is received
-            if (this.readyState == 4 && this.status == 200) {
-                var button = document.getElementById("likeButton");
-                button.innerHTML = "Unlike";
-                button.style.background='red';
-                alert('iii made it to the right if');
-            }
-            else
-            if (this.readyState == 4 && this.status == 401) {
-                alert("Sorry, you must log in to like this video!");
-            }
-        }
-        alert('iii am sending the request');
-        request.open("post", "like/"+postId, true);
-        request.send();
-        alert('iii made it');
-
-    }
-
-    function unlikePost(postId) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            //when response is received
-            if (this.readyState == 4 && this.status == 200) {
-                var button = document.getElementById("likeButton");
-                button.innerHTML = "Like";
-                button.style.background='green';
-            }
-            else
-            if (this.readyState == 4 && this.status == 401) {
-                alert("Sorry, you must log in to like this video!");
-            }
-        }
-        request.open("post", "unlike/"+postId, true);
-        request.send();
-    }
-
-    function dislikePost(postId) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            //when response is received
-            if (this.readyState == 4 && this.status == 200) {
-                var button = document.getElementById("dislikeButton");
-                button.innerHTML = "Undislike";
-                button.style.background='red';
-            }
-            else
-            if (this.readyState == 4 && this.status == 401) {
-                alert("Sorry, you must log in to like this video!");
-            }
-        }
-        request.open("post", "dislike/"+postId, true);
-        request.send();
-    }
-
-    function unDislikePost(postId) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            //when response is received
-            if (this.readyState == 4 && this.status == 200) {
-                var button = document.getElementById("dislikeButton");
-                button.innerHTML = "Dislike";
-                button.style.background='green';
-            }
-            else
-            if (this.readyState == 4 && this.status == 401) {
-                alert("Sorry, you must log in to like this video!");
-            }
-        }
-        request.open("post", "undislike/"+postId, true);
-        request.send();
-    }
-
-
-
-
-
-</script>
-
-	<jsp:include page="footer.jsp"></jsp:include>
 
 </body>
 </html>

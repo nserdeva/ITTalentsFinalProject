@@ -29,6 +29,8 @@ public class UserDao extends AbstractDao { // operates with the following tables
 	CommentDao commentDao;
 	@Autowired
 	TagDao tagDao;
+	@Autowired
+	PostDao postDao;
 
 
 	// ::::::::: inserting user in db :::::::::
@@ -213,6 +215,10 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				post.setTaggedPeople(this.getAllTaggedUsersForPost(post));
 				post.setComments(commentDao.getCommentsForPost(post));
 				post.setTags(tagDao.getTagsForPost(post));
+				post.setPeopleLiked(postDao.getAllPeopleLiked(post));
+				post.setPeopleDisliked(postDao.getAllPeopleDisliked(post));
+				System.out.println("::::::::::::::FETCHED PEOPLE LIKED: "+post.getPeopleLiked());
+				System.out.println("::::::::::::::::::FETCHED PEOPLE DISLIKED "+post.getPeopleDisliked());
 				posts.add(post);
 			}
 		}

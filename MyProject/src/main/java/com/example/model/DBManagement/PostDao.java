@@ -240,10 +240,45 @@ public class PostDao extends AbstractDao{
             post.setTaggedPeople(userDao.getAllTaggedUsersForPost(post));
             post.setVideo(multimediaDao.getVideoForPost(post));
             post.setTags(tagDao.getTagsForPost(post));
+            post.setPeopleDisliked(getAllPeopleDisliked(post));
+            post.setPeopleLiked(getAllPeopleLiked(post));
             posts.add(post);
         }
         return posts;
     }
+
+	public HashSet<Long> getAllPeopleLiked(Post post) {
+		HashSet<Long> peopleLiked=new HashSet<>();
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT user_id FROM posts_reactions WHERE post_id=? AND reaction=1");
+			ps.setLong(1,post.getId());
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()){
+				long currentId=rs.getLong("user_id");
+				peopleLiked.add(currentId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("PRINTING THE SIZE OF PEOPLE LIKED COLLECTION "+peopleLiked.size());
+		return peopleLiked;
+	}
+
+	public HashSet<Long> getAllPeopleDisliked(Post post) {
+		HashSet<Long> peopleDisliked=new HashSet<>();
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT user_id FROM posts_reactions WHERE post_id=? AND reaction=0");
+			ps.setLong(1,post.getId());
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()){
+				long currentId=rs.getLong("user_id");
+				peopleDisliked.add(currentId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return peopleDisliked;
+	}
 
 	// tested
 	public void decrementDislikes(Post post) throws SQLException, PostException {
@@ -343,4 +378,54 @@ public class PostDao extends AbstractDao{
 		return filteredPosts;
 	}
 
+	public boolean existsReaction(long postId, long userId) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT COUNT(*) FROM posts_reactions WHERE post_id = ? AND user_id=? ");
+			ps.setLong(1,postId);
+			ps.setLong(2,userId);
+			ResultSet rs=ps.executeQuery();
+			rs.next();
+			if(rs.getInt("COUNT(*)")>0){
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public void updateReaction(boolean reaction, long postId, long userId) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("UPDATE posts_reactions SET reaction=? WHERE post_id=? AND user_id=? ");
+			ps.setBoolean(1,reaction);
+			ps.setLong(2,postId);
+			ps.setLong(3,userId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void insertReaction(boolean b, long id, long user) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("INSERT INTO posts_reactions(post_id, reaction, user_id) VALUE (?,?,?)");
+			ps.setLong(1,id);
+			ps.setBoolean(2,b);
+			ps.setLong(3,user);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteReaction(long id, long user) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("DELETE FROM posts_reactions WHERE post_id=? AND user_id=?");
+			ps.setLong(1,id);
+			ps.setLong(2,user);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

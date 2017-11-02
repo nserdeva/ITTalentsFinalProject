@@ -158,6 +158,8 @@ public class ExploreController {
 			selectedPost.setLocation(locationDao.getLocationByPost(selectedPost));
 			selectedPost.setTaggedPeople(userDao.getAllTaggedUsersForPost(selectedPost));
 			selectedPost.setComments(commentDao.getCommentsForPost(selectedPost));
+			selectedPost.setPeopleDisliked(postDao.getAllPeopleDisliked(selectedPost));
+			selectedPost.setPeopleLiked(postDao.getAllPeopleLiked(selectedPost));
 			session.setAttribute("post", selectedPost);
 		} catch (NumberFormatException | SQLException e) {
 			// TODO Auto-generated catch block
