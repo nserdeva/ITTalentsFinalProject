@@ -17,7 +17,14 @@
       <name>xuggle_repo</name>
       <url>http://www.dcm4che.org/maven2/</url>
     </repository>
+   
+     <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+    
   </repositories>
+  
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -83,6 +90,13 @@
 			<artifactId>tika-core</artifactId>
 			<version>1.16</version>
 		</dependency>
+
+
+<dependency>
+    <groupId>com.github.amdelamar</groupId>
+    <artifactId>jhash</artifactId>
+    <version>v1.1.0</version>
+</dependency>
 
 
 
