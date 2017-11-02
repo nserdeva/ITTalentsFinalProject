@@ -52,6 +52,11 @@ public class PostController {
                              @RequestParam("categories") String categoryNames, @RequestParam("image1") MultipartFile image1,
                              @RequestParam("image2") MultipartFile image2, @RequestParam("image3") MultipartFile image3,
                              @RequestParam("video") MultipartFile video1, HttpSession session){
+        if("".equals(description) && "".equals(locationName) && "".equals(taggedPeople)
+                && "".equals(tagNames) && "".equals(categoryNames) && image1.getSize()==0 && image2.getSize()==0
+                && image3.getSize()==0 && video1.getSize()==0){
+            return "redirect:/myPassport";
+        }
         Post post=null;
         try {
             User user=(User)session.getAttribute("user");
@@ -59,6 +64,9 @@ public class PostController {
             HashSet<User> taggedUsers=getTaggedUsers(taggedPeople);
             HashSet<Tag> tags=getTags(tagNames);
             HashSet<Category> categories=getCategories(categoryNames);
+            if(location==null && taggedUsers.size()==0 && categories.size()==0){
+                return "redirect:/myPassport";
+            }
             HashSet<Multimedia> multimedia= getImages(image1, image2, image3);
             Multimedia video=null;
             if(video1.getSize() != 0){
@@ -98,9 +106,13 @@ public class PostController {
             for (int i = 0; i < locationNames.length; i++) {
                 String locationName=locationNames[i];
                 if(!"".equals(locationName)){
+                    locationName=locationName.replace("]","");
+                    locationName=locationName.replace("[","");
                     locationName=locationName.trim();
-                    location = locationDao.getLocationByName(locationName);
-                    System.out.println("************************ADDED LOCATION: "+location.getLocationName());
+                    if(locationDao.existsLocation(locationName)){
+                        location = locationDao.getLocationByName(locationName);
+                        System.out.println("************************ADDED LOCATION: "+location.getLocationName());
+                    }
                 }
             }
         }
@@ -157,6 +169,8 @@ public class PostController {
                 String categoryName=splitCategories[i];
                 if(!"".equals(categoryName)){
                     categoryName=categoryName.trim();
+                    categoryName=categoryName.replace("]","");
+                    categoryName=categoryName.replace("[","");
                     HashMap<String,Category> applicationScopeCategories=(HashMap<String, Category>)servletContext.getAttribute("categories");
                     if(applicationScopeCategories.containsKey(categoryName)){
                         Category category=applicationScopeCategories.get(categoryName);
@@ -178,6 +192,8 @@ public class PostController {
             for (int i = 0; i < splitTags.length; i++) {
                 String tagName = splitTags[i];
                 tagName=tagName.trim();
+                tagName=tagName.replace("]","");
+                tagName=tagName.replace("[","");
                 if (!"".equals(tagName)) {
                     if (((HashSet<String>) servletContext.getAttribute("tags")).contains(tagName)) {
                         Tag tag = tagDao.getTagByTagName(tagName);
@@ -201,10 +217,14 @@ public class PostController {
             for (int i = 0; i < splitUsernames.length; i++) {
                 try {
                     String currentUsername=splitUsernames[i];
+                    currentUsername=currentUsername.replace("]","");
+                    currentUsername=currentUsername.replace("[","");
                     currentUsername=currentUsername.trim();
                     if(!"".equals(currentUsername)){
-                        User user=userDao.getUserByUsername(currentUsername);
-                        users.add(user);
+                        if(userDao.existsUsername(currentUsername)){
+                            User user=userDao.getUserByUsername(currentUsername);
+                            users.add(user);
+                        }
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();

@@ -30,14 +30,23 @@ public class PostDao extends AbstractDao{
 	// tested
 	public void insertNewPost(Post post)
 			throws SQLException, CategoryException, PostException, MultimediaException, UserException {
+		this.getConnection().setAutoCommit(false);
+		PreparedStatement ps=null;
 		try {
-			this.getConnection().setAutoCommit(false);
-			PreparedStatement ps = this.getConnection().prepareStatement(
-					"insert into posts(user_id, description, date_time, location_id) value (?,?,now(),?);",
-					Statement.RETURN_GENERATED_KEYS);
-			ps.setLong(1, post.getUser().getUserId());
-			ps.setString(2, post.getDescription());
-			ps.setLong(3,post.getLocation().getId());
+			if(post.getLocation()==null){
+				ps = this.getConnection().prepareStatement(
+						"insert into posts(user_id, description, date_time) value (?,?,now());",
+						Statement.RETURN_GENERATED_KEYS);
+				ps.setLong(1, post.getUser().getUserId());
+				ps.setString(2, post.getDescription());
+			}else{
+				ps = this.getConnection().prepareStatement(
+						"insert into posts(user_id, description, date_time, location_id) value (?,?,now(),?);",
+						Statement.RETURN_GENERATED_KEYS);
+				ps.setLong(1, post.getUser().getUserId());
+				ps.setString(2, post.getDescription());
+				ps.setLong(3,post.getLocation().getId());
+			}
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();

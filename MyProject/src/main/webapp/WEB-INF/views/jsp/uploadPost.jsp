@@ -9,7 +9,7 @@
     <title>Wanderlust - Register</title>
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>">
     <link rel="stylesheet" href="<c:url value="/css/awesomplete.css"/>" type="text/css"/>
-    <script src="<c:url value="/js/awesomplete.js" />" type ="text/javascript" async></script>
+    <script src="<c:url value="/js/awesomplete.js" />" type ="text/javascript" ></script>
 
 </head>
 <body>
@@ -19,7 +19,7 @@
 <form name="newPost" class="w3-container" action="/uploadPost" method="post" enctype="multipart/form-data">
     Description: <textarea  name="description" rows="4" cols="50"></textarea> <br>
     Location:
-    <input name="location" />
+    <input name="location" data-list="${applicationScope.locations}"/>
     <br><br>
     Tag people:
     <input name="taggedPeople" data-list="${applicationScope.usernames}" data-multiple-taggedPeople />
@@ -28,15 +28,7 @@
     <input name="tags" data-list="${applicationScope.tags}" data-multiple-tags />
     <br> <br>
     Add categories:
-    <div class="w3-dropdown-hover">
-        <button class="w3-button w3-black">Categories</button>
-        <select id="categoriesDropdown" class="w3-dropdown-content w3-bar-block w3-border" onchange="addCategory()">
-            <c:forEach var="category" items="${applicationScope.categories}">
-                <option value="${category.key}"> ${category.key} </option>
-            </c:forEach>
-        </select>
-    </div>
-    <input type="text" name="categories" id="chosenCat" value="" style="width: 800px" readonly>
+    <input name="categories" data-list="${applicationScope.categories.keySet()}" data-multiple-categories />
     <br>
 
     Upload image: <input type="file" name="image1" accept="image/*"/><br>
@@ -80,6 +72,21 @@
     });
 
     new Awesomplete('input[data-multiple-tags]', {
+        filter: function(text, input) {
+            return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
+        },
+
+        item: function(text, input) {
+            return Awesomplete.ITEM(text, input.match(/[^,]*$/)[0]);
+        },
+
+        replace: function(text) {
+            var before = this.input.value.match(/^.+,\s*|/)[0];
+            this.input.value = before + text + ", ";
+        }
+    });
+
+    new Awesomplete('input[data-multiple-categories]', {
         filter: function(text, input) {
             return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
         },

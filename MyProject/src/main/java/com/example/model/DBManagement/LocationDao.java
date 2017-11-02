@@ -132,4 +132,18 @@ public class LocationDao extends AbstractDao {
 		}
 		return locations;
     }
+
+	public boolean existsLocation(String locationName) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT COUNT(*) FROM locations WHERE location_name LIKE ?");
+			ps.setString(1,locationName);
+			ResultSet rs=ps.executeQuery();
+			if(rs.getInt("COUNT(*)")>0){
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
