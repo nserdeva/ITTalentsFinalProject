@@ -33,10 +33,11 @@ public class PostDao extends AbstractDao{
 		try {
 			this.getConnection().setAutoCommit(false);
 			PreparedStatement ps = this.getConnection().prepareStatement(
-					"insert into posts(user_id, description, date_time) value (?,?,now());",
+					"insert into posts(user_id, description, date_time, location_id) value (?,?,now(),?);",
 					Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, post.getUser().getUserId());
 			ps.setString(2, post.getDescription());
+			ps.setLong(3,post.getLocation().getId());
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();

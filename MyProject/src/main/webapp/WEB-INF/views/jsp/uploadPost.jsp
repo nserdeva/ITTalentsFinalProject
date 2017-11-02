@@ -19,7 +19,7 @@
 <form name="newPost" class="w3-container" action="/uploadPost" method="post" enctype="multipart/form-data">
     Description: <textarea  name="description" rows="4" cols="50"></textarea> <br>
     Location:
-    <input name="location"  />
+    <input name="location" />
     <br><br>
     Tag people:
     <input name="taggedPeople" data-list="${applicationScope.usernames}" data-multiple-taggedPeople />

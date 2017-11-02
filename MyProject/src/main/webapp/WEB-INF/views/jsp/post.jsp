@@ -84,8 +84,8 @@
 				</c:forEach>
 			</div>
 			<div class="subContainer">
-				Likes: <p id="likesCount"> ${sessionScope.post.peopleLiked.size()} </p>
-				Dislikes: <p id="dislikesCount"> ${sessionScope.post.peopleDisliked.size()}  </p>
+				Likes: <p id="likesCount">${sessionScope.post.peopleLiked.size()}</p>
+				Dislikes: <p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
 			</div>
 			</p>
 
@@ -136,7 +136,7 @@
 	<c:set var="containsDisliked" value="false" />
 	<c:forEach var="personDisliked" items="${sessionScope.post.peopleDisliked}">
 		<c:if test="${personDisliked eq sessionScope.user.userId}">
-			<c:set var="contains" value="true" />
+			<c:set var="containsDisliked" value="true" />
 		</c:if>
 	</c:forEach>
 
@@ -192,17 +192,16 @@
                 var dislikeButton=document.getElementById("dislikeButton");
                 dislikeButton.innerHTML="Dislike";
                 dislikeButton.style.background="green";
-                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
-                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
-
+                document.getElementById("likesCount").innerHTML=request.responseText;
             }
             else if(this.readyState == 4 && this.status == 201){
-                var likeButton = document.getElementById("likeButton");
-                likeButton.innerHTML = "Unlike";
-                likeButton.style.background='red';
+                var likeButton1 = document.getElementById("likeButton");
+                likeButton1.innerHTML = "Unlike";
+                likeButton1.style.background='red';
                 alert("I JUST LIKED POST AND CREATED NEW ENTRY");
-                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
-                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+                alert(${sessionScope.post.peopleDisliked.size()});
+                alert(document.getElementById("likesCount").innerHTML);
+                document.getElementById("likesCount").innerHTML=request.responseText;
             }
             else if (this.readyState == 4 && this.status == 401) {
                 alert("Sorry, you cannot like this video!");
@@ -222,8 +221,7 @@
                 button.innerHTML = "Like";
                 button.style.background='green';
                 alert("I JUST UNLIKED A POST AND DELETED THE ENTRY");
-                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
-                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+                document.getElementById("likesCount").innerHTML=request.responseText;
             }
             else
             if (this.readyState == 4 && this.status == 401) {
@@ -247,16 +245,14 @@
                 likeButton.innerHTML="Like";
                 likeButton.style.background="green";
                 alert("I JUST DISLIKED A POST AND UPDATED THE ENTRY");
-                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
-                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+                document.getElementById("dislikesCount").innerHTML=request.responseText;
             }
             else if(this.readyState == 4 && this.status == 201){
-                var dislikeButton = document.getElementById("dislikeButton");
-                dislikeButton.innerHTML = "Undislike";
-                dislikeButton.style.background='red';
+                var dislikeButton1 = document.getElementById("dislikeButton");
+                dislikeButton1.innerHTML = "Undislike";
+                dislikeButton1.style.background='red';
                 alert("I JUST DISLIKED A POST AND ADDED A NEW ENTRY");
-                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
-                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+                document.getElementById("dislikesCount").innerHTML=request.responseText;
             }
             else
             if (this.readyState == 4 && this.status == 401) {
@@ -277,8 +273,7 @@
                 button.innerHTML = "Dislike";
                 button.style.background='green';
                 alert("I JUST UNDISLIKED A POST AND DELETED THE NEW ENTRY");
-                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
-                document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
+                document.getElementById("dislikesCount").innerHTML=request.responseText;
             }
             else
             if (this.readyState == 4 && this.status == 401) {

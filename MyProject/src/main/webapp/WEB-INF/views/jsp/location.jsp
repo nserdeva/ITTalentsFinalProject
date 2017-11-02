@@ -76,16 +76,6 @@ tr {
 
     <div id="googleMap" style="width:100%;height:400px;"></div>
 
-    <script>
-        function myMap() {
-            var mapProp= {
-                center:new google.maps.LatLng(21.508742,-0.120850),
-                zoom:5,
-            };
-            var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-        }
-    </script>
-
 			<div id="map" style="width:400px;height:400px"></div>
 			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
 			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />
