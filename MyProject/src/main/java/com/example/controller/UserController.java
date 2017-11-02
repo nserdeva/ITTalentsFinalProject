@@ -70,7 +70,7 @@ public class UserController {
 			throws NoSuchAlgorithmException, BadOperationException, InvalidHashException {
 		String username = request.getParameter("user");
 		String password = request.getParameter("pass");
-		// TODO HASHING
+
 		try {
 
 			// WARNING

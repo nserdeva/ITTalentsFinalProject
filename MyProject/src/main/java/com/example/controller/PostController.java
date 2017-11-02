@@ -65,7 +65,8 @@ public class PostController {
             }
             post=new Post(user,description,video,location,categories,multimedia,taggedUsers,tags);
             postDao.insertNewPost(post);
-            user.setPosts(postDao.getPostsForUser(user));
+            //user.setPosts(postDao.getPostsForUser(user));
+            userDao.setPosts(user);
         } catch (PostException e) {
             e.printStackTrace();
         } catch (CategoryException e) {
@@ -76,9 +77,7 @@ public class PostController {
             e.printStackTrace();
         } catch (MultimediaException e) {
             e.printStackTrace();
-        } catch (VisitedLocationException e) {
-            e.printStackTrace();
-        } catch (LocationException e) {
+        }  catch (LocationException e) {
             e.printStackTrace();
         } catch (CommentException e) {
             e.printStackTrace();
@@ -86,7 +85,7 @@ public class PostController {
         //put everything in database
         //reload posts
         //return to my profile
-        return "myPassport";
+        return "passport";
     }
 
     private Location getLocation(String locationInput) {

@@ -101,8 +101,8 @@ tr {
 					</c:if>
 				</c:if> Followers:
 				<p id="selectedUserFollowers">
-					${sessionScope.selectedUser.followers.size()}</p> Following:
-				${sessionScope.selectedUser.following.size()}
+					${sessionScope.selectedUser.followers.size()}</p> <br> Following:
+				${sessionScope.selectedUser.following.size()} <br>
 				${sessionScope.selectedUser.description}</td>
 		</tr>
 	</table>
@@ -130,8 +130,8 @@ tr {
 			<c:if test="${post.taggedPeople.size()>0}">
 with 	
 <c:forEach var="taggedUser" items="${post.taggedPeople}">
-					<a target="_blank" href="/showPassport/${taggedUser.userId}">
-						${taggedUser.username}</a>; </h3>
+	<a target="_blank" href="/showPassport/${taggedUser.userId}">
+			${taggedUser.username}</a>;
 				</c:forEach>
 			</c:if>
 			<p>${post.description}

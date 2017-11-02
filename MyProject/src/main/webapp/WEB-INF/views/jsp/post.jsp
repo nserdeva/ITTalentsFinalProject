@@ -55,7 +55,8 @@
 				 height="45" align="middle"
 				 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
 			${sessionScope.post.dateTime}
-			<a target="_blank" href="/showPost/${sessionScope.post.id}">${sessionScope.post.user.username}</a>
+				<a target="_blank" href="/showPassport/${sessionScope.post.user.userId}">
+				${sessionScope.post.user.username}</a>
 			<c:if test="${sessionScope.post.location!=null}">
 				was at
 				<a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
@@ -65,7 +66,8 @@
 			<c:if test="${sessionScope.post.taggedPeople.size()>0}">
 				with
 				<c:forEach var="taggedUser" items="${sessionScope.post.taggedPeople}">
-					${taggedUser.username};
+					<a target="_blank" href="/showPassport/${taggedUser.userId}">
+					${taggedUser.username}</a>;
 				</c:forEach>
 			</c:if>
 			<p>${sessionScope.post.description}
@@ -115,8 +117,6 @@
 	<input type = "hidden" id = "longtitude" value="${sessionScope.post.location.longtitude}" />
 </c:if>
 
-${sessionScope.post.location.latitude}
-${sessionScope.post.location.longtitude}<br>
 
 <div id="like/dislike" >
 	<c:set var="containsLiked" value="false" />

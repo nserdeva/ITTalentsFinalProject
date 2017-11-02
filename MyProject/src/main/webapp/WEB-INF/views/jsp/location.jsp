@@ -89,9 +89,7 @@ tr {
 			<div id="map" style="width:400px;height:400px"></div>
 			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
 			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />
-			ai stiga we
-			${sessionScope.location.latitude}
-		    ${sessionScope.location.longtitude}<br>
+
 	<jsp:include page="footer.jsp"></jsp:include>
 	
 	
