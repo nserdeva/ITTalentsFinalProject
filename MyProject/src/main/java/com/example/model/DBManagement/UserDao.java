@@ -60,7 +60,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 		try (PreparedStatement ps = this.getConnection()
 				.prepareStatement("select count(*) as count from users where username = ? and password = ?;")) {
 			ps.setString(1, username);
-			ps.setString(2, password); // hashing required
+			ps.setString(2, password); 
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			return rs.getInt("count") > 0;

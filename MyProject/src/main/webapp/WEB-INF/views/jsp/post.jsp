@@ -1,154 +1,154 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+		 pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<title>View Adventure</title>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<title>View Adventure</title>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
 			type="text/javascript"></script>
 
-<style>
-.image{
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 5px;
-    width: 150px;
-}
+	<style>
+		.image{
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			padding: 5px;
+			width: 150px;
+		}
 
-.image:hover {
-    opacity: 0.5;
-    box-shadow: 0 0 2px 1px rgb(51, 51, 255);
-}
-table {
-	font-family: arial, sans-serif;
-	border-collapse: collapse;
-	width: 80%;
-	border: 2px solid #909090;
+		.image:hover {
+			opacity: 0.5;
+			box-shadow: 0 0 2px 1px rgb(51, 51, 255);
+		}
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 80%;
+			border: 2px solid #909090;
 
-}
+		}
 
-td, .th {
-	border: 2px solid #909090;
-	text-align: left;
-	padding: 5px;
-}
+		td, .th {
+			border: 2px solid #909090;
+			text-align: left;
+			padding: 5px;
+		}
 
-tr {
-	background-color: #dddddd;
+		tr {
+			background-color: #dddddd;
 
-}
-</style>
+		}
+	</style>
 </head>
 <body>
 
 
-	<jsp:include page="header.jsp"></jsp:include><br>
+<jsp:include page="header.jsp"></jsp:include><br>
 
 <table align="center">
-<tr >
-<td >
-	<img src="/user/picture/${sessionScope.post.user.userId}" border="3" width="45"
-					height="45" align="middle"
-					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-	${sessionScope.post.dateTime}
-				<a target="_blank" href="/showPost/${sessionScope.post.id}">${sessionScope.post.user.username}</a>
-				<c:if test="${sessionScope.post.location!=null}">
- was at 
- <a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
+	<tr >
+		<td >
+			<img src="/user/picture/${sessionScope.post.user.userId}" border="3" width="45"
+				 height="45" align="middle"
+				 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+			${sessionScope.post.dateTime}
+			<a target="_blank" href="/showPost/${sessionScope.post.id}">${sessionScope.post.user.username}</a>
+			<c:if test="${sessionScope.post.location!=null}">
+				was at
+				<a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
 
-				</c:if>
+			</c:if>
 			</h3>
 			<c:if test="${sessionScope.post.taggedPeople.size()>0}">
-with 	
-<c:forEach var="taggedUser" items="${sessionScope.post.taggedPeople}">
-	${taggedUser.username};
-	</c:forEach>
+				with
+				<c:forEach var="taggedUser" items="${sessionScope.post.taggedPeople}">
+					${taggedUser.username};
+				</c:forEach>
 			</c:if>
 			<p>${sessionScope.post.description}
 			<div class="subContainer">
 				Categories:
 				<c:forEach var="category" items="${sessionScope.post.categories}">
-${category.name};
-</c:forEach>
+					${category.name};
+				</c:forEach>
 			</div>
 			<div class="subContainer">
 				Tags:
 				<c:forEach var="tag" items="${sessionScope.post.tags}">
-${tag.tag_name};
-</c:forEach>
+					${tag.tag_name};
+				</c:forEach>
 			</div>
-	<div class="subContainer">
-		Likes: <p id="likesCount"> ${sessionScope.post.peopleLiked.size()} </p>
-		Dislikes: <p id="dislikesCount"> ${sessionScope.post.peopleDisliked.size()}  </p>
-	</div>
+			<div class="subContainer">
+				Likes: <p id="likesCount"> ${sessionScope.post.peopleLiked.size()} </p>
+				Dislikes: <p id="dislikesCount"> ${sessionScope.post.peopleDisliked.size()}  </p>
+			</div>
 			</p>
 
-		</div></td>
-  </tr>
-  <tr>
+			</div></td>
+	</tr>
+	<tr>
 </table>
 
 <table align="center">
-<tr>
- <td > 
- 	<c:forEach var="multimediaFile" items="${sessionScope.post.multimedia}">				
-    <a target="_blank" href="/post/multimedia/${multimediaFile.id}"> <img class="image" src="/post/multimedia/${multimediaFile.id}" style="width:150px"></a>
-	</c:forEach>
-   </td>
-  <tr>
+	<tr>
+		<td >
+			<c:forEach var="multimediaFile" items="${sessionScope.post.multimedia}">
+				<a target="_blank" href="/post/multimedia/${multimediaFile.id}"> <img class="image" src="/post/multimedia/${multimediaFile.id}" style="width:150px"></a>
+			</c:forEach>
+		</td>
+	<tr>
 </table>
-	<c:if test="${sessionScope.post.video.url != null}">
-		<video width="320" height="240" controls="controls">
+<c:if test="${sessionScope.post.video.url != null}">
+	<video width="320" height="240" controls="controls">
 
-			<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4">
+		<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4">
 		Your browser does not support the video tag.
-		</video>
+	</video>
+</c:if>
+
+<c:if test="${sessionScope.post.location !=null}">
+	<div id="map" style="width:400px;height:400px"></div>
+	<input type = "hidden" id = "latitude"  value="${sessionScope.post.location.latitude}" />
+	<input type = "hidden" id = "longtitude" value="${sessionScope.post.location.longtitude}" />
+</c:if>
+
+${sessionScope.post.location.latitude}
+${sessionScope.post.location.longtitude}<br>
+
+<div id="like/dislike" >
+	<c:set var="containsLiked" value="false" />
+	<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
+		<c:if test="${personLiked eq sessionScope.user.userId}">
+			<c:set var="containsLiked" value="true" />
+		</c:if>
+	</c:forEach>
+
+	<c:if test="${containsLiked}">
+		<button style="background-color: red" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Unlike</button>
+	</c:if>
+	<c:if test="${!containsLiked}">
+		<button style="background-color: green" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Like</button>
 	</c:if>
 
-	<c:if test="${sessionScope.post.location !=null}">
-		<div id="map" style="width:400px;height:400px"></div>
-		<input type = "hidden" id = "latitude"  value="${sessionScope.post.location.latitude}" />
-		<input type = "hidden" id = "longtitude" value="${sessionScope.post.location.longtitude}" />
+	<c:set var="containsDisliked" value="false" />
+	<c:forEach var="personDisliked" items="${sessionScope.post.peopleDisliked}">
+		<c:if test="${personDisliked eq sessionScope.user.userId}">
+			<c:set var="contains" value="true" />
+		</c:if>
+	</c:forEach>
+
+	<c:if test="${containsDisliked}">
+		<button  style="background-color: red" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
 	</c:if>
+	<c:if test="${!containsDisliked}">
+		<button  style="background-color: green" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
+	</c:if>
+</div>
 
-	${sessionScope.post.location.latitude}
-	${sessionScope.post.location.longtitude}<br>
-
-	<div id="like/dislike" >
-		<c:set var="containsLiked" value="false" />
-		<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
-			<c:if test="${personLiked eq sessionScope.user.userId}">
-				<c:set var="containsLiked" value="true" />
-			</c:if>
-		</c:forEach>
-
-		<c:if test="${containsLiked}">
-			<button style="background-color: red" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Unlike</button>
-		</c:if>
-		<c:if test="${!containsLiked}">
-			<button style="background-color: green" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Like</button>
-		</c:if>
-
-		<c:set var="containsDisliked" value="false" />
-		<c:forEach var="personDisliked" items="${sessionScope.post.peopleDisliked}">
-			<c:if test="${personDisliked eq sessionScope.user.userId}">
-				<c:set var="contains" value="true" />
-			</c:if>
-		</c:forEach>
-
-		<c:if test="${containsDisliked}">
-			<button  style="background-color: red" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
-		</c:if>
-		<c:if test="${!containsDisliked}">
-			<button  style="background-color: green" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
-		</c:if>
-	</div>
-
-	<jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"></jsp:include>
 
 
 <script>
@@ -157,11 +157,11 @@ ${tag.tag_name};
         var title = button.innerHTML;
         if(title == 'Like'){
             alert("I WANT TO LIKE THE POST");
-			likePost(postId);
+            likePost(postId);
         }
         else{
-			alert("I WANT TO UNLIKE THE POST");
-			unlikePost(postId);
+            alert("I WANT TO UNLIKE THE POST");
+            unlikePost(postId);
         }
     }
 
@@ -188,11 +188,11 @@ ${tag.tag_name};
                 var likeButton = document.getElementById("likeButton");
                 likeButton.innerHTML = "Unlike";
                 likeButton.style.background='red';
-				alert("I JUST LIKED POST AND DISLIKED ANOTHER ONE");
-				var dislikeButton=document.getElementById("dislikeButton");
-				dislikeButton.innerHTML="Dislike";
-				dislikeButton.style.background="green";
-				document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
+                alert("I JUST LIKED POST AND DISLIKED ANOTHER ONE");
+                var dislikeButton=document.getElementById("dislikeButton");
+                dislikeButton.innerHTML="Dislike";
+                dislikeButton.style.background="green";
+                document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
                 document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
 
             }
@@ -204,7 +204,7 @@ ${tag.tag_name};
                 document.getElementById("likesCount").innerHTML=${sessionScope.post.peopleLiked.size()};
                 document.getElementById("dislikesCount").innerHTML=${sessionScope.post.peopleDisliked.size()};
             }
-			else if (this.readyState == 4 && this.status == 401) {
+            else if (this.readyState == 4 && this.status == 401) {
                 alert("Sorry, you cannot like this video!");
             }
         }
@@ -290,39 +290,39 @@ ${tag.tag_name};
     }
 </script>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 
-        var latitudeString = document.getElementById("latitude").value;
-        var longtitudeString = document.getElementById("longtitude").value;
+    var latitudeString = document.getElementById("latitude").value;
+    var longtitudeString = document.getElementById("longtitude").value;
 
-        var latitude = parseFloat(latitudeString);
-        var longtitude = parseFloat(longtitudeString);
+    var latitude = parseFloat(latitudeString);
+    var longtitude = parseFloat(longtitudeString);
 
 
-        var locations = [
-            ['', latitude, longtitude, 4],
-        ];
+    var locations = [
+        ['', latitude, longtitude, 4],
+    ];
 
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            center: new google.maps.LatLng(latitude, longtitude),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: new google.maps.LatLng(latitude, longtitude),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
         });
-        var infowindow = new google.maps.InfoWindow();
-        var marker, i;
-        for (i = 0; i < locations.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                map: map
-            });
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infowindow.setContent(locations[i][0]);
-                    infowindow.open(map, marker);
-                }
-            })(marker, i));
-        }
-	</script>
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+</script>
 
 
 </body>
