@@ -238,7 +238,7 @@ public class Post implements Comparable<Post> {
     }
 
     public void addComment(Comment c) {
-        if (c != null) {
+        if (this.comments!=null && c!=null) {
             this.comments.add(c);
         }
     }

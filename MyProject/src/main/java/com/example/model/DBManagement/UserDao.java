@@ -40,7 +40,7 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				"insert into users (username, password, email, profile_pic_id) value (?, ?, ?,?);",
 				Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, u.getUsername());
-			ps.setString(2, u.getPassword()); // hashing required
+			ps.setString(2, u.getPassword()); 
 			ps.setString(3, u.getEmail());
 			ps.setLong(4, 0); // default profile pic id=0
 			ps.executeUpdate();

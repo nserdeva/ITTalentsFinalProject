@@ -21,19 +21,21 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 	PostDao postDao;
 
 	// ::::::::: insert/remove from db :::::::::
-	public void insertComment(Comment c, User u) throws SQLException, PostException, UserException {
+	public void insertComment(Comment c, User sentBy)throws PostException, UserException {
 		try (PreparedStatement ps = this.getConnection().prepareStatement(
 				"insert into comments (content, post_id, user_id, date_time) values (?, ?, ?, now());",
 				Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, c.getContent());
 			ps.setLong(2, c.getPostId());
-			ps.setLong(3, u.getUserId());
+			ps.setLong(3, sentBy.getUserId());
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
-			c.setId(rs.getLong(1));
+			c.setId(rs.getLong(1));	
 			// !!! insert in post POJO comments collection required:
 			postDao.addComment(postDao.getPostById(c.getPostId()), c);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -55,6 +57,23 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 		}
 	}
 
+	public Comment getCommentById(long id) throws CommentException, SQLException, UserException, PostException {
+		Comment c = null;
+		try (PreparedStatement ps = this.getConnection().prepareStatement(
+				"select comment_id, content, likes_counter, dislikes_counter, post_id, user_id, date_time from comments where comment_id = ?;");) {
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				User sentBy =  userDao.getUserById(rs.getLong("user_id"));
+				sentBy.setProfilePic(multimediaDao.getMultimediaById(sentBy.getProfilePic().getId()));
+				c = new Comment(rs.getLong("comment_id"), rs.getString("content"), rs.getInt("likes_counter"),
+						rs.getInt("dislikes_counter"), rs.getLong("post_id"), rs.getLong("user_id"),
+						rs.getTimestamp("date_time"));
+			}
+			return c;
+		}
+	}
+	
 	// ::::::::: loading comments for post :::::::::
 	public TreeSet<Comment> getCommentsForPost(Post p) throws SQLException, CommentException, UserException, PostException {
 		TreeSet<Comment> comments = new TreeSet<Comment>();

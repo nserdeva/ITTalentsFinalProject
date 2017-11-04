@@ -1,157 +1,176 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<title>View Adventure</title>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
-			type="text/javascript"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<title>View Adventure</title>
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
+	type="text/javascript"></script>
 
-	<style>
-		.image{
-			border: 1px solid #ddd;
-			border-radius: 8px;
-			padding: 5px;
-			width: 150px;
-		}
+<style>
+.container {
+	position: center;
+	height: 160px;
+	align: center;
+	width: 70%;
+	margin-bottom: 25px;
+	padding: 1em;
+	background-color: #eee;
+	border: 3px solid #ddd;
+}
 
-		.image:hover {
-			opacity: 0.5;
-			box-shadow: 0 0 2px 1px rgb(51, 51, 255);
-		}
-		table {
-			font-family: arial, sans-serif;
-			border-collapse: collapse;
-			width: 80%;
-			border: 2px solid #909090;
+.image {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 5px;
+	width: 150px;
+}
 
-		}
+.image:hover {
+	opacity: 0.5;
+	box-shadow: 0 0 2px 1px rgb(51, 51, 255);
+}
 
-		td, .th {
-			border: 2px solid #909090;
-			text-align: left;
-			padding: 5px;
-		}
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 80%;
+	border: 2px solid #909090;
+}
 
-		tr {
-			background-color: #dddddd;
+td, .th {
+	border: 2px solid #909090;
+	text-align: left;
+	padding: 5px;
+}
 
-		}
-	</style>
+tr {
+	background-color: #dddddd;
+}
+</style>
 </head>
 <body>
 
 
-<jsp:include page="header.jsp"></jsp:include><br>
+	<jsp:include page="header.jsp"></jsp:include><br>
 
-<table align="center">
-	<tr >
-		<td >
-			<img src="/user/picture/${sessionScope.post.user.userId}" border="3" width="45"
-				 height="45" align="middle"
-				 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-			${sessionScope.post.dateTime}
-				<a target="_blank" href="/showPassport/${sessionScope.post.user.userId}">
-				${sessionScope.post.user.username}</a>
-			<c:if test="${sessionScope.post.location!=null}">
+	<table align="center">
+		<tr>
+			<td><img src="/user/picture/${sessionScope.post.user.userId}"
+				border="3" width="45" height="45" align="middle"
+				style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+				${sessionScope.post.dateTime} <a target="_blank"
+				href="/showPassport/${sessionScope.post.user.userId}">
+					${sessionScope.post.user.username}</a> <c:if
+					test="${sessionScope.post.location!=null}">
 				was at
 				<a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
 
-			</c:if>
-			</h3>
-			<c:if test="${sessionScope.post.taggedPeople.size()>0}">
+				</c:if>
+				</h3> <c:if test="${sessionScope.post.taggedPeople.size()>0}">
 				with
-				<c:forEach var="taggedUser" items="${sessionScope.post.taggedPeople}">
-					<a target="_blank" href="/showPassport/${taggedUser.userId}">
-					${taggedUser.username}</a>;
+				<c:forEach var="taggedUser"
+						items="${sessionScope.post.taggedPeople}">
+						<a target="_blank" href="/showPassport/${taggedUser.userId}">
+							${taggedUser.username}</a>;
 				</c:forEach>
-			</c:if>
-			<p>${sessionScope.post.description}
-			<div class="subContainer">
-				Categories:
-				<c:forEach var="category" items="${sessionScope.post.categories}">
+				</c:if>
+				<p>${sessionScope.post.description}
+				<div class="subContainer">
+					Categories:
+					<c:forEach var="category" items="${sessionScope.post.categories}">
 					${category.name};
 				</c:forEach>
-			</div>
-			<div class="subContainer">
-				Tags:
-				<c:forEach var="tag" items="${sessionScope.post.tags}">
+				</div>
+				<div class="subContainer">
+					Tags:
+					<c:forEach var="tag" items="${sessionScope.post.tags}">
 					${tag.tag_name};
 				</c:forEach>
-			</div>
-			<div class="subContainer">
-				Likes: <p id="likesCount">${sessionScope.post.peopleLiked.size()}</p>
-				Dislikes: <p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
-			</div>
-			</p>
+				</div>
+				<div class="subContainer">
+					Likes:
+					<p id="likesCount">${sessionScope.post.peopleLiked.size()}</p>
+					Dislikes:
+					<p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
+				</div>
+				</p>
 
-			</div></td>
-	</tr>
-	<tr>
-</table>
+				</div></td>
+		</tr>
+		<tr>
+	</table>
 
-<table align="center">
-	<tr>
-		<td >
-			<c:forEach var="multimediaFile" items="${sessionScope.post.multimedia}">
-				<a target="_blank" href="/post/multimedia/${multimediaFile.id}"> <img class="image" src="/post/multimedia/${multimediaFile.id}" style="width:150px"></a>
-			</c:forEach>
-		</td>
-	<tr>
-</table>
-<c:if test="${sessionScope.post.video.url != null}">
-	<video width="320" height="240" controls="controls">
+	<table align="center">
+		<tr>
+			<td><c:forEach var="multimediaFile"
+					items="${sessionScope.post.multimedia}">
+					<a target="_blank" href="/post/multimedia/${multimediaFile.id}">
+						<img class="image" src="/post/multimedia/${multimediaFile.id}"
+						style="width: 150px">
+					</a>
+				</c:forEach></td>
+		<tr>
+	</table>
+	<c:if test="${sessionScope.post.video.url != null}">
+		<video width="320" height="240" controls="controls"> <source
+			src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> "
+			type="video/mp4"> Your browser does not support the video
+		tag. </video>
+	</c:if>
 
-		<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4">
-		Your browser does not support the video tag.
-	</video>
-</c:if>
-
-<c:if test="${sessionScope.post.location !=null}">
-	<div id="map" style="width:400px;height:400px"></div>
-	<input type = "hidden" id = "latitude"  value="${sessionScope.post.location.latitude}" />
-	<input type = "hidden" id = "longtitude" value="${sessionScope.post.location.longtitude}" />
-</c:if>
+	<c:if test="${sessionScope.post.location !=null}">
+		<div id="map" style="width: 400px; height: 400px"></div>
+		<input type="hidden" id="latitude"
+			value="${sessionScope.post.location.latitude}" />
+		<input type="hidden" id="longtitude"
+			value="${sessionScope.post.location.longtitude}" />
+	</c:if>
 
 
-<div id="like/dislike" >
-	<c:set var="containsLiked" value="false" />
-	<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
-		<c:if test="${personLiked eq sessionScope.user.userId}">
-			<c:set var="containsLiked" value="true" />
+	<div id="like/dislike">
+		<c:set var="containsLiked" value="false" />
+		<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
+			<c:if test="${personLiked eq sessionScope.user.userId}">
+				<c:set var="containsLiked" value="true" />
+			</c:if>
+		</c:forEach>
+
+		<c:if test="${containsLiked}">
+			<button style="background-color: red" id="likeButton"
+				onclick="handleLike(${sessionScope.post.id})">Unlike</button>
 		</c:if>
-	</c:forEach>
-
-	<c:if test="${containsLiked}">
-		<button style="background-color: red" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Unlike</button>
-	</c:if>
-	<c:if test="${!containsLiked}">
-		<button style="background-color: green" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Like</button>
-	</c:if>
-
-	<c:set var="containsDisliked" value="false" />
-	<c:forEach var="personDisliked" items="${sessionScope.post.peopleDisliked}">
-		<c:if test="${personDisliked eq sessionScope.user.userId}">
-			<c:set var="containsDisliked" value="true" />
+		<c:if test="${!containsLiked}">
+			<button style="background-color: green" id="likeButton"
+				onclick="handleLike(${sessionScope.post.id})">Like</button>
 		</c:if>
-	</c:forEach>
 
-	<c:if test="${containsDisliked}">
-		<button  style="background-color: red" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
-	</c:if>
-	<c:if test="${!containsDisliked}">
-		<button  style="background-color: green" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
-	</c:if>
-</div>
+		<c:set var="containsDisliked" value="false" />
+		<c:forEach var="personDisliked"
+			items="${sessionScope.post.peopleDisliked}">
+			<c:if test="${personDisliked eq sessionScope.user.userId}">
+				<c:set var="containsDisliked" value="true" />
+			</c:if>
+		</c:forEach>
 
-<jsp:include page="footer.jsp"></jsp:include>
+		<c:if test="${containsDisliked}">
+			<button style="background-color: red" id="dislikeButton"
+				onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
+		</c:if>
+		<c:if test="${!containsDisliked}">
+			<button style="background-color: green" id="dislikeButton"
+				onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
+		</c:if>
+	</div>
 
 
-<script>
+
+	<script>
     function handleLike(postId){
         var button = document.getElementById("likeButton");
         var title = button.innerHTML;
@@ -285,7 +304,7 @@
     }
 </script>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 
     var latitudeString = document.getElementById("latitude").value;
     var longtitudeString = document.getElementById("longtitude").value;
@@ -319,6 +338,90 @@
     }
 </script>
 
+	<br>
+	<br>
+	<br>
+
+	<textarea  id="newCommentInputContent" rows="6" cols="79">
+</textarea>
+	<br>
+	<button style="background-color: purple" id="postCommentButton"
+		onclick="postComment(${sessionScope.post.id})">Post</button><br>
+		<br>
+
+
+	<table id="commentsTable" align="center">
+
+		<c:forEach var="comment" items="${sessionScope.post.comments}">
+			<tr>
+				<td>
+					<h5 style="visibility: hidden;" id="newCommentId">${comment.id}</h5>
+					<div class="container" width=70%>
+						<img src="/user/picture/${comment.sentBy.userId}" border="3"
+							width="45" height="45" align="middle"
+							style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+						${comment.datetime} <a target="_blank"
+							href="/showPassport/${comment.sentBy.userId}">
+							${comment.sentBy.username}</a>
+						<br>${comment.content} <br>
+						<p id="likesCount">Likes: ${comment.likesCount}</p>
+						<p id="dislikesCount">Dislikes: ${comment.dislikesCount}</p>
+					</div>
+				</td>
+			</tr>
+		</c:forEach>
+	</table>
+
+
+	<script>
+    function postComment(postId){
+    	   var textAreaInput = document.getElementById("newCommentInputContent").value;
+    	    var request = new XMLHttpRequest();
+    	      request.onreadystatechange = function() {
+    	          //when response is received 
+    	          if (this.readyState == 4 && this.status == 200) {
+    	             var comment = JSON.parse(request.responseText); // tva ni e vurnatiq comment ot rest controllera
+    	            
+    	             var commentContent = comment.content;
+    	             document.getElementById("newCommentContent").innerHTML = commentContent;
+    	             
+    	             var commentDatetime = comment.datetimeString;
+    	             document.getElementById("newCommentDatetime").innerHTML = commentDatetime;
+    	            
+    	            var commentId = comment.id;// will be needed later for like/dislike operations 
+    	            document.getElementById("newCommentId").innerHTML = commentId;
+    	             
+    	            // now that everything is set:    
+    	            var table = document.getElementById("commentsTable");
+    	            var row = table.insertRow(0);
+    	             var cell = row.insertCell(0);
+    	             cell.innerHTML = document.getElementById("newCommentContainer").innerHTML;
+    	          }
+    	          else
+    	          if (this.readyState == 4 && this.status == 401) {
+    	              alert("Sorry, you must log in to comment on this post.");
+    	          }
+    	      }
+    	      request.open("POST", "/postComment/"+postId + "/" + textAreaInput, true);
+    	      request.send();
+    	  }
+    </script>
+
+	<div style="visibility: hidden;" id="newCommentContainer"
+		class="container">
+		<img src="/user/picture/${sessionScope.user.userId}" border="3"
+			width="45" height="45" align="middle"
+			style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+		<h5 id="newCommentDatetime"></h5>
+		<a target="_blank" href="/showPassport/${sessionScope.user.userId}">
+			${sessionScope.user.username}</a>
+		<h5 id="newCommentContent"></h5>
+		<p id="newCommentLikesCount">Likes: 0</p>
+		<p id="newCommentDislikesCount">Dislikes: 0</p>
+		<h5 style="visibility: hidden;" id="newCommentId"></h5>
+	</div>
+
+	<jsp:include page="footer.jsp"></jsp:include>
 
 </body>
 </html>
