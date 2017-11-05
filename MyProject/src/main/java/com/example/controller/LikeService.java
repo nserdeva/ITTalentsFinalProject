@@ -138,7 +138,7 @@ public class LikeService {
 
 	@RequestMapping(value = "/likeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
-	public String likeComment(HttpSession session, Model model, HttpServletResponse resp,
+	public Integer[] likeComment(HttpSession session, Model model, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId){
 		Comment comment = null;
 		try {
@@ -163,12 +163,15 @@ public class LikeService {
 		} catch (UserException e) {
 			e.printStackTrace();
 		}
-		return String.valueOf(comment.getPeopleLiked().size());
+		Integer[] sizes = new Integer[2];
+		sizes[0] = comment.getPeopleLiked().size();
+		sizes[1] = comment.getPeopleDisliked().size();
+		return sizes;
 	}
 
 	@RequestMapping(value = "/unlikeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
-	public String unlikeComment(HttpSession session, HttpServletResponse resp,
+	public Integer[] unlikeComment(HttpSession session, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId){
 		Comment comment = null;
 		try {
@@ -185,12 +188,15 @@ public class LikeService {
 		} catch (UserException e) {
 			e.printStackTrace();
 		}
-		return String.valueOf(comment.getPeopleLiked().size());
+		Integer[] sizes = new Integer[2];
+		sizes[0] = comment.getPeopleLiked().size();
+		sizes[1] = comment.getPeopleDisliked().size();
+		return sizes;
 	}
 
 	@RequestMapping(value = "/dislikeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
-	public String dislikeComment(HttpSession session, HttpServletResponse resp,
+	public Integer[] dislikeComment(HttpSession session, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId){
 		Comment comment = null;
 		try {
@@ -215,12 +221,15 @@ public class LikeService {
 		} catch (UserException e) {
 			e.printStackTrace();
 		}
-		return String.valueOf(comment.getPeopleDisliked().size());
+		Integer[] sizes = new Integer[2];
+		sizes[0] = comment.getPeopleLiked().size();
+		sizes[1] = comment.getPeopleDisliked().size();
+		return sizes;
 	}
 
 	@RequestMapping(value = "/undislikeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
-	public String undislikeComment(HttpSession session, HttpServletResponse resp,
+	public Integer[] undislikeComment(HttpSession session, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId){
 		Comment comment = null;
 		try {
@@ -239,7 +248,10 @@ public class LikeService {
 		} catch (UserException e) {
 			e.printStackTrace();
 		}
-		return String.valueOf(comment.getPeopleDisliked().size());
+		Integer[] sizes = new Integer[2];
+		sizes[0] = comment.getPeopleLiked().size();
+		sizes[1] = comment.getPeopleDisliked().size();
+		return sizes;
 	}
 
 }

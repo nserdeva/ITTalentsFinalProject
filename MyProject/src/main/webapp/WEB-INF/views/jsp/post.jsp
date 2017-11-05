@@ -472,13 +472,17 @@ tr {
                 var dislikeButton=document.getElementById("dislikeButton/"+commentId);
                 dislikeButton.innerHTML="Dislike";
                 dislikeButton.style.background="green";
-                document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount/"+commentId).innerHTML= "Likes: " + counters[0];
+                document.getElementById("dislikesCount/"+commentId).innerHTML= "Dislikes: " + counters[1];    
             }
             else if(this.readyState == 4 && this.status == 201){
                 var likeButton1 = document.getElementById("likeButton/"+commentId);
                 likeButton1.innerHTML = "Unlike";
                 likeButton1.style.background='red';
-                document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount/"+commentId).innerHTML= "Likes: " + counters[0];
+                document.getElementById("dislikesCount/"+commentId).innerHTML= "Dislikes: " + counters[1];    
             }
             else if (this.readyState == 4 && this.status == 401) {
                 alert("Sorry, you cannot like this video!");
@@ -496,7 +500,9 @@ tr {
                 var button = document.getElementById("likeButton/"+commentId);
                 button.innerHTML = "Like";
                 button.style.background='green';
-                document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount/"+commentId).innerHTML= "Likes: " + counters[0];
+                document.getElementById("dislikesCount/"+commentId).innerHTML= "Dislikes: " + counters[1];    
             }
             else
             if (this.readyState == 4 && this.status == 401) {
@@ -518,13 +524,17 @@ tr {
                 var likeButton=document.getElementById("likeButton/"+commentId);
                 likeButton.innerHTML="Like";
                 likeButton.style.background="green";
-                document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount/"+commentId).innerHTML= "Likes: " + counters[0];
+                document.getElementById("dislikesCount/"+commentId).innerHTML= "Dislikes: " + counters[1];    
             }
             else if(this.readyState == 4 && this.status == 201){
                 var dislikeButton1 = document.getElementById("dislikeButton/"+commentId);
                 dislikeButton1.innerHTML = "Undislike";
                 dislikeButton1.style.background='red';
-                document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount/"+commentId).innerHTML= "Likes: " + counters[0];
+                document.getElementById("dislikesCount/"+commentId).innerHTML= "Dislikes: " + counters[1];    
             }
             else
             if (this.readyState == 4 && this.status == 401) {
@@ -543,8 +553,9 @@ tr {
                 var button = document.getElementById("dislikeButton/"+commentId);
                 button.innerHTML = "Dislike";
                 button.style.background='green';
-                document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
-            }
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount/"+commentId).innerHTML= "Likes: " + counters[0];
+                document.getElementById("dislikesCount/"+commentId).innerHTML= "Dislikes: " + counters[1];            }
             else
             if (this.readyState == 4 && this.status == 401) {
                 alert("Sorry, you must log in to like this video!");
