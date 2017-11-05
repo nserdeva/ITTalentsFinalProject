@@ -1,8 +1,11 @@
 package com.example.controller;
 
+import com.example.model.DBManagement.CommentDao;
 import com.example.model.DBManagement.PostDao;
+import com.example.model.Comment;
 import com.example.model.Post;
 import com.example.model.User;
+import com.example.model.exceptions.CommentException;
 import com.example.model.exceptions.PostException;
 import com.example.model.exceptions.UserException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +29,9 @@ public class LikeService
 {
     @Autowired
     PostDao postDao;
+    @Autowired
+    CommentDao commentDao;
+
 
     @RequestMapping(value = "/like/{postId}",method = RequestMethod.POST)
     @ResponseBody
@@ -120,5 +126,103 @@ public class LikeService
         }
         return String.valueOf(post.getPeopleDisliked().size());
     }
+   
+    //:::::Comment like/dislike functionality methods:::::
+    
 
+    @RequestMapping(value = "/likeComment/{commentId}",method = RequestMethod.POST)
+    @ResponseBody
+    public String likeComment(HttpSession session, Model model, HttpServletResponse resp , @PathVariable("commentId") long commentId) throws UserException, JsonProcessingException, CommentException {
+        Comment comment = null;
+        ObjectMapper mapper=new ObjectMapper();
+        try {
+            System.out.println("::::: E VLIZASH LI V SERVICA WEE "+ commentId);
+            comment=commentDao.getCommentById(commentId);
+            long userId=((User)session.getAttribute("user")).getUserId();
+            if(commentDao.existsReaction(commentId,userId)){
+                commentDao.updateReaction(true, comment.getId(),((User)session.getAttribute("user")).getUserId());
+                comment.addPersonLiked(userId);
+                comment.removePersonDisliked(userId);
+                resp.setStatus(200);
+            }else{
+                commentDao.insertReaction(true, comment.getId(), ((User)session.getAttribute("user")).getUserId());
+                comment.addPersonLiked(userId);
+                resp.setStatus(201);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(comment.getPeopleLiked().size());
+    }
+
+
+    @RequestMapping(value = "/unlikeComment/{commentId}",method = RequestMethod.POST)
+    @ResponseBody
+    public String unlikeComment(HttpSession session,HttpServletResponse resp ,@PathVariable("commentId") long commentId) throws UserException, SQLException, PostException, CommentException {
+        System.out.println(":::::::::::::: SHE UNLIKE-VAM MOTHAFUCKAAAA "+commentId);
+        Comment comment=null;
+        try {
+            comment=commentDao.getCommentById(commentId);
+            long userId=((User)session.getAttribute("user")).getUserId();
+            commentDao.deleteReaction( comment.getId(), ((User) session.getAttribute("user")).getUserId());
+            comment.removePersonLiked(userId);
+            //true=like false=dislike
+            resp.setStatus(200);
+        } catch (SQLException | PostException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(comment.getPeopleLiked().size());
+    }
+
+    @RequestMapping(value = "/dislikeComment/{commentId}",method = RequestMethod.POST)
+    @ResponseBody
+    public String dislikeComment(HttpSession session,HttpServletResponse resp ,@PathVariable("commentId") long commentId) throws UserException, CommentException{
+        Comment comment=null;
+        try {
+            System.out.println("::: SHE DISLAIKVAM MOTHAFUCKAAA "+commentId);
+            comment=commentDao.getCommentById(commentId);
+            long userId=((User)session.getAttribute("user")).getUserId();
+            if(commentDao.existsReaction(commentId,userId)){
+            	comment.removePersonLiked(userId);
+            	comment.addPersonDisliked(userId);
+            	commentDao.updateReaction(false, comment.getId(),((User)session.getAttribute("user")).getUserId());
+                resp.setStatus(200);
+            }else{
+            	commentDao.insertReaction(false, comment.getId(), ((User)session.getAttribute("user")).getUserId());
+                comment.addPersonDisliked(userId);
+                resp.setStatus(201);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(comment.getPeopleDisliked().size());
+    }
+
+    @RequestMapping(value = "/undislikeComment/{commentId}",method = RequestMethod.POST)
+    @ResponseBody
+    public String undislikeComment(HttpSession session,HttpServletResponse resp ,@PathVariable("commentId") long commentId) throws UserException, CommentException{
+        System.out.println(":: AAA SQ SHE UNDISLIKE-VAM:"+commentId);
+        Comment comment=null;
+        try {
+            comment=commentDao.getCommentById(commentId);
+            long userId=((User)session.getAttribute("user")).getUserId();
+            commentDao.deleteReaction( comment.getId(), ((User) session.getAttribute("user")).getUserId());
+            comment.removePersonDisliked(userId);
+            //true=like false=dislike
+            resp.setStatus(200);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PostException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(comment.getPeopleDisliked().size());
+    }
+
+    
+    
+    
 }

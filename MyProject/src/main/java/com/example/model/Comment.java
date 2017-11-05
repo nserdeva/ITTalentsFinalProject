@@ -3,6 +3,9 @@ package com.example.model;
 import com.example.model.exceptions.*;
 
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class Comment implements Comparable<Comment> {
 	// ::::::::: main object characteristics :::::::::
@@ -17,6 +20,9 @@ public final class Comment implements Comparable<Comment> {
 	// ::::::::: additional object characteristics :::::::::
 	private static final int MAX_CONTENT_LENGTH = 500;
 	private User sentBy = null;
+    private HashSet<Long> peopleLiked = new HashSet<Long>();
+    private HashSet<Long> peopleDisliked = new HashSet<Long>();
+
 
 	// ::::::::: constructor to be used when posting a new comment :::::::::
 	public Comment(String content, long postId, long userId, User sentBy) throws CommentException {
@@ -172,4 +178,48 @@ public final class Comment implements Comparable<Comment> {
 		return c.getDatetime().compareTo(this.getDatetime());
 	}
 
+	//LIKE/DISLIKE FUNCTIONALITY
+	public void addPersonLiked(long userId) {
+        if(this.peopleLiked==null){
+            this.peopleLiked=new HashSet<>();
+        }
+       this.peopleLiked.add(userId);
+    }
+
+    public void removePersonLiked(long userId) {
+        if(this.peopleLiked==null){
+            this.peopleLiked=new HashSet<>();
+        }
+        this.peopleLiked.remove(userId);
+    }
+
+    public void removePersonDisliked(long userId) {
+        if(this.peopleDisliked==null){
+            this.peopleDisliked=new HashSet<>();
+        }
+        this.peopleDisliked.remove(userId);
+    }
+
+    public void addPersonDisliked(long userId) {
+        if(this.peopleDisliked==null){
+            this.peopleDisliked=new HashSet<>();
+        }
+        this.peopleDisliked.add(userId);
+    }
+	
+    public Set<Long> getPeopleLiked() {
+        return Collections.unmodifiableSet(this.peopleLiked);
+    }
+
+    public void setPeopleLiked(HashSet<Long> peopleLiked) {
+        this.peopleLiked = peopleLiked;
+    }
+
+    public Set<Long> getPeopleDisliked() {
+        return Collections.unmodifiableSet(this.peopleDisliked);
+    }
+
+    public void setPeopleDisliked(HashSet<Long> peopleDisliked) {
+        this.peopleDisliked = peopleDisliked;
+    }
 }

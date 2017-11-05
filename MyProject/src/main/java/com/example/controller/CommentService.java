@@ -41,7 +41,6 @@ public class CommentService {
 	@ResponseBody	
 	public Comment postComment(HttpSession session, HttpServletResponse resp, HttpServletRequest request, @PathVariable("postId") long postId, @PathVariable("content") String content)
 			throws UserException, SQLException, PostException, CommentException {
-		System.out.println(content);
 		User sentBy = (User)session.getAttribute("user");
 		Comment comment = new Comment(content, postId,sentBy.getUserId(), sentBy);
 		commentDao.insertComment(comment, sentBy);

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.TreeSet;
 
 import com.example.model.*;
@@ -84,14 +85,50 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 			while (rs.next()) {
 				User sentBy =  userDao.getUserById(rs.getLong("user_id"));
 				sentBy.setProfilePic(multimediaDao.getMultimediaById(sentBy.getProfilePic().getId()));
-				comments.add(new Comment(rs.getLong("comment_id"), rs.getString("content"), rs.getInt("likes_counter"),
+				Comment comment = new Comment(rs.getLong("comment_id"), rs.getString("content"), rs.getInt("likes_counter"),
 						rs.getInt("dislikes_counter"), p.getId(), rs.getLong("user_id"),
-						rs.getTimestamp("date_time"),sentBy));
+						rs.getTimestamp("date_time"),sentBy);
+				  comment.setPeopleDisliked(this.getAllPeopleDisliked(comment));
+		            comment.setPeopleLiked(getAllPeopleLiked(comment));
+					comments.add(comment);
 			}
 			return comments;
 		}
 	}
 
+	public HashSet<Long> getAllPeopleLiked(Comment comment) {
+		HashSet<Long> peopleLiked=new HashSet<>();
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT user_id FROM comments_reactions WHERE comment_id=? AND reaction=1");
+			ps.setLong(1,comment.getId());
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()){
+				long currentId=rs.getLong("user_id");
+				peopleLiked.add(currentId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return peopleLiked;
+	}
+
+	public HashSet<Long> getAllPeopleDisliked(Comment comment) {
+		HashSet<Long> peopleDisliked=new HashSet<>();
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT user_id FROM comments_reactions WHERE comment_id=? AND reaction=0");
+			ps.setLong(1,comment.getId());
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()){
+				long currentId=rs.getLong("user_id");
+				peopleDisliked.add(currentId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return peopleDisliked;
+	}
+
+	
 	// ::::::::: like/dislike operations :::::::::
 	// currently comments are not keeping data for the users who liked/disliked them
 	public void incrementLikes(Comment c) throws SQLException, CommentException {
@@ -112,4 +149,56 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 		}
 	}
 
+	public boolean existsReaction(long commentId, long userId) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT COUNT(*) FROM comments_reactions WHERE comment_id = ? AND user_id=? ");
+			ps.setLong(1,commentId);
+			ps.setLong(2,userId);
+			ResultSet rs=ps.executeQuery();
+			rs.next();
+			if(rs.getInt("COUNT(*)")>0){
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void updateReaction(boolean reaction, long commentId, long userId) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("UPDATE comments_reactions SET reaction=? WHERE comment_id=? AND user_id=? ");
+			ps.setBoolean(1,reaction);
+			ps.setLong(2,commentId);
+			ps.setLong(3,userId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void insertReaction(boolean b, long commentId, long userId) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("INSERT INTO comments_reactions(comment_id, reaction, user_id) VALUE (?,?,?)");
+			ps.setLong(1,commentId);
+			ps.setBoolean(2,b);
+			ps.setLong(3,userId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteReaction(long commentId, long userId) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("DELETE FROM comments_reactions WHERE comment_id=? AND user_id=?");
+			ps.setLong(1,commentId);
+			ps.setLong(2,userId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 }
