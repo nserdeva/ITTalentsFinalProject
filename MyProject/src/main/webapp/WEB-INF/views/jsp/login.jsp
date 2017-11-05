@@ -19,7 +19,7 @@
 </c:if>
 
 	<div class="loginBox">
-		<img src="img/user.png" class="user">
+		<img src="img/user_icon.png" class="user">
 		<h2>Start exploring!</h2>
 		<form action="/login" method="post">
 			<p>
@@ -37,8 +37,9 @@
 				<font color="white">password</font>
 			</p>
 			<input type="password" placeholder="••••••••••••••" name="pass">
-			<input type="submit" value="Sign in"> <a href="<c:url value="/register" /> ">New
-				to the travelling world? Join now!</a>
+			<input type="submit" value="Sign in"> 
+			<font color = "white" >New to the travelling world? </font>
+			<a href="<c:url value="/register" /> "><u> Join now! </u></a>
 		</form>
 	</div>
 </body>

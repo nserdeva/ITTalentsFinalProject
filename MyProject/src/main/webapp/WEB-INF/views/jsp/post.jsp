@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -8,10 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<title>View Adventure</title>
-
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
-			type="text/javascript"></script>
-
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map" type="text/javascript"></script>
 	<style>
 		.image{
 			border: 1px solid #ddd;
@@ -43,121 +40,228 @@
 
 		}
 	</style>
-
-
 </head>
 <body>
+
 <c:if test="${ sessionScope.user == null }">
 	<c:redirect url="/login"></c:redirect>
 </c:if>
 
 
-<jsp:include page="header.jsp"></jsp:include><br>
+	<jsp:include page="header.jsp"></jsp:include><br>
 
-<table align="center">
-	<tr >
-		<td >
-			<img src="/user/picture/${sessionScope.post.user.userId}" border="3" width="45"
-				 height="45" align="middle"
-				 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-			${sessionScope.post.dateTime}
-				<a target="_blank" href="/showPassport/${sessionScope.post.user.userId}">
-				${sessionScope.post.user.username}</a>
-			<c:if test="${sessionScope.post.location!=null}">
+	<% int currentNewCommentId = -1; %>
+	<table align="center">
+		<tr>
+			<td><img src="/user/picture/${sessionScope.post.user.userId}"
+				border="3" width="45" height="45" align="middle"
+				style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+				${sessionScope.post.dateTime} <a target="_blank"
+				href="/showPassport/${sessionScope.post.user.userId}">
+					${sessionScope.post.user.username}</a> <c:if
+					test="${sessionScope.post.location!=null}">
 				was at
 				<a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
 
-			</c:if>
-			</h3>
-			<c:if test="${sessionScope.post.taggedPeople.size()>0}">
+				</c:if>
+				</h3> <c:if test="${sessionScope.post.taggedPeople.size()>0}">
 				with
-				<c:forEach var="taggedUser" items="${sessionScope.post.taggedPeople}">
-					<a target="_blank" href="/showPassport/${taggedUser.userId}">
-					${taggedUser.username}</a>;
+				<c:forEach var="taggedUser"
+						items="${sessionScope.post.taggedPeople}">
+						<a target="_blank" href="/showPassport/${taggedUser.userId}">
+							${taggedUser.username}</a>;
 				</c:forEach>
-			</c:if>
-			<p>${sessionScope.post.description}
-			<div class="subContainer">
-				Categories:
-				<c:forEach var="category" items="${sessionScope.post.categories}">
+				</c:if>
+				<p>${sessionScope.post.description}
+				<div class="subContainer">
+					Categories:
+					<c:forEach var="category" items="${sessionScope.post.categories}">
 					${category.name};
 				</c:forEach>
-			</div>
-			<div class="subContainer">
-				Tags:
-				<c:forEach var="tag" items="${sessionScope.post.tags}">
+				</div>
+				<div class="subContainer">
+					Tags:
+					<c:forEach var="tag" items="${sessionScope.post.tags}">
 					${tag.tag_name};
 				</c:forEach>
-			</div>
-			<div class="subContainer">
-				Likes: <p id="likesCount">${sessionScope.post.peopleLiked.size()}</p>
-				Dislikes: <p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
-			</div>
-			</p>
+				</div>
+				<div class="subContainer">
+					Likes:
+					<p id="likesCount">${sessionScope.post.peopleLiked.size()}</p>
+					Dislikes:
+					<p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
+				</div>
+				</p>
 
-			</div></td>
-	</tr>
-	<tr>
+				</div></td>
+		</tr>
+		<tr>
+	</table>
+
+	<table align="center">
+		<tr>
+			<td><c:forEach var="multimediaFile"
+					items="${sessionScope.post.multimedia}">
+					<a target="_blank" href="/post/multimedia/${multimediaFile.id}">
+						<img class="image" src="/post/multimedia/${multimediaFile.id}"
+						style="width: 150px">
+					</a>
+				</c:forEach></td>
+		<tr>
+	</table>
+	<c:if test="${sessionScope.post.video.url != null}">
+		<video width="320" height="240" controls="controls">
+			<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> "
+					type="video/mp4"> Your browser does not support the video
+		tag. </video>
+	</c:if>
+
+	<c:if test="${sessionScope.post.location !=null}">
+		<div id="map" style="width: 400px; height: 400px"></div>
+		<input type="hidden" id="latitude"
+			value="${sessionScope.post.location.latitude}" />
+		<input type="hidden" id="longtitude"
+			value="${sessionScope.post.location.longtitude}" />
+	</c:if>
+<br>
+<br>
+<br>
+
+<textarea id="newCommentInputContent" rows="6" cols="79">
+</textarea>
+<br>
+<button style="background-color: purple" id="postCommentButton"
+		onclick="postComment(${sessionScope.post.id})">Post</button>
+<br>
+<br>
+
+
+<table id="commentsTable" align="center">
+
+	<c:forEach var="comment" items="${sessionScope.post.comments}">
+		<tr>
+			<td>
+				<h5 style="visibility: hidden;" id="newCommentId">${comment.id}</h5>
+				<div class="container" width=70%>
+					<img src="/user/picture/${comment.sentBy.userId}" border="3"
+						 width="45" height="45" align="middle"
+						 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+						${comment.datetime} <a target="_blank"
+											   href="/showPassport/${comment.sentBy.userId}">
+						${comment.sentBy.username}</a> <br>${comment.content} <br>
+					<p id="likesCount/${comment.id}">Likes: ${comment.peopleLiked.size()}</p>
+					<p id="dislikesCount/${comment.id}">Dislikes:
+							${comment.peopleLiked.size()}</p>
+
+
+					<div id="likeComment/dislikeComment">
+						<c:set var="containsLiked" value="false" />
+						<c:forEach var="personLiked" items="${comment.peopleLiked}">
+							<c:if test="${personLiked eq sessionScope.user.userId}">
+								<c:set var="containsLiked" value="true" />
+							</c:if>
+						</c:forEach>
+
+						<c:if test="${containsLiked}">
+							<button style="background-color: red"
+									id="likeButton/${comment.id}"
+									onclick="handleCommentLike(${comment.id})">Unlike</button>
+						</c:if>
+						<c:if test="${!containsLiked}">
+							<button style="background-color: green"
+									id="likeButton/${comment.id}"
+									onclick="handleCommentLike(${comment.id})">Like</button>
+						</c:if>
+
+						<c:set var="containsDisliked" value="false" />
+						<c:forEach var="personDisliked" items="${comment.peopleDisliked}">
+							<c:if test="${personDisliked eq sessionScope.user.userId}">
+								<c:set var="containsDisliked" value="true" />
+							</c:if>
+						</c:forEach>
+
+						<c:if test="${containsDisliked}">
+							<button style="background-color: red"
+									id="dislikeButton/${comment.id}"
+									onclick="handleCommentDislike(${comment.id})">Undislike</button>
+						</c:if>
+						<c:if test="${!containsDisliked}">
+							<button style="background-color: green"
+									id="dislikeButton/${comment.id}"
+									onclick="handleCommentDislike(${comment.id})">Dislike</button>
+						</c:if>
+					</div>
+
+
+				</div>
+			</td>
+		</tr>
+	</c:forEach>
 </table>
 
-<table align="center">
-	<tr>
-		<td >
-			<c:forEach var="multimediaFile" items="${sessionScope.post.multimedia}">
-				<a target="_blank" href="/post/multimedia/${multimediaFile.id}"> <img class="image" src="/post/multimedia/${multimediaFile.id}" style="width:150px"></a>
-			</c:forEach>
-		</td>
-	<tr>
-</table>
-<c:if test="${sessionScope.post.video.url != null}">
-	<video width="320" height="240" controls="controls">
 
-		<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> " type="video/mp4">
-		Your browser does not support the video tag.
-	</video>
-</c:if>
+	<div id="like/dislike">
+		<c:set var="containsLiked" value="false" />
+		<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
+			<c:if test="${personLiked eq sessionScope.user.userId}">
+				<c:set var="containsLiked" value="true" />
+			</c:if>
+		</c:forEach>
 
-<c:if test="${sessionScope.post.location !=null}">
-	<div id="map" style="width:400px;height:400px"></div>
-	<input type = "hidden" id = "latitude"  value="${sessionScope.post.location.latitude}" />
-	<input type = "hidden" id = "longtitude" value="${sessionScope.post.location.longtitude}" />
-</c:if>
-
-
-<div id="like/dislike" >
-	<c:set var="containsLiked" value="false" />
-	<c:forEach var="personLiked" items="${sessionScope.post.peopleLiked}">
-		<c:if test="${personLiked eq sessionScope.user.userId}">
-			<c:set var="containsLiked" value="true" />
+		<c:if test="${containsLiked}">
+			<button style="background-color: red" id="likeButton"
+				onclick="handleLike(${sessionScope.post.id})">Unlike</button>
 		</c:if>
-	</c:forEach>
-
-	<c:if test="${containsLiked}">
-		<button style="background-color: red" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Unlike</button>
-	</c:if>
-	<c:if test="${!containsLiked}">
-		<button style="background-color: green" id="likeButton" onclick="handleLike(${sessionScope.post.id})" >Like</button>
-	</c:if>
-
-	<c:set var="containsDisliked" value="false" />
-	<c:forEach var="personDisliked" items="${sessionScope.post.peopleDisliked}">
-		<c:if test="${personDisliked eq sessionScope.user.userId}">
-			<c:set var="containsDisliked" value="true" />
+		<c:if test="${!containsLiked}">
+			<button style="background-color: green" id="likeButton"
+				onclick="handleLike(${sessionScope.post.id})">Like</button>
 		</c:if>
-	</c:forEach>
 
-	<c:if test="${containsDisliked}">
-		<button  style="background-color: red" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
-	</c:if>
-	<c:if test="${!containsDisliked}">
-		<button  style="background-color: green" id="dislikeButton" onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
-	</c:if>
+		<c:set var="containsDisliked" value="false" />
+		<c:forEach var="personDisliked"
+			items="${sessionScope.post.peopleDisliked}">
+			<c:if test="${personDisliked eq sessionScope.user.userId}">
+				<c:set var="containsDisliked" value="true" />
+			</c:if>
+		</c:forEach>
+
+		<c:if test="${containsDisliked}">
+			<button style="background-color: red" id="dislikeButton"
+				onclick="handleDislike(${sessionScope.post.id})">Undislike</button>
+		</c:if>
+		<c:if test="${!containsDisliked}">
+			<button style="background-color: green" id="dislikeButton"
+				onclick="handleDislike(${sessionScope.post.id})">Dislike</button>
+		</c:if>
+	</div>
+
+<div style="visibility: hidden;" id="newCommentContainer"
+	 class="container">
+	<img src="/user/picture/${sessionScope.user.userId}" border="3"
+		 width="45" height="45" align="middle"
+		 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+	<h5 id="newCommentDatetime"></h5>
+	<a target="_blank" href="/showPassport/${sessionScope.user.userId}">
+		${sessionScope.user.username}</a>
+	<h5 id="newCommentContent"></h5>
+	<p id="newCommentLikesCount">Likes: 0</p>
+	<p id="newCommentDislikesCount">Dislikes: 0</p>
+	<h5 style="visibility: hidden;" id="newCommentId"></h5>
+	<button style="background-color: green"
+			id="likeButton/newCommentId"
+			onclick=""
+	>Like</button>
+
+	<button style="background-color: green"
+			id="dislikeButton/newCommentId"
+			onclick=""
+	>Dislike</button>
+
 </div>
 
 <jsp:include page="footer.jsp"></jsp:include>
 
-
-<script>
+	<script>
     function handleLike(postId){
         var button = document.getElementById("likeButton");
         var title = button.innerHTML;
@@ -301,8 +405,7 @@
         request.send();
     }
 </script>
-
-<script type="text/javascript">
+	<script type="text/javascript">
 
     var latitudeString = document.getElementById("latitude").value;
     var longtitudeString = document.getElementById("longtitude").value;
@@ -335,7 +438,174 @@
         })(marker, i));
     }
 </script>
+	<script>
+    function postComment(postId){
+    	   var textAreaInput = document.getElementById("newCommentInputContent").value;
+    	    var request = new XMLHttpRequest();
+    	      request.onreadystatechange = function() {
+    	          //when response is received 
+    	          if (this.readyState == 4 && this.status == 200) {
+    	             var comment = JSON.parse(request.responseText); // tva ni e vurnatiq comment ot rest controllera
+    	            
+    	             var commentContent = comment.content;
+    	             document.getElementById("newCommentContent").innerHTML = commentContent;
+    	             
+    	             var commentDatetime = comment.datetimeString;
+    	             document.getElementById("newCommentDatetime").innerHTML = commentDatetime;
+    	            
+    	            var commentId = comment.id;// will be needed later for like/dislike operations 
+    	            document.getElementById("newCommentId").innerHTML = commentId;
+    	            //like operation 
+    	            //dislike operation 
+    	           
+    	            //now that everything is set:    
+    	            var table = document.getElementById("commentsTable");
+    	            var row = table.insertRow(0);
+    	             var cell = row.insertCell(0);
+    	             cell.innerHTML = document.getElementById("newCommentContainer").innerHTML;
+    	          }
+    	          else
+    	          if (this.readyState == 4 && this.status == 401) {
+    	              alert("Sorry, you must log in to comment on this post.");
+    	          }
+    	      }
+    	      request.open("POST", "/postComment/"+postId + "/" + textAreaInput, true);
+    	      request.send();
+    	  }
+    </script>
+	<script>
+    function handleCommentLike(commentId){
+    	alert("I am trying to like comment id = " + commentId);
+        var button = document.getElementById("likeButton/"+commentId);
+        var title = button.innerHTML;
+        if(title == 'Like'){
+            alert("I wanna like it.");
+            likeComment(commentId);
+        }
+        else{
+            alert("I wanna dislike it.");
+            unlikeComment(commentId);
+        }
+    }
 
+    function handleCommentDislike(commentId){
+    	alert("I am trying to dislike comment id = " + commentId);
+        var button = document.getElementById("dislikeButton/"+commentId);
+        var title = button.innerHTML;
+        if(title == "Dislike"){
+            alert("I wanna dislike it.");
+            dislikeComment(commentId);
+        }
+        else{
+            alert("I wanna undislike it.");
+            undislikeComment(commentId);
+        }
+    }
 
+    function likeComment(commentId) {
+        alert("Now i am rly tryin to like "+ commentId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var likeButton = document.getElementById("likeButton/"+commentId);
+                likeButton.innerHTML = "Unlike";
+                likeButton.style.background='red';
+                alert("Am i supposed to have liked it now?");
+                var dislikeButton=document.getElementById("dislikeButton/"+commentId);
+                dislikeButton.innerHTML="Dislike";
+                dislikeButton.style.background="green";
+                document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
+            }
+            else if(this.readyState == 4 && this.status == 201){
+                var likeButton1 = document.getElementById("likeButton/"+commentId);
+                likeButton1.innerHTML = "Unlike";
+                likeButton1.style.background='red';
+                alert("Am i supposed to have liked it now?");
+               // alert(${sessionScope.post.peopleDisliked.size()});
+               // alert(document.getElementById("likesCount/"+commentId).innerHTML);
+                document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
+            }
+            else if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you cannot like this video!");
+            }
+        }
+        request.open("POST", "/likeComment/"+commentId, true);
+        request.send();
+    }
+
+    function unlikeComment(commentId) {
+        alert("Now i am tryin to unlike "+ commentId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var button = document.getElementById("likeButton/"+commentId);
+                button.innerHTML = "Like";
+                button.style.background='green';
+                alert("Sooo... now im tryin to unlike it, huh?");
+                document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("POST", "/unlikeComment/"+commentId, true);
+        request.send();
+    }
+
+    function dislikeComment(commentId) {
+        alert("I WANT TO DISLIKE comment "+ commentId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var dislikeButton = document.getElementById("dislikeButton/"+commentId);
+                dislikeButton.innerHTML = "Undislike";
+                dislikeButton.style.background='red';
+                var likeButton=document.getElementById("likeButton/"+commentId);
+                likeButton.innerHTML="Like";
+                likeButton.style.background="green";
+                alert("I JUST DISLIKED A comment and updated some entry???");
+                document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
+            }
+            else if(this.readyState == 4 && this.status == 201){
+                var dislikeButton1 = document.getElementById("dislikeButton/"+commentId);
+                dislikeButton1.innerHTML = "Undislike";
+                dislikeButton1.style.background='red';
+                alert("I JUST DISLIKED A COMMENT  AND ADDED A NEW ENTRY");
+                document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to dislike this video!");
+            }
+        }
+        request.open("post", "/dislikeComment/"+commentId, true);
+        request.send();
+    }
+
+    function undislikeComment(commentId) {
+        alert("I WANT TO UNDISLIKE COMMENT "+ commentId);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            //when response is received
+            if (this.readyState == 4 && this.status == 200) {
+                var button = document.getElementById("dislikeButton/"+commentId);
+                button.innerHTML = "Dislike";
+                button.style.background='green';
+                alert("I JUST UNDISLIKED A comment  AND DELETED THE NEW ENTRY");
+                document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
+            }
+            else
+            if (this.readyState == 4 && this.status == 401) {
+                alert("Sorry, you must log in to like this video!");
+            }
+        }
+        request.open("POST", "/undislikeComment/"+commentId, true);
+        request.send();
+    }
+</script>
 </body>
 </html>
