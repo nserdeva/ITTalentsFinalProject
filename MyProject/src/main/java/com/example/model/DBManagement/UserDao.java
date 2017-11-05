@@ -217,8 +217,6 @@ public class UserDao extends AbstractDao { // operates with the following tables
 				post.setTags(tagDao.getTagsForPost(post));
 				post.setPeopleLiked(postDao.getAllPeopleLiked(post));
 				post.setPeopleDisliked(postDao.getAllPeopleDisliked(post));
-				System.out.println("::::::::::::::FETCHED PEOPLE LIKED: "+post.getPeopleLiked());
-				System.out.println("::::::::::::::::::FETCHED PEOPLE DISLIKED "+post.getPeopleDisliked());
 				posts.add(post);
 			}
 		}

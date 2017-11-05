@@ -9,6 +9,11 @@
 	<link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css">
 </head>
 <body>
+
+<c:if test="${ sessionScope.user != null }">
+	<c:redirect url="/myPassport"></c:redirect>
+</c:if>
+
 	<div class="registerBox">
 		<h2>Register</h2>
 		<form method="post" action="register">

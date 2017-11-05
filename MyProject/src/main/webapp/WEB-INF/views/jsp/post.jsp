@@ -8,6 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<title>View Adventure</title>
+
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
 			type="text/javascript"></script>
 
@@ -42,8 +43,13 @@
 
 		}
 	</style>
+
+
 </head>
 <body>
+<c:if test="${ sessionScope.user == null }">
+	<c:redirect url="/login"></c:redirect>
+</c:if>
 
 
 <jsp:include page="header.jsp"></jsp:include><br>
@@ -192,16 +198,19 @@
                 var dislikeButton=document.getElementById("dislikeButton");
                 dislikeButton.innerHTML="Dislike";
                 dislikeButton.style.background="green";
-                document.getElementById("likesCount").innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount").innerHTML=counters[0];
+                document.getElementById("dislikesCount").innerHTML=counters[1];
+
             }
             else if(this.readyState == 4 && this.status == 201){
                 var likeButton1 = document.getElementById("likeButton");
                 likeButton1.innerHTML = "Unlike";
                 likeButton1.style.background='red';
                 alert("I JUST LIKED POST AND CREATED NEW ENTRY");
-                alert(${sessionScope.post.peopleDisliked.size()});
-                alert(document.getElementById("likesCount").innerHTML);
-                document.getElementById("likesCount").innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount").innerHTML=counters[0];
+                document.getElementById("dislikesCount").innerHTML=counters[1];
             }
             else if (this.readyState == 4 && this.status == 401) {
                 alert("Sorry, you cannot like this video!");
@@ -221,7 +230,9 @@
                 button.innerHTML = "Like";
                 button.style.background='green';
                 alert("I JUST UNLIKED A POST AND DELETED THE ENTRY");
-                document.getElementById("likesCount").innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount").innerHTML=counters[0];
+                document.getElementById("dislikesCount").innerHTML=counters[1];
             }
             else
             if (this.readyState == 4 && this.status == 401) {
@@ -245,14 +256,18 @@
                 likeButton.innerHTML="Like";
                 likeButton.style.background="green";
                 alert("I JUST DISLIKED A POST AND UPDATED THE ENTRY");
-                document.getElementById("dislikesCount").innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount").innerHTML=counters[0];
+                document.getElementById("dislikesCount").innerHTML=counters[1];
             }
             else if(this.readyState == 4 && this.status == 201){
                 var dislikeButton1 = document.getElementById("dislikeButton");
                 dislikeButton1.innerHTML = "Undislike";
                 dislikeButton1.style.background='red';
                 alert("I JUST DISLIKED A POST AND ADDED A NEW ENTRY");
-                document.getElementById("dislikesCount").innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount").innerHTML=counters[0];
+                document.getElementById("dislikesCount").innerHTML=counters[1];
             }
             else
             if (this.readyState == 4 && this.status == 401) {
@@ -273,7 +288,9 @@
                 button.innerHTML = "Dislike";
                 button.style.background='green';
                 alert("I JUST UNDISLIKED A POST AND DELETED THE NEW ENTRY");
-                document.getElementById("dislikesCount").innerHTML=request.responseText;
+                var counters=JSON.parse(request.responseText);
+                document.getElementById("likesCount").innerHTML=counters[0];
+                document.getElementById("dislikesCount").innerHTML=counters[1];
             }
             else
             if (this.readyState == 4 && this.status == 401) {

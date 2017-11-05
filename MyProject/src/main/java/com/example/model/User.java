@@ -232,7 +232,7 @@ public final class User {
 
 	// ::::::::: add/remove from visited_locations :::::::::
 	public void addVisitedLocation(Timestamp datetime, Location location) {
-		if (this.visitedLocations == null) {
+			if (this.visitedLocations == null) {
 			this.visitedLocations = new TreeMap<Timestamp, Location>();
 		}
 		this.visitedLocations.put(datetime, location);

@@ -25,7 +25,7 @@ public class LocationDao extends AbstractDao {
 	MultimediaDao multimediaDao;
 
 	// tested
-	public void insertLocation(Location location) throws SQLException, LocationException {
+	public Location insertLocation(Location location) throws SQLException, LocationException {
 		try {
 			PreparedStatement ps = this.getConnection().prepareStatement(
 					"insert into locations( latitude,longtitude, description, location_name) values (?,?,?,?);",
@@ -34,12 +34,18 @@ public class LocationDao extends AbstractDao {
 			ps.setString(2, location.getLongtitude());
 			ps.setString(3, location.getDescription());
 			ps.setString(4, location.getLocationName());
+			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
-			rs.next();
-			location.setId(rs.getLong(1));
+			if(rs.next()){
+				location.setId(rs.getLong(1));
+			}
 		} catch (SQLException e) {
 			throw new LocationException("Location could not be added. Reason: " + e.getMessage());
 		}
+		if(location==null){
+			System.out.println("********************************************FRESHLY INSERTED LOCATION IS NULL");
+		}
+		return location;
 	}
 
 	// tested
@@ -133,6 +139,24 @@ public class LocationDao extends AbstractDao {
 		return locations;
     }
 
+	public boolean existsLocationInDb(Location location) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT COUNT(*) FROM locations WHERE location_name LIKE ? AND latitude LIKE ? AND longtitude LIKE ?");
+			ps.setString(1,location.getLocationName());
+			ps.setString(2,location.getLatitude());
+			ps.setString(3,location.getLongtitude());
+			ResultSet rs=ps.executeQuery();
+			rs.next();
+				if(rs.getInt("COUNT(*)")>0){
+					return true;
+				}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+
 	public boolean existsLocation(String locationName) {
 		try{
 			PreparedStatement ps=this.getConnection().prepareStatement("SELECT COUNT(*) FROM locations WHERE location_name LIKE ?");
@@ -145,5 +169,32 @@ public class LocationDao extends AbstractDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public Location getLocation(Location location) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("SELECT location_id FROM locations WHERE location_name LIKE ? AND latitude LIKE ? AND longtitude LIKE ?");
+			ps.setString(1,location.getLocationName());
+			ps.setString(2,location.getLatitude());
+			ps.setString(3,location.getLongtitude());
+			ResultSet rs=ps.executeQuery();
+			if(rs.next()){
+				location.setId(rs.getLong("location_id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return location;
+	}
+
+	public void insertVisitedLocation(long userId, long id) {
+		try{
+			PreparedStatement ps=this.getConnection().prepareStatement("INSERT INTO visited_locations(user_id, location_id, date_time) VALUES(?,?,now());");
+			ps.setLong(1,userId);
+			ps.setLong(2,id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

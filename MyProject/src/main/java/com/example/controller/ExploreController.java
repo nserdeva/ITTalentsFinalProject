@@ -6,14 +6,17 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -178,7 +181,7 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/showPassport/{id}", method = RequestMethod.GET)
-	public String getPassportPage(@PathVariable("id") long id, HttpSession session, HttpServletRequest request)
+	public String getPassportPage(@PathVariable("id") long id, HttpSession session, HttpServletRequest request,Model model)
 			throws CategoryException, UserException {
 		try {
 			User current = (User)session.getAttribute("user");
@@ -190,11 +193,8 @@ public class ExploreController {
 			// userDao.setVisitedLocations(selectedUser);
 			// userDao.setWishlistLocations(selectedUser);
 			session.setAttribute("selectedUser", selectedUser);
-			System.out.println("maikati_ follow kotkata_mi" + current.follows(selectedUser));
             request.setAttribute("thisFollowsSelected", current.follows(selectedUser));
             request.setAttribute("isMyPassport", current.equals(selectedUser));
-
-
 		} catch (NumberFormatException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by Marina on 2.11.2017 г..
@@ -29,9 +30,8 @@ public class LikeService
 
     @RequestMapping(value = "/like/{postId}",method = RequestMethod.POST)
     @ResponseBody
-    public String likePost(HttpSession session, Model model, HttpServletResponse resp , @PathVariable("postId") long postId) throws UserException, JsonProcessingException {
+    public Integer[] likePost(HttpSession session, Model model, HttpServletResponse resp , @PathVariable("postId") long postId) throws UserException, JsonProcessingException {
         Post post=null;
-        ObjectMapper mapper=new ObjectMapper();
         try {
             System.out.println("=================================="+postId);
             post=postDao.getPostById(postId);
@@ -53,14 +53,16 @@ public class LikeService
         } catch (PostException e) {
             e.printStackTrace();
         }
-        return String.valueOf(post.getPeopleLiked().size());
+        Integer[] sizes=new Integer[2];
+        sizes[0]=post.getPeopleLiked().size();
+        sizes[1]=post.getPeopleDisliked().size();
+        return sizes;
     }
 
 
     @RequestMapping(value = "/unlike/{postId}",method = RequestMethod.POST)
     @ResponseBody
-    public String unlikePost(HttpSession session,HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException, SQLException, PostException {
-        System.out.println("=================================="+postId);
+    public Integer[] unlikePost(HttpSession session,HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException, SQLException, PostException {
         Post post=null;
         try {
             post=postDao.getPostById(postId);
@@ -72,12 +74,15 @@ public class LikeService
         } catch (SQLException | PostException e) {
             e.printStackTrace();
         }
-        return String.valueOf(post.getPeopleLiked().size());
+        Integer[] sizes=new Integer[2];
+        sizes[0]=post.getPeopleLiked().size();
+        sizes[1]=post.getPeopleDisliked().size();
+        return sizes;
     }
 
     @RequestMapping(value = "/dislike/{postId}",method = RequestMethod.POST)
     @ResponseBody
-    public String dislikePost(HttpSession session,HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
+    public Integer[] dislikePost(HttpSession session,HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
         Post post=null;
         try {
             System.out.println("=================================="+postId);
@@ -98,12 +103,15 @@ public class LikeService
         } catch (PostException e) {
             e.printStackTrace();
         }
-        return String.valueOf(post.getPeopleDisliked().size());
+        Integer[] sizes=new Integer[2];
+        sizes[0]=post.getPeopleLiked().size();
+        sizes[1]=post.getPeopleDisliked().size();
+        return sizes;
     }
 
     @RequestMapping(value = "/undislike/{postId}",method = RequestMethod.POST)
     @ResponseBody
-    public String undislikePost(HttpSession session,HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
+    public Integer[] undislikePost(HttpSession session,HttpServletResponse resp ,@PathVariable("postId") long postId) throws UserException{
         System.out.println("=================================="+postId);
         Post post=null;
         try {
@@ -118,7 +126,10 @@ public class LikeService
         } catch (PostException e) {
             e.printStackTrace();
         }
-        return String.valueOf(post.getPeopleDisliked().size());
+        Integer[] sizes=new Integer[2];
+        sizes[0]=post.getPeopleLiked().size();
+        sizes[1]=post.getPeopleDisliked().size();
+        return sizes;
     }
 
 }

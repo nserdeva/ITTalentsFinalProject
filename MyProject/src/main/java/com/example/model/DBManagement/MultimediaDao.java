@@ -24,7 +24,7 @@ public class MultimediaDao extends AbstractDao {
     @Autowired
     UserDao userDao;
 
-    public static Multimedia AVATAR=new Multimedia(0,"avatar.jpg",false, null);
+    public static Multimedia AVATAR=new Multimedia(0,"avatar.png",false, null);
 
     //tested
     public void insertMultimediaInPost(Post post, Multimedia multimedia) throws SQLException, MultimediaException {

@@ -11,6 +11,10 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvyBZwme7_jzLC85kY0OCv_5SXfFuc-qw&callback=map" type="text/javascript"></script>
 </head>
 <body>
+<c:if test="${ sessionScope.user == null }">
+	<c:redirect url="/login"></c:redirect>
+</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include>
 	<c:set var="i" value="0" scope="page" />
 	<c:forEach var="post" items="${sessionScope.user.posts}">

@@ -33,19 +33,28 @@ public class PostDao extends AbstractDao{
 		this.getConnection().setAutoCommit(false);
 		PreparedStatement ps=null;
 		try {
-			if(post.getLocation()==null){
+			Location location=null;
+			if(post.getLocation()!=null){
+				if(locationDao.existsLocationInDb(post.getLocation())){
+					location=locationDao.getLocation(post.getLocation());
+					post.setLocation(location);
+				}else{
+					location=locationDao.insertLocation(post.getLocation());
+					post.setLocation(location);
+				}
+
+				ps = this.getConnection().prepareStatement(
+						"insert into posts(user_id, description, date_time,location_id) value (?,?,now(),?);",
+						Statement.RETURN_GENERATED_KEYS);
+				ps.setLong(1, post.getUser().getUserId());
+				ps.setString(2, post.getDescription());
+				ps.setLong(3,post.getLocation().getId());
+			}else{
 				ps = this.getConnection().prepareStatement(
 						"insert into posts(user_id, description, date_time) value (?,?,now());",
 						Statement.RETURN_GENERATED_KEYS);
 				ps.setLong(1, post.getUser().getUserId());
 				ps.setString(2, post.getDescription());
-			}else{
-				ps = this.getConnection().prepareStatement(
-						"insert into posts(user_id, description, date_time, location_id) value (?,?,now(),?);",
-						Statement.RETURN_GENERATED_KEYS);
-				ps.setLong(1, post.getUser().getUserId());
-				ps.setString(2, post.getDescription());
-				ps.setLong(3,post.getLocation().getId());
 			}
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
@@ -60,10 +69,15 @@ public class PostDao extends AbstractDao{
 			User user = userDao.getUserById(post.getUser().getUserId());
 			userDao.addPost(user, post);
 			tagDao.addTagsToPost(post, post.getTags());
+			if(post.getLocation()!=null){
+				locationDao.insertVisitedLocation(user.getUserId(), post.getLocation().getId());
+			}
 			this.tagAllUsers(post, post.getTaggedPeople());
 			this.getConnection().commit();
 		} catch (SQLException e) {
 			throw new PostException("Post could not be added. Reason: " + e.getMessage());
+		} catch (LocationException e) {
+			e.printStackTrace();
 		} finally {
 			this.getConnection().rollback();
 			this.getConnection().setAutoCommit(true);
@@ -270,7 +284,6 @@ public class PostDao extends AbstractDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("PRINTING THE SIZE OF PEOPLE LIKED COLLECTION "+peopleLiked.size());
 		return peopleLiked;
 	}
 

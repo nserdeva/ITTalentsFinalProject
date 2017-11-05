@@ -14,10 +14,14 @@
 	<link href="<c:url value="/css/style.css"/>" rel="stylesheet" type="text/css">
 </head>
 <body>
+<c:if test="${ sessionScope.user != null }">
+	<c:redirect url="/myPassport"></c:redirect>
+</c:if>
+
 	<div class="loginBox">
 		<img src="img/user.png" class="user">
 		<h2>Start exploring!</h2>
-		<form action="login" method="post">
+		<form action="/login" method="post">
 			<p>
 				<font color="white"> username</font>
 			</p>

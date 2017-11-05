@@ -82,6 +82,9 @@ public class Post implements Comparable<Post> {
     }
 
     public Set<Long> getPeopleLiked() {
+        if(this.peopleLiked==null){
+            this.peopleLiked=new HashSet<>();
+        }
         return Collections.unmodifiableSet(this.peopleLiked);
     }
 
@@ -90,6 +93,9 @@ public class Post implements Comparable<Post> {
     }
 
     public Set<Long> getPeopleDisliked() {
+        if(this.peopleDisliked==null){
+            this.peopleDisliked=new HashSet<>();
+        }
         return Collections.unmodifiableSet(this.peopleDisliked);
     }
 

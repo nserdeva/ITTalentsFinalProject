@@ -56,6 +56,10 @@
 </head>
 <body>
 
+<c:if test="${ sessionScope.user == null }">
+	<c:redirect url="/login"></c:redirect>
+</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include><br>
 
 	<c:forEach var="post" items="${sessionScope.browsedAdventures}">
@@ -100,8 +104,8 @@ ${category.name};
 ${tag.tag_name};
 </c:forEach>
 			</div>
-			<div class="subContainer">Likes: ${post.likesCount} Dislikes:
-				${post.dislikesCount}</div>
+			<div class="subContainer">Likes: ${post.peopleLiked.size()} Dislikes:
+				${post.peopleDisliked.size()}</div>
 
 		</div>
 		<br>

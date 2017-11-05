@@ -1,4 +1,5 @@
 ﻿<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Marina
@@ -13,6 +14,11 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
+
+<c:if test="${ sessionScope.user == null }">
+    <c:redirect url="/login"></c:redirect>
+</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include>
 
 	<div class="w3-container">
@@ -28,7 +34,7 @@
         <button onclick="showDescription()" class="w3-btn w3-black">Description</button>
         <form id="descriptionChange" class="w3-hide w3-red" method="post" action="/settings/changeDescription">
 			Change description: 
-			<input type="text" name="descriptionTxt" placeholder="${sessionScope.user.description}">
+			<input type="text" name="descriptionTxt" value="${sessionScope.user.description}">
 		    <input type="submit" value="Change description"/>
 		</form><br>
 

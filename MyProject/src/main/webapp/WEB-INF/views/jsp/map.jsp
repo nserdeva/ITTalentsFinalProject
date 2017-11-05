@@ -18,16 +18,26 @@
 <div id="map" style="float: left; width: 500px; height: 400px;"></div>
 
 <script type="text/javascript">
+
+    var visitedLocations=${sessionScope.user.visitedLocations}
+    for(i=0; i<visitedLocations.length;i++){
+        var latitudeString = ${}
+        var longtitudeString = document.getElementById("longtitude").value;
+
+        var latitude = parseFloat(latitudeString);
+        var longtitude = parseFloat(longtitudeString);
+
+    }
+
+
+
     var locations = [
-        ['Musagenica', 42.661723, 23.360285, 4],
-        ['Stud. grad', 42.653884, 23.345965, 5],
-        ['Geo Milev', 42.680135, 23.356985, 3],
-        ['Lozenec', 42.674448, 23.309441, 2],
-        ['Center', 42.697180, 23.316997, 1]
+        ['', latitude, longtitude, 4],
     ];
+
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
-        center: new google.maps.LatLng(42.661723, 23.360285),
+        center: new google.maps.LatLng(latitude, longtitude),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
     var infowindow = new google.maps.InfoWindow();
@@ -45,5 +55,6 @@
         })(marker, i));
     }
 </script>
+
 </body>
 </html>

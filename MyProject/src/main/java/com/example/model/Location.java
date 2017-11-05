@@ -25,12 +25,16 @@ public class Location {
 
 	private String locationName;
 	private ConcurrentSkipListSet<User> peopleVisited;
-	private HashSet<Category> categories;
+	//private HashSet<Category> categories;
 	private HashSet<Multimedia> pictures = new HashSet<Multimedia>();
 
 	// constructor to be used when putting object in database
 
-	Location(String latitude, String longtitude, String description, String locationName) throws LocationException {
+
+	public Location() {
+	}
+
+	public Location(String latitude, String longtitude, String description, String locationName) throws LocationException {
 		this.setLatitude(latitude);
 		this.setLongtitude(longtitude);
 		this.setDescription(description);
@@ -84,9 +88,9 @@ public class Location {
 		return this.locationName;
 	}
 
-	public Set<Category> getCategories() {
+	/*public Set<Category> getCategories() {
 		return Collections.unmodifiableSet(this.categories);
-	}
+	}*/
 
 	public Set<Multimedia> getPictures() {
 		return Collections.unmodifiableSet(this.pictures);
@@ -123,10 +127,6 @@ public class Location {
 		this.peopleVisited = peopleVisited;
 	}
 
-	public void setCategories(HashSet<Category> categories) {
-		this.categories = categories;
-	}
-
 	public void setPictures(HashSet<Multimedia> pictures) {
 		this.pictures = pictures;
 	}
@@ -135,6 +135,10 @@ public class Location {
 		this.shortDescription = this.description.length() > 200 ? this.description.substring(0, 200) + "..."
 				: this.description;
 	}
+
+	/*public void setCategories(HashSet<Category> categories) {
+		this.categories = categories;
+	}*/
 
 	@Override
 	public boolean equals(Object o) {

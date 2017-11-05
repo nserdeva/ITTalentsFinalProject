@@ -5,6 +5,13 @@
     <title>$Title$</title>
 </head>
 <body>
+
+
+<c:if test="${ sessionScope.user == null }">
+    <c:redirect url="/login"></c:redirect>
+</c:if>
+
+
 <jsp:include page="header.jsp"></jsp:include>
 <div class="w3-container">
 <div class="w3-panel w3-teal">

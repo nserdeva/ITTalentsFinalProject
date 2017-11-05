@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
+<c:if test="${ sessionScope.user == null }">
+    <c:redirect url="/login"></c:redirect>
+</c:if>
 
 <jsp:include page="header.jsp"></jsp:include>
 

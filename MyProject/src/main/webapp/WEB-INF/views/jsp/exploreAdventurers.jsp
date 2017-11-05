@@ -56,6 +56,10 @@ visibility: hidden;
 </head>
 <body>
 
+<c:if test="${ sessionScope.user == null }">
+	<c:redirect url="/login"></c:redirect>
+</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include><br>
 
 	<c:forEach var="user" items="${sessionScope.browsedAdventurers}">				

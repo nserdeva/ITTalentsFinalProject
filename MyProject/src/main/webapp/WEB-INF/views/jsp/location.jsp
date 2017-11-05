@@ -8,8 +8,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>${sessionScope.location.locationName}</title>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
-			type="text/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHRkWRORCE1pttqPPUWLt0dF6tpO2LUow&callback=map"
+            type="text/javascript"></script>
 
 <style>
 .image{
@@ -23,34 +23,34 @@
     opacity: 0.5;
     box-shadow: 0 0 2px 1px rgb(51, 51, 255);
 }
-</style>
+ table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 80%;
+            border: 2px solid #909090;
 
+        }
+
+        td, .th {
+            border: 2px solid #909090;
+            text-align: left;
+            padding: 5px;
+        }
+
+        tr {
+            background-color: #dddddd;
+
+        }
+    </style>
 </head>
 <body>
+
+<c:if test="${ sessionScope.user == null }">
+    <c:redirect url="/login"></c:redirect>
+</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include><br>
 
-<style>
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 80%;
-            border: 2px solid #909090;
-    
-}
-
-td, .th {
-        border: 2px solid #909090;
-    text-align: left;
-    padding: 5px;
-}
-
-tr {
-    background-color: #dddddd;
-    
-}
-</style>
-			</head>
-<body>
 <table align="center">
 <tr >
     <td > 
@@ -116,6 +116,7 @@ var locations = [
             })(marker, i));
         }
 	</script>
+
 
 
 </body>

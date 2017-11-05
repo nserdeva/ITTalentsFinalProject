@@ -47,20 +47,23 @@ public class PostController {
     }
 
     @RequestMapping(value = "/uploadPost", method = RequestMethod.POST)
-    public String uploadPost(@RequestParam("description") String description, @RequestParam("location") String locationName,
+    public String uploadPost(@RequestParam("description") String description, @RequestParam("locationName") String locationName,
+                             @RequestParam("latitude") String latitude, @RequestParam("longtitude") String longtitude,
                              @RequestParam("taggedPeople") String taggedPeople, @RequestParam("tags") String tagNames,
                              @RequestParam("categories") String categoryNames, @RequestParam("image1") MultipartFile image1,
                              @RequestParam("image2") MultipartFile image2, @RequestParam("image3") MultipartFile image3,
                              @RequestParam("video") MultipartFile video1, HttpSession session){
-        if("".equals(description) && "".equals(locationName) && "".equals(taggedPeople)
+        if("".equals(description) && "".equals(locationName) && "".equals(latitude) && "".equals(longtitude) && "".equals(taggedPeople)
                 && "".equals(tagNames) && "".equals(categoryNames) && image1.getSize()==0 && image2.getSize()==0
                 && image3.getSize()==0 && video1.getSize()==0){
             return "redirect:/myPassport";
         }
         Post post=null;
+
+
         try {
             User user=(User)session.getAttribute("user");
-            Location location=getLocation(locationName);
+            Location location=getLocation(locationName, latitude, longtitude);
             HashSet<User> taggedUsers=getTaggedUsers(taggedPeople);
             HashSet<Tag> tags=getTags(tagNames);
             HashSet<Category> categories=getCategories(categoryNames);
@@ -97,27 +100,19 @@ public class PostController {
         return "redirect:/myPassport";
     }
 
-    private Location getLocation(String locationInput) {
-        Location location = null;
-        System.out.println("************************LOCATION INPUT FROM FORM: "+locationInput);
+    private Location getLocation(String locationInput, String latitude, String longtitude) throws LocationException, SQLException {
 
-        if (!"".equals(locationInput)) {
-            String[] locationNames=locationInput.split(",");
-            for (int i = 0; i < locationNames.length; i++) {
-                String locationName=locationNames[i];
-                if(!"".equals(locationName)){
-                    locationName=locationName.replace("]","");
-                    locationName=locationName.replace("[","");
-                    locationName=locationName.trim();
-                    if(locationDao.existsLocation(locationName)){
-                        location = locationDao.getLocationByName(locationName);
-                        System.out.println("************************ADDED LOCATION: "+location.getLocationName());
-                    }
-                }
+        /*if (!"".equals(locationInput)) {
+            if(locationDao.existsLocation(locationInput, latitude, longtitude)){
+                location = locationDao.getLocationByName(locationInput);
+                System.out.println("************************ADDED LOCATION: "+location.getLocationName());
             }
-        }
-        return location;
+        }*/
+        Location location1=new Location(latitude,longtitude, "", locationInput);
+        //location=locationDao.insertLocation(location1);
+        return location1;
     }
+
 
     private HashSet<Multimedia> getImages(MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         HashSet<Multimedia> images=new HashSet<>();

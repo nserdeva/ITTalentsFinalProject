@@ -65,7 +65,16 @@ public class UserController {
 		return "login";
 	}
 
-	@RequestMapping(value = "*", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login2(Model model) {
+		// TODO CHECK IF LOGGED IN
+		// model.addAttribute("user", new User());
+		return "login";
+	}
+
+
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String logUser(HttpSession session, HttpServletRequest request)
 			throws NoSuchAlgorithmException, BadOperationException, InvalidHashException {
 		String username = request.getParameter("user");
@@ -109,18 +118,9 @@ public class UserController {
 				request.setAttribute("isValidData", false);
 				return "login";
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | CommentException | PostException | LocationException |UserException | CategoryException e) {
 			e.printStackTrace();
-		} catch (CommentException e) {
-			e.printStackTrace();
-		} catch (PostException e) {
-			e.printStackTrace();
-		} catch (LocationException e) {
-			e.printStackTrace();
-		} catch (UserException e) {
-			e.printStackTrace();
-		} catch (CategoryException e) {
-			e.printStackTrace();
+			return "login";
 		}
 		return "login";
 	}
@@ -150,10 +150,9 @@ public class UserController {
 					System.out.println("second if- else");
 					return "register";
 				}
-			} catch (SQLException e) {
+			} catch (SQLException | UserException e) {
 				e.printStackTrace();
-			} catch (UserException e) {
-				e.printStackTrace();
+				return "register";
 			}
 		}
 		return "register";
@@ -238,7 +237,7 @@ public class UserController {
 	@RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.POST)
 	public String changeAvatar(HttpSession session, @RequestParam("avatar") MultipartFile file, Model model) {
 		User user = (User) session.getAttribute("user");
-		String avatarUrl = user.getUsername() + ".jpg";
+		String avatarUrl = user.getUsername();
 		try {
 			if (file.isEmpty()) {
 				// TODO NOT SURE HERE

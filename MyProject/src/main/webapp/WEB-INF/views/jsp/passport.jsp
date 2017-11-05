@@ -6,11 +6,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Content-Type" content="text/plain; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>${sessionScope.selectedUser.username}</title>
-<style type="text/css" media="screen">
+	<style type="text/css" media="screen">
 .subContainer {
 	position: right;
 	align: right;
@@ -53,8 +53,7 @@
 	visibility: hidden;
 }
 </style>
-
-<style>
+	<style>
 table {
 	font-family: arial, sans-serif;
 	border-collapse: collapse;
@@ -72,11 +71,20 @@ tr {
 	background-color: #dddddd;
 }
 </style>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHRkWRORCE1pttqPPUWLt0dF6tpO2LUow&callback=map" type="text/javascript"></script>
 
 </head>
 <body>
 
+<c:if test="${ sessionScope.user == null }">
+	<c:redirect url="/login"></c:redirect>
+</c:if>
+
 	<jsp:include page="header.jsp"></jsp:include><br>
+
+
+	<div id="map" style="float: left; width: 500px; height: 400px;"></div>
+
 
 	<table align="center">
 		<tr>
@@ -84,8 +92,8 @@ tr {
 				src="/user/picture/${sessionScope.selectedUser.userId}" border="3"
 				width="200" height="200" align="middle"
 				style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-				${sessionScope.selectedUser.username} <c:if
-					test="${isMyPassport=='false' }">
+				${sessionScope.selectedUser.username}
+				<c:if test="${isMyPassport=='false' }">
 					<c:if test="${thisFollowsSelected!='false' }">
 						<div id="follow/unfollow">
 							<button style="background-color: blue" id="followButton"
@@ -99,9 +107,11 @@ tr {
 								onclick="handleFollow(${sessionScope.selectedUser.userId})">Follow</button>
 						</div>
 					</c:if>
-				</c:if> Followers:
+				</c:if>
+				Followers:
 				<p id="selectedUserFollowers">
-					${sessionScope.selectedUser.followers.size()}</p> <br> Following:
+					${sessionScope.selectedUser.followers.size()}</p> <br>
+				Following:
 				${sessionScope.selectedUser.following.size()} <br>
 				${sessionScope.selectedUser.description}</td>
 		</tr>
@@ -148,8 +158,9 @@ ${category.name};
 ${tag.tag_name};
 </c:forEach>
 			</div>
-			<div class="subContainer">Likes: ${post.likesCount} Dislikes:
-				${post.dislikesCount}</div>
+			<div class="subContainer">
+				Likes:  ${post.peopleLiked.size()}
+				Dislikes: ${post.peopleDisliked.size()}</div>
 			</p>
 
 		</div>
@@ -220,6 +231,56 @@ function handleFollow(userId) {
 
 </script>
 
+<script type="text/javascript">
+    var locations = [];
+    getVisitedLocations();
+
+    function getVisitedLocations() {
+        var request= new XMLHttpRequest();
+        request.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var visitedLocations=JSON.parse(request.responseText);
+                for(i=0; i<visitedLocations.length;i++){
+                    var currentLocation=visitedLocations[i];
+                    var latitudeString =currentLocation.latitude;
+                    var longtitudeString = currentLocation.longtitude;
+
+                    var latitude = parseFloat(latitudeString);
+                    var longtitude = parseFloat(longtitudeString);
+                    var loc={};
+                    loc[0]='';
+                    loc[1]=latitude;
+                    loc[2]=longtitude;
+                    loc[3]=i;
+                    locations.push(loc);
+                }
+            }
+        };
+        request.open("GET","/getVisitedPlaces/"+${sessionScope.selectedUser.userId},false);
+        request.send();
+    }
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 2,
+        center: new google.maps.LatLng(42.6388078, 23.1838613),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+    for (i = 0; i < locations.length; i++) {
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infowindow.setContent(locations[i][0]);
+                infowindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+</script>
 
 
 	<jsp:include page="footer.jsp"></jsp:include>
