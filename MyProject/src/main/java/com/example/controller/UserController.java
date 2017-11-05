@@ -8,8 +8,7 @@ import com.example.WebInitializer;
 import com.example.model.Category;
 import com.example.model.DBManagement.*;
 import com.example.model.Multimedia;
-import com.example.model.Post;
-import com.example.model.Tag;
+
 import com.example.model.User;
 import com.example.model.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -59,36 +57,24 @@ public class UserController {
 	LocationDao locationDao;
 
 	@RequestMapping(value = "*", method = RequestMethod.GET)
-	public String login(Model model) {
-		// TODO CHECK IF LOGGED IN
-		// model.addAttribute("user", new User());
+	public String login() {
 		return "login";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login2(Model model) {
-		// TODO CHECK IF LOGGED IN
-		// model.addAttribute("user", new User());
+	public String login2() {
 		return "login";
 	}
 
-
-
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String logUser(HttpSession session, HttpServletRequest request)
-			throws NoSuchAlgorithmException, BadOperationException, InvalidHashException {
+	public String logUser(HttpSession session, HttpServletRequest request) {
 		String username = request.getParameter("user");
 		String password = request.getParameter("pass");
-
 		try {
-
-			// WARNING
 			User user = userDao.getUserByUsername(username);
 			if (user != null) {
 				if (Hash.verify(password, user.getPassword())) {
-					// userDao.setProfilePic(user);
 					session.setAttribute("user", user);
-
 					session.setAttribute("logged", true);
 					request.setAttribute("isValidData", true);
 					HashSet<String> usernames = userDao.getAllUsernames();
@@ -111,14 +97,14 @@ public class UserController {
 					servletContext.setAttribute("tags", tags);
 					servletContext.setAttribute("categories", categories);
 					servletContext.setAttribute("categoryNames", categoryNames);
-
-					return "index";
+					return "redirect:/showPassport/" + user.getUserId();
 				}
 			} else {
 				request.setAttribute("isValidData", false);
 				return "login";
 			}
-		} catch (SQLException | CommentException | PostException | LocationException |UserException | CategoryException e) {
+		} catch (SQLException | CommentException | PostException | LocationException | UserException | CategoryException
+				| NoSuchAlgorithmException | BadOperationException | InvalidHashException e) {
 			e.printStackTrace();
 			return "login";
 		}
@@ -127,13 +113,11 @@ public class UserController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String getRegister() {
-		// TODO check if logged
 		return "register";
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(HttpServletRequest request, HttpSession session)
-			throws NoSuchAlgorithmException, BadOperationException {
+	public String registerUser(HttpServletRequest request, HttpSession session) {
 		String username = request.getParameter("user");
 		String pass = request.getParameter("pass");
 		String pass2 = request.getParameter("pass2");
@@ -145,12 +129,11 @@ public class UserController {
 					userDao.insertUser(user);
 					session.setAttribute("user", user);
 					session.setAttribute("logged", true);
-					return "index";
+					return "redirect:/showPassport/" + user.getUserId();
 				} else {
-					System.out.println("second if- else");
 					return "register";
 				}
-			} catch (SQLException | UserException e) {
+			} catch (SQLException | UserException | NoSuchAlgorithmException | BadOperationException e) {
 				e.printStackTrace();
 				return "register";
 			}
@@ -167,47 +150,42 @@ public class UserController {
 
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)
 	public String arrangeSettings(HttpSession session) {
-		// TODO CHECK IF LOGGED
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/changeDescription", method = RequestMethod.GET)
-	public String getChangeDescriptionForm(HttpSession session, HttpServletRequest request) throws SQLException {
+	public String getChangeDescriptionForm(HttpSession session, HttpServletRequest request) {
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/changeDescription", method = RequestMethod.POST)
-	public String changeDescription(HttpSession session, HttpServletRequest request) throws SQLException {
+	public String changeDescription(HttpSession session, HttpServletRequest request) {
 		String newDescription = request.getParameter("descriptionTxt");
-		System.out.println(newDescription == null);
-		userDao.changeDescription((User) session.getAttribute("user"), newDescription);
+		try {
+			userDao.changeDescription((User) session.getAttribute("user"), newDescription);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/changeEmail", method = RequestMethod.GET)
-	public String getChangeEmailForm(HttpSession session, Model model) throws SQLException {
+	public String getChangeEmailForm(HttpSession session, Model model) {
 		model.addAttribute("email", ((User) session.getAttribute("user")).getEmail());
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/changeEmail", method = RequestMethod.POST)
 	public String changeEmail(HttpSession session, HttpServletRequest request,
-			@Valid @ModelAttribute("email") String email, BindingResult result) throws SQLException {
-		// String newEmail = request.getParameter("emailTxt");
-		// TODO CHECK FOR MISTAKEN EMAIL
-		// TODO AJAX
+			@Valid @ModelAttribute("email") String email, BindingResult result) {
 		if (result.hasErrors()) {
-			System.out.println("================IMA LI GRESHKI==========================]");
 			return "settings";
 		} else {
-			// System.out.println(newEmail==null);
 			try {
-				// TODO GOING HERE BUT GETTING NULL EMAIL
-				System.out.println(
-						"=================//////////" + email + "///////////////===================================");
 				userDao.changeEmail((User) session.getAttribute("user"), email);
-			} catch (UserException e) {
-				return "settings";
+			} catch (UserException | SQLException e) {
+				request.setAttribute("errorMessage", e.getMessage());
+				return "error";
 			}
 		}
 		return "settings";
@@ -257,13 +235,11 @@ public class UserController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return "settings";
 	}
 
 	@RequestMapping(value = "/follow/{userId}", method = RequestMethod.POST)
-	public void followUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId)
-			throws UserException {
+	public void followUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId){
 		try {
 			User follower = (User) session.getAttribute("user");
 			User followed = userDao.getUserById(userId);
@@ -273,12 +249,13 @@ public class UserController {
 			e.printStackTrace();
 		} catch (PostException e) {
 			e.printStackTrace();
+		} catch (UserException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@RequestMapping(value = "/unfollow/{userId}", method = RequestMethod.POST)
-	public void unfollowUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId)
-			throws UserException {
+	public void unfollowUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId){
 		try {
 			User follower = (User) session.getAttribute("user");
 			User followed = userDao.getUserById(userId);
@@ -289,6 +266,8 @@ public class UserController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (PostException e) {
+			e.printStackTrace();
+		} catch (UserException e) {
 			e.printStackTrace();
 		}
 	}

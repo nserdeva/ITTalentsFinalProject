@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.model.DBManagement.LocationDao;
 import com.example.model.DBManagement.UserDao;
 import com.example.model.Location;
 import com.example.model.User;
@@ -26,11 +25,23 @@ public class LocationsService {
 
     @RequestMapping(value = "/getVisitedPlaces/{userId}",method = RequestMethod.GET)
     @ResponseBody
-    public Collection<Location> getVisitedPlaces(HttpServletResponse response, @PathVariable("userId") long userId) throws SQLException, PostException, UserException, LocationException {
-        System.out.println("THIS IS THE USER ID: "+userId);
-        User user=userDao.getUserById(userId);
-        Collection<Location> locations=userDao.getVisitedLocations(user).values();
+    public Collection<Location> getVisitedPlaces(HttpServletResponse response, @PathVariable("userId") long userId){
+    	User user = null;
+    	Collection<Location> locations = null;
+    	try {
+    	user=userDao.getUserById(userId);
+        locations=userDao.getVisitedLocations(user).values();
         response.setStatus(200);
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (LocationException e) {
+			e.printStackTrace();
+		} catch (PostException e) {
+			e.printStackTrace();
+		} catch (UserException e) {
+			e.printStackTrace();
+		}
         return locations;
     }
+    
 }

@@ -16,7 +16,8 @@ public final class Comment implements Comparable<Comment> {
 	private long postId = 0;
 	private long userId = 0;
 	private Timestamp datetime = null;
-	private String datetimeString = null; // trust me, i really need it
+	private String datetimeString = null; 
+	
 	// ::::::::: additional object characteristics :::::::::
 	private static final int MAX_CONTENT_LENGTH = 500;
 	private User sentBy = null;
@@ -24,7 +25,7 @@ public final class Comment implements Comparable<Comment> {
     private HashSet<Long> peopleDisliked = new HashSet<Long>();
 
 
-	// ::::::::: constructor to be used when posting a new comment :::::::::
+	// ::::::::: constructors to be used when posting a new comment :::::::::
 	public Comment(String content, long postId, long userId, User sentBy) throws CommentException {
 		this.setContent(content);
 		this.setPostId(postId);
@@ -32,7 +33,6 @@ public final class Comment implements Comparable<Comment> {
 		this.setSentBy(sentBy);
 	}
 
-	// TO BE PARTICULARLY USED WHEN POSTING A NEW COMMENT 
 	public Comment(long id, String content, int likesCount, int dislikesCount, long postId, long userId,
 			Timestamp datetime) throws CommentException {
 		this.setContent(content);
@@ -178,7 +178,7 @@ public final class Comment implements Comparable<Comment> {
 		return c.getDatetime().compareTo(this.getDatetime());
 	}
 
-	//LIKE/DISLIKE FUNCTIONALITY
+	//::::::::: like/dislike functionality :::::::::
 	public void addPersonLiked(long userId) {
         if(this.peopleLiked==null){
             this.peopleLiked=new HashSet<>();
@@ -222,4 +222,5 @@ public final class Comment implements Comparable<Comment> {
     public void setPeopleDisliked(HashSet<Long> peopleDisliked) {
         this.peopleDisliked = peopleDisliked;
     }
+    
 }

@@ -61,7 +61,7 @@ input[type=text]:focus {
 		<input type="checkbox" onclick="changeCheckBoxesValues()" name="cityCheckBox" class="chb" value="false">City
 </div>
 		<input type="text" name="searchFormDataTxt" placeholder="Search..">
-			<button onclick="changeCheckBoxesValues()">explore</button>		
+			<button id = "exploreButton" style = "visibility: hidden;" onclick="changeCheckBoxesValues()">explore</button>		
 	</form>
 	
  <div class="dropdown">
@@ -81,6 +81,7 @@ input[type=text]:focus {
 
 <script>
 		function searchInAdventures() {
+			  document.getElementById("exploreButton").style.visibility = 'visible';
 			  document.getElementById('show_categories').style.display= 'block' ;
 			  document.getElementById('browse_adventures').style.display= 'block' ;
 			  document.getElementById('browse_destinations').style.display= 'none' ;
@@ -89,6 +90,7 @@ input[type=text]:focus {
 		}
 		
 		function searchInDestinations() {
+			  document.getElementById("exploreButton").style.visibility = 'visible';
 			  document.getElementById('show_categories').style.display= 'none' ;
 			  document.getElementById('browse_destinations').style.display= 'block' ;
 			  document.getElementById('browse_adventures').style.display= 'none' ;
@@ -98,6 +100,7 @@ input[type=text]:focus {
 		}
 		
 		function searchInAdventurers() {
+			  document.getElementById("exploreButton").style.visibility = 'visible';
 			  document.getElementById('show_categories').style.display= 'none' ;
 			  document.getElementById('browse_adventures').style.display= 'none' ;
 			  document.getElementById('browse_destinations').style.display= 'none' ;

@@ -4,53 +4,53 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<title>View Adventure</title>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map" type="text/javascript"></script>
-	<style>
-		.image{
-			border: 1px solid #ddd;
-			border-radius: 8px;
-			padding: 5px;
-			width: 150px;
-		}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<title>View Adventure</title>
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkHN_gdiuaWXmHeLB8Fpe_pBc840VRgIk&callback=map"
+	type="text/javascript"></script>
+<style>
+.image {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 5px;
+	width: 150px;
+}
 
-		.image:hover {
-			opacity: 0.5;
-			box-shadow: 0 0 2px 1px rgb(51, 51, 255);
-		}
-		table {
-			font-family: arial, sans-serif;
-			border-collapse: collapse;
-			width: 80%;
-			border: 2px solid #909090;
+.image:hover {
+	opacity: 0.5;
+	box-shadow: 0 0 2px 1px rgb(51, 51, 255);
+}
 
-		}
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 80%;
+	border: 2px solid #909090;
+}
 
-		td, .th {
-			border: 2px solid #909090;
-			text-align: left;
-			padding: 5px;
-		}
+td, .th {
+	border: 2px solid #909090;
+	text-align: left;
+	padding: 5px;
+}
 
-		tr {
-			background-color: #dddddd;
-
-		}
-	</style>
+tr {
+	background-color: #dddddd;
+}
+</style>
 </head>
 <body>
 
-<c:if test="${ sessionScope.user == null }">
-	<c:redirect url="/login"></c:redirect>
-</c:if>
+	<c:if test="${ sessionScope.user == null }">
+		<c:redirect url="/login"></c:redirect>
+	</c:if>
 
 
 	<jsp:include page="header.jsp"></jsp:include><br>
 
-	<% int currentNewCommentId = -1; %>
 	<table align="center">
 		<tr>
 			<td><img src="/user/picture/${sessionScope.post.user.userId}"
@@ -110,9 +110,9 @@
 		<tr>
 	</table>
 	<c:if test="${sessionScope.post.video.url != null}">
-		<video width="320" height="240" controls="controls">
-			<source src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> "
-					type="video/mp4"> Your browser does not support the video
+		<video width="320" height="240" controls="controls"> <source
+			src="<c:url value="/getVideo/${sessionScope.post.video.url}"/> "
+			type="video/mp4"> Your browser does not support the video
 		tag. </video>
 	</c:if>
 
@@ -123,81 +123,77 @@
 		<input type="hidden" id="longtitude"
 			value="${sessionScope.post.location.longtitude}" />
 	</c:if>
-<br>
-<br>
-<br>
-
-<textarea id="newCommentInputContent" rows="6" cols="79">
+	<br>
+	<br>
+	<br>
+	<textarea id="newCommentInputContent" rows="6" cols="79">
 </textarea>
-<br>
-<button style="background-color: purple" id="postCommentButton"
+	<br>
+	<button style="background-color: purple" id="postCommentButton"
 		onclick="postComment(${sessionScope.post.id})">Post</button>
-<br>
-<br>
-
-
-<table id="commentsTable" align="center">
-
-	<c:forEach var="comment" items="${sessionScope.post.comments}">
-		<tr>
-			<td>
-				<h5 style="visibility: hidden;" id="newCommentId">${comment.id}</h5>
-				<div class="container" width=70%>
-					<img src="/user/picture/${comment.sentBy.userId}" border="3"
-						 width="45" height="45" align="middle"
-						 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
+	<br>
+	<br>
+	<table id="commentsTable" align="center">
+		<c:forEach var="comment" items="${sessionScope.post.comments}">
+			<tr>
+				<td>
+					<div class="container" width=70%>
+						<img src="/user/picture/${comment.sentBy.userId}" border="3"
+							width="45" height="45" align="middle"
+							style="border-radius: 80px; border-style: solid; border-color: #bbb;">
 						${comment.datetime} <a target="_blank"
-											   href="/showPassport/${comment.sentBy.userId}">
-						${comment.sentBy.username}</a> <br>${comment.content} <br>
-					<p id="likesCount/${comment.id}">Likes: ${comment.peopleLiked.size()}</p>
-					<p id="dislikesCount/${comment.id}">Dislikes:
+							href="/showPassport/${comment.sentBy.userId}">
+							${comment.sentBy.username}</a> <br>${comment.content} <br>
+						<p id="likesCount/${comment.id}">Likes:
 							${comment.peopleLiked.size()}</p>
+						<p id="dislikesCount/${comment.id}">Dislikes:
+							${comment.peopleDisliked.size()}</p>
 
 
-					<div id="likeComment/dislikeComment">
-						<c:set var="containsLiked" value="false" />
-						<c:forEach var="personLiked" items="${comment.peopleLiked}">
-							<c:if test="${personLiked eq sessionScope.user.userId}">
-								<c:set var="containsLiked" value="true" />
-							</c:if>
-						</c:forEach>
+						<div id="likeComment/dislikeComment">
+							<c:set var="containsLiked" value="false" />
+							<c:forEach var="personLiked" items="${comment.peopleLiked}">
+								<c:if test="${personLiked eq sessionScope.user.userId}">
+									<c:set var="containsLiked" value="true" />
+								</c:if>
+							</c:forEach>
 
-						<c:if test="${containsLiked}">
-							<button style="background-color: red"
+							<c:if test="${containsLiked}">
+								<button style="background-color: red"
 									id="likeButton/${comment.id}"
 									onclick="handleCommentLike(${comment.id})">Unlike</button>
-						</c:if>
-						<c:if test="${!containsLiked}">
-							<button style="background-color: green"
+							</c:if>
+							<c:if test="${!containsLiked}">
+								<button style="background-color: green"
 									id="likeButton/${comment.id}"
 									onclick="handleCommentLike(${comment.id})">Like</button>
-						</c:if>
-
-						<c:set var="containsDisliked" value="false" />
-						<c:forEach var="personDisliked" items="${comment.peopleDisliked}">
-							<c:if test="${personDisliked eq sessionScope.user.userId}">
-								<c:set var="containsDisliked" value="true" />
 							</c:if>
-						</c:forEach>
 
-						<c:if test="${containsDisliked}">
-							<button style="background-color: red"
+							<c:set var="containsDisliked" value="false" />
+							<c:forEach var="personDisliked" items="${comment.peopleDisliked}">
+								<c:if test="${personDisliked eq sessionScope.user.userId}">
+									<c:set var="containsDisliked" value="true" />
+								</c:if>
+							</c:forEach>
+
+							<c:if test="${containsDisliked}">
+								<button style="background-color: red"
 									id="dislikeButton/${comment.id}"
 									onclick="handleCommentDislike(${comment.id})">Undislike</button>
-						</c:if>
-						<c:if test="${!containsDisliked}">
-							<button style="background-color: green"
+							</c:if>
+							<c:if test="${!containsDisliked}">
+								<button style="background-color: green"
 									id="dislikeButton/${comment.id}"
 									onclick="handleCommentDislike(${comment.id})">Dislike</button>
-						</c:if>
+							</c:if>
+						</div>
+
+
 					</div>
-
-
-				</div>
-			</td>
-		</tr>
-	</c:forEach>
-</table>
+				</td>
+			</tr>
+		</c:forEach>
+	</table>
 
 
 	<div id="like/dislike">
@@ -235,31 +231,7 @@
 		</c:if>
 	</div>
 
-<div style="visibility: hidden;" id="newCommentContainer"
-	 class="container">
-	<img src="/user/picture/${sessionScope.user.userId}" border="3"
-		 width="45" height="45" align="middle"
-		 style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-	<h5 id="newCommentDatetime"></h5>
-	<a target="_blank" href="/showPassport/${sessionScope.user.userId}">
-		${sessionScope.user.username}</a>
-	<h5 id="newCommentContent"></h5>
-	<p id="newCommentLikesCount">Likes: 0</p>
-	<p id="newCommentDislikesCount">Dislikes: 0</p>
-	<h5 style="visibility: hidden;" id="newCommentId"></h5>
-	<button style="background-color: green"
-			id="likeButton/newCommentId"
-			onclick=""
-	>Like</button>
-
-	<button style="background-color: green"
-			id="dislikeButton/newCommentId"
-			onclick=""
-	>Dislike</button>
-
-</div>
-
-<jsp:include page="footer.jsp"></jsp:include>
+	<jsp:include page="footer.jsp"></jsp:include>
 
 	<script>
     function handleLike(postId){
@@ -441,28 +413,21 @@
 	<script>
     function postComment(postId){
     	   var textAreaInput = document.getElementById("newCommentInputContent").value;
+    	   document.getElementById("newCommentInputContent").value = "";
     	    var request = new XMLHttpRequest();
     	      request.onreadystatechange = function() {
     	          //when response is received 
     	          if (this.readyState == 4 && this.status == 200) {
-    	             var comment = JSON.parse(request.responseText); // tva ni e vurnatiq comment ot rest controllera
-    	            
+    	             var comment = JSON.parse(request.responseText); 
     	             var commentContent = comment.content;
-    	             document.getElementById("newCommentContent").innerHTML = commentContent;
-    	             
     	             var commentDatetime = comment.datetimeString;
-    	             document.getElementById("newCommentDatetime").innerHTML = commentDatetime;
-    	            
-    	            var commentId = comment.id;// will be needed later for like/dislike operations 
-    	            document.getElementById("newCommentId").innerHTML = commentId;
-    	            //like operation 
-    	            //dislike operation 
-    	           
+    	            var commentId = comment.id;
     	            //now that everything is set:    
     	            var table = document.getElementById("commentsTable");
     	            var row = table.insertRow(0);
     	             var cell = row.insertCell(0);
-    	             cell.innerHTML = document.getElementById("newCommentContainer").innerHTML;
+    	             var newInnerHtml = "<div class='container' width=70%> <img src='/user/picture/${sessionScope.user.userId}' border='3' width='45' height='45' align='middle'style='border-radius: 80px; border-style: solid; border-color: #bbb;'>"+commentDatetime+" <a target='_blank' href='/showPassport/${sessionScope.user.userId}'>${sessionScope.user.username}</a><br>"+ commentContent +"<br><p id='likesCount/"+ commentId + "'>Likes: 0</p><p id='dislikesCount/"+ commentId + "'>Dislikes: 0</p> <button style='background-color: green' id='likeButton/" + commentId +"' onclick='handleCommentLike("+ commentId + ")'>Like</button><button style='background-color: green' id='dislikeButton/" + commentId +"'onclick='handleCommentDislike("+ commentId + ")'>Dislike</button></div>";
+    	    	             cell.innerHTML = newInnerHtml;
     	          }
     	          else
     	          if (this.readyState == 4 && this.status == 401) {
@@ -475,35 +440,28 @@
     </script>
 	<script>
     function handleCommentLike(commentId){
-    	alert("I am trying to like comment id = " + commentId);
         var button = document.getElementById("likeButton/"+commentId);
         var title = button.innerHTML;
         if(title == 'Like'){
-            alert("I wanna like it.");
             likeComment(commentId);
         }
         else{
-            alert("I wanna dislike it.");
             unlikeComment(commentId);
         }
     }
 
     function handleCommentDislike(commentId){
-    	alert("I am trying to dislike comment id = " + commentId);
         var button = document.getElementById("dislikeButton/"+commentId);
         var title = button.innerHTML;
         if(title == "Dislike"){
-            alert("I wanna dislike it.");
             dislikeComment(commentId);
         }
         else{
-            alert("I wanna undislike it.");
             undislikeComment(commentId);
         }
     }
 
     function likeComment(commentId) {
-        alert("Now i am rly tryin to like "+ commentId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -511,7 +469,6 @@
                 var likeButton = document.getElementById("likeButton/"+commentId);
                 likeButton.innerHTML = "Unlike";
                 likeButton.style.background='red';
-                alert("Am i supposed to have liked it now?");
                 var dislikeButton=document.getElementById("dislikeButton/"+commentId);
                 dislikeButton.innerHTML="Dislike";
                 dislikeButton.style.background="green";
@@ -521,9 +478,6 @@
                 var likeButton1 = document.getElementById("likeButton/"+commentId);
                 likeButton1.innerHTML = "Unlike";
                 likeButton1.style.background='red';
-                alert("Am i supposed to have liked it now?");
-               // alert(${sessionScope.post.peopleDisliked.size()});
-               // alert(document.getElementById("likesCount/"+commentId).innerHTML);
                 document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
             }
             else if (this.readyState == 4 && this.status == 401) {
@@ -535,7 +489,6 @@
     }
 
     function unlikeComment(commentId) {
-        alert("Now i am tryin to unlike "+ commentId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -543,7 +496,6 @@
                 var button = document.getElementById("likeButton/"+commentId);
                 button.innerHTML = "Like";
                 button.style.background='green';
-                alert("Sooo... now im tryin to unlike it, huh?");
                 document.getElementById("likesCount/"+commentId).innerHTML=request.responseText;
             }
             else
@@ -556,7 +508,6 @@
     }
 
     function dislikeComment(commentId) {
-        alert("I WANT TO DISLIKE comment "+ commentId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -567,14 +518,12 @@
                 var likeButton=document.getElementById("likeButton/"+commentId);
                 likeButton.innerHTML="Like";
                 likeButton.style.background="green";
-                alert("I JUST DISLIKED A comment and updated some entry???");
                 document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
             }
             else if(this.readyState == 4 && this.status == 201){
                 var dislikeButton1 = document.getElementById("dislikeButton/"+commentId);
                 dislikeButton1.innerHTML = "Undislike";
                 dislikeButton1.style.background='red';
-                alert("I JUST DISLIKED A COMMENT  AND ADDED A NEW ENTRY");
                 document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
             }
             else
@@ -587,7 +536,6 @@
     }
 
     function undislikeComment(commentId) {
-        alert("I WANT TO UNDISLIKE COMMENT "+ commentId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -595,7 +543,6 @@
                 var button = document.getElementById("dislikeButton/"+commentId);
                 button.innerHTML = "Dislike";
                 button.style.background='green';
-                alert("I JUST UNDISLIKED A comment  AND DELETED THE NEW ENTRY");
                 document.getElementById("dislikesCount/"+commentId).innerHTML=request.responseText;
             }
             else
