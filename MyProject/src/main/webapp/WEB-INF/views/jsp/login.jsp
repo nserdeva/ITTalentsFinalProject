@@ -20,7 +20,7 @@
 
 	<div class="loginBox">
 		<img src="img/user_icon.png" class="user">
-		<h2>Start exploring!</h2>
+		<h2>Welcome, traveller!</h2>
 		<form action="/login" method="post">
 			<p>
 				<font color="white"> username</font>

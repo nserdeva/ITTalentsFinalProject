@@ -47,7 +47,7 @@
 
         <button onclick="showPassword()" class="w3-btn w3-black">Password</button>
         <form id="passwordChange" name="password" class="w3-hide w3-red" method="post" action="/settings/changePassword"  >
-            Change email:
+            Change password:
             <input type="password"  name="oldPassword" placeholder="Old password" /><br>
             <input type="password"  name="newPassword" placeholder="New password"  /><br>
             <input type="password"  name="confirmPassword" placeholder="Confirm new password" /><br>

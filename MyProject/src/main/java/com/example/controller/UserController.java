@@ -122,8 +122,9 @@ public class UserController {
 		String pass = request.getParameter("pass");
 		String pass2 = request.getParameter("pass2");
 		String email = request.getParameter("email");
+		try {
+		User test = new User(username, pass, email); //test if given data is correct
 		if (pass != null && pass.equals(pass2)) {
-			try {
 				if (!userDao.existsUsername(username)) {
 					User user = new User(username, Hash.create(pass, Type.BCRYPT), email);
 					userDao.insertUser(user);
@@ -131,14 +132,33 @@ public class UserController {
 					session.setAttribute("logged", true);
 					return "redirect:/showPassport/" + user.getUserId();
 				} else {
+					System.out.println("Vlizash li TUKA weeee");
+
 					return "register";
 				}
-			} catch (SQLException | UserException | NoSuchAlgorithmException | BadOperationException e) {
+		} else {
+			request.setAttribute("doPasswordsMatch", false);
+			return "register";
+		}
+			} catch (SQLException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				return "register";
+			} catch (UserException | BadOperationException e) {
+				System.out.println("Vlizash li weeee");
+				if(e.getMessage().contains("Username")) {
+					System.out.println("VLIZA PRI USERNAME");
+					request.setAttribute("isValidUsername", false);
+				} 
+				if(e.getMessage().contains("e-mail")) {
+					System.out.println("VLIZA PRI EMAIL");
+					request.setAttribute("isValidEmail", false);
+				}
+				if(e.getMessage().contains("Password")) {
+					System.out.println("VLIZA PRI PASSWORD");
+					request.setAttribute("isValidPassword", false);
+				}
+				return "register";
 			}
-		}
-		return "register";
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
