@@ -29,8 +29,8 @@ public final class User {
 	private String email = null;
 	private String description = "";
 	private Multimedia profilePic = null;
-	private HashSet<User> followers = null;
-	private HashSet<User> following = null;
+	private HashSet<User> followers = new HashSet<User>();
+	private HashSet<User> following = new HashSet<User>();
 	private TreeMap<Timestamp, Location> visitedLocations = null; // order by date and time of visit required
 	private HashSet<Location> wishlist = null;
 	private TreeSet<Post> posts = new TreeSet<>(); 

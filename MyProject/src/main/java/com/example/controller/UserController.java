@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
@@ -314,47 +315,6 @@ public class UserController {
 			}
 		}
 		return "settings";
-	}
-
-
-	@RequestMapping(value = "/follow/{userId}", method = RequestMethod.POST)
-	public void followUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
-			resp.sendRedirect("login");
-		}
-		try {
-			User follower = (User) session.getAttribute("user");
-			User followed = userDao.getUserById(userId);
-			userDao.follow(follower, followed);
-			resp.setStatus(200);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (PostException e) {
-			e.printStackTrace();
-		} catch (UserException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@RequestMapping(value = "/unfollow/{userId}", method = RequestMethod.POST)
-	public void unfollowUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
-			resp.sendRedirect("login");
-		}
-		try {
-			User follower = (User) session.getAttribute("user");
-			User followed = userDao.getUserById(userId);
-			if (follower != null & followed != null) {
-				userDao.unfollow(follower, followed);
-				resp.setStatus(200);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (PostException e) {
-			e.printStackTrace();
-		} catch (UserException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

@@ -6,6 +6,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
+</style>
+<body class="w3-theme-l5">
+
+
+
 <meta http-equiv="Content-Type" content="text/plain; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
@@ -97,39 +109,70 @@ tr {
 
 
 
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
 
-
-	<table align="center">
-		<tr>
-			<td width="210"><img
-				src="/user/picture/${sessionScope.selectedUser.userId}" border="3"
-				width="200" height="200" align="middle"
-				style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-			</td>
-			<td>
-				<h2>${sessionScope.selectedUser.username}</h2> <br>
-				${sessionScope.selectedUser.description} <br> <c:if
-					test="${isMyPassport=='false' }">
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div class="w3-third">
+    
+      <div class="w3-white w3-text-grey w3-card-4">
+        <div class="w3-display-container">
+          <img src="/user/picture/${sessionScope.selectedUser.userId}" style="width:100%" alt="Avatar">
+          <div class="w3-display-bottomleft w3-container w3-text-black">
+          </div>
+        </div>
+        <div class="w3-container">
+          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>${sessionScope.selectedUser.username}</p>
+			<p id="selectedUserFollowers">Followers: ${sessionScope.selectedUser.followers.size()}</p>
+			<p id="selectedUserFollowing">Following: ${sessionScope.selectedUser.following.size()}</p> 
+			<c:if test="${isMyPassport=='false' }">
 					<c:if test="${thisFollowsSelected!='false' }">
 						<div id="follow/unfollow">
-							<button style="background-color: blue" id="followButton"
+							<br><button style="background-color: blue" id="followButton"
 								onclick="handleFollow(${sessionScope.selectedUser.userId})">Unfollow</button>
 						</div>
 					</c:if>
 
 					<c:if test="${thisFollowsSelected=='false'}">
 						<div id="follow/unfollow">
-							<button style="background-color: pink" id="followButton"
+							<br><button style="background-color: pink" id="followButton"
 								onclick="handleFollow(${sessionScope.selectedUser.userId})">Follow</button>
 						</div>
 					</c:if>
-				</c:if> Followers:
-				<h3 id="selectedUserFollowers">${sessionScope.selectedUser.followers.size()}</h3>
-				Following:
-				<h3 id="selectedUserFollowing">
-					${sessionScope.selectedUser.following.size()}</h3> <br>
-		</tr>
-	</table>
+				</c:if> 
+			<hr>     
+        </div>
+      </div>
+
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="w3-twothird">
+    
+      <div class="w3-container w3-card w3-white w3-margin-bottom">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Passport</h2>
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>About: </b></h5>
+          <p>${sessionScope.selectedUser.description}</p>
+          <hr>
+        </div>
+          <hr>
+        </div>    
+      </div>
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+  <!-- End Page Container -->
+	
+				
+				
 	<br>
 	<table align="center">
 		<tr>
@@ -163,8 +206,10 @@ function handleFollow(userId) {
           if (this.readyState == 4 && this.status == 200) {
               var button = document.getElementById("followButton");
               button.innerHTML = "Unfollow";
-              document.getElementById("selectedUserFollowers").innerHTML = ${sessionScope.selectedUser.followers.size()}+1;
               button.style.background='blue';
+              var counters=JSON.parse(request.responseText);
+              document.getElementById("selectedUserFollowers").innerHTML="Followers: " + counters[0];
+              document.getElementById("selectedUserFollowing").innerHTML="Following: " + counters[1];
           }
           else
           if (this.readyState == 4 && this.status == 401) {
@@ -182,8 +227,10 @@ function handleFollow(userId) {
           if (this.readyState == 4 && this.status == 200) {
               var button = document.getElementById("followButton");
               button.innerHTML = "Follow";
-              document.getElementById("selectedUserFollowers").innerHTML = ${sessionScope.selectedUser.followers.size()};
               button.style.background='pink';
+              var counters=JSON.parse(request.responseText);
+              document.getElementById("selectedUserFollowers").innerHTML="Followers: " + counters[0];
+              document.getElementById("selectedUserFollowing").innerHTML="Following: " + counters[1];
           }
           else
           if (this.readyState == 4 && this.status == 401) {
