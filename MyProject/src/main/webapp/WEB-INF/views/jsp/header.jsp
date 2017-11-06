@@ -60,9 +60,18 @@ input[type=text]:focus {
 		<input type="checkbox" onclick="changeCheckBoxesValues()" name="resortCheckBox" class="chb" value="false">Resort
 		<input type="checkbox" onclick="changeCheckBoxesValues()" name="cityCheckBox" class="chb" value="false">City
 </div>
-		<input type="text" name="searchFormDataTxt" placeholder="Search..">
+		<input type="text" id="searchFormDataTxt" name="searchFormDataTxt" placeholder="Search..">
 			<button id = "exploreButton" style = "visibility: hidden;" onclick="changeCheckBoxesValues()">explore</button>		
 	</form>
+
+<script>
+    // prevent the enter key from submitting the form if input_id has focus to prevent accidental submission
+    document.getElementById('searchFormDataTxt').addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+        }
+    });
+</script>
 	
  <div class="dropdown">
   <button class="dropbtn">Browse</button>

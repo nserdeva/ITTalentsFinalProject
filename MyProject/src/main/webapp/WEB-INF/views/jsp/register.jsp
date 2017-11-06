@@ -32,6 +32,8 @@
 			<input type="password" name="pass" placeholder="enter password">
 			<input type="password" name="pass2" placeholder="retype password">
 			<input type="submit"  value="Register">
+			<font color = "white" >Already part of the travelling world? </font>
+			<a href="<c:url value="/login" /> "><u> Get back on track! </u></a>
 		</form>
 	</div>
 </body>

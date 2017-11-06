@@ -54,6 +54,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/searchAdventurers", method = RequestMethod.POST)
 	public String searchAdventurers(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		try {
 			session.setAttribute("browsedAdventurers",
 					userDao.getFilteredUsers(request.getParameter("searchFormDataTxt")));
@@ -66,6 +69,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/showMostPopular", method = RequestMethod.POST)
 	public String showMostPopularFirst(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		TreeSet<Post> newsfeedPosts = new TreeSet<Post>(
 				(p1, p2) -> (p2.getLikesCount() - p1.getLikesCount()) != 0 ? (p2.getLikesCount() - p1.getLikesCount())
 						: (p2.getDateTime().compareTo(p1.getDateTime())));
@@ -91,6 +97,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/searchDestinations", method = RequestMethod.POST)
 	public String searchDestinations(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		try {
 			session.setAttribute("browsedLocations",
 					locationDao.getFilteredLocations(request.getParameter("searchFormDataTxt")));
@@ -103,6 +112,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/searchAdventures", method = RequestMethod.POST)
 	public String searchAdventures(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		TreeSet<Post> browsedAdventures = new TreeSet<Post>();
 		ArrayList<String> checkBoxValues = new ArrayList<String>();
 		checkBoxValues.add(request.getParameter("natureCheckBox")); // category_id must be '1' in db
@@ -146,6 +158,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/location/{id}", method = RequestMethod.GET)
 	public String getLocationPage(@PathVariable("id") long id, HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		try {
 			Location selectedLocation = locationDao.getLocationById((id));
 			session.setAttribute("location", selectedLocation);
@@ -158,6 +173,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/post/{id}", method = RequestMethod.GET)
 	public String getPostPage(@PathVariable("id") long id, HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		try {
 			Post selectedPost = postDao.getPostById(id);
 			selectedPost.setCategories(categoryDao.getCategoriesForPost(selectedPost));
@@ -180,6 +198,9 @@ public class ExploreController {
 
 	@RequestMapping(value = "/showPassport/{id}", method = RequestMethod.GET)
 	public String getPassportPage(@PathVariable("id") long id, HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		try {
 			User current = (User) session.getAttribute("user");
 			User selectedUser = userDao.getUserById(id);
@@ -199,7 +220,10 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/location/getMainPic/{id}", method = RequestMethod.GET)
-	public void getLocationMainPic(@PathVariable("id") long id, HttpServletResponse response) {
+	public void getLocationMainPic(HttpSession session,@PathVariable("id") long id, HttpServletResponse response) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			response.sendRedirect("login");
+		}
 		try {
 			Location selectedLocation = locationDao.getLocationById(id);
 			locationDao.setPictures(selectedLocation);
@@ -222,7 +246,10 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/post/getMainPic/{id}", method = RequestMethod.GET)
-	public void getPostMainPic(@PathVariable("id") long id, HttpServletResponse response) {
+	public void getPostMainPic(HttpSession session,@PathVariable("id") long id, HttpServletResponse response) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			response.sendRedirect("login");
+		}
 		try {
 			Post selectedPost = postDao.getPostById(id);
 			selectedPost.setMultimedia(multimediaDao.getAllMultimediaForPost(selectedPost));
@@ -247,7 +274,10 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/location/picture/{id}", method = RequestMethod.GET)
-	public void getLocationPicture(@PathVariable("id") long id, HttpServletResponse response) {
+	public void getLocationPicture(@PathVariable("id") long id,HttpSession session, HttpServletResponse response) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			response.sendRedirect("login");
+		}
 		try {
 			File myFile = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION
 					+ WebInitializer.LOCATIONS_PICTURES_LOCATION + File.separator
@@ -268,7 +298,10 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/post/multimedia/{id}", method = RequestMethod.GET)
-	public void getPostMultimediaFile(@PathVariable("id") long id, HttpServletResponse response) {
+	public void getPostMultimediaFile(@PathVariable("id") long id, HttpSession session,HttpServletResponse response) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			response.sendRedirect("login");
+		}
 		try {
 			File myFile = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION + File.separator
 					+ multimediaDao.getMultimediaById(id).getUrl());
@@ -288,7 +321,10 @@ public class ExploreController {
 	}
 
 	@RequestMapping(value = "/user/picture/{id}", method = RequestMethod.GET)
-	public void getUserPicture(@PathVariable("id") long id, HttpServletResponse response) {
+	public void getUserPicture(@PathVariable("id") long id, HttpSession session,HttpServletResponse response) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			response.sendRedirect("login");
+		}
 		try {
 			File myFile = new File(WebInitializer.LOCATION + WebInitializer.AVATAR_LOCATION + File.separator
 					+ userDao.getUserById(id).getProfilePic().getUrl());

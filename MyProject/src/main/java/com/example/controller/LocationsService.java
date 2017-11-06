@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -25,7 +27,10 @@ public class LocationsService {
 
     @RequestMapping(value = "/getVisitedPlaces/{userId}",method = RequestMethod.GET)
     @ResponseBody
-    public Collection<Location> getVisitedPlaces(HttpServletResponse response, @PathVariable("userId") long userId){
+    public Collection<Location> getVisitedPlaces(HttpSession session,HttpServletResponse response, @PathVariable("userId") long userId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			response.sendRedirect("login");
+		}
     	User user = null;
     	Collection<Location> locations = null;
     	try {

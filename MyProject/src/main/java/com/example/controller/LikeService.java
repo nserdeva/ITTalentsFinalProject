@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -31,7 +32,10 @@ public class LikeService {
 	@RequestMapping(value = "/like/{postId}", method = RequestMethod.POST)
 	@ResponseBody
 	public Integer[] likePost(HttpSession session, Model model, HttpServletResponse resp,
-			@PathVariable("postId") long postId) {
+			@PathVariable("postId") long postId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Post post = null;
 		try {
 			post = postDao.getPostById(postId);
@@ -61,7 +65,10 @@ public class LikeService {
 
 	@RequestMapping(value = "/unlike/{postId}", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer[] unlikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) {
+	public Integer[] unlikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Post post = null;
 		try {
 			post = postDao.getPostById(postId);
@@ -82,7 +89,10 @@ public class LikeService {
 
 	@RequestMapping(value = "/dislike/{postId}", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer[] dislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) {
+	public Integer[] dislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Post post = null;
 		try {
 			post = postDao.getPostById(postId);
@@ -112,7 +122,10 @@ public class LikeService {
 
 	@RequestMapping(value = "/undislike/{postId}", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer[] undislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) {
+	public Integer[] undislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Post post = null;
 		try {
 			post = postDao.getPostById(postId);
@@ -139,7 +152,10 @@ public class LikeService {
 	@RequestMapping(value = "/likeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
 	public Integer[] likeComment(HttpSession session, Model model, HttpServletResponse resp,
-			@PathVariable("commentId") long commentId){
+			@PathVariable("commentId") long commentId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Comment comment = null;
 		try {
 			comment = commentDao.getCommentById(commentId);
@@ -172,7 +188,10 @@ public class LikeService {
 	@RequestMapping(value = "/unlikeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
 	public Integer[] unlikeComment(HttpSession session, HttpServletResponse resp,
-			@PathVariable("commentId") long commentId){
+			@PathVariable("commentId") long commentId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Comment comment = null;
 		try {
 			comment = commentDao.getCommentById(commentId);
@@ -197,7 +216,10 @@ public class LikeService {
 	@RequestMapping(value = "/dislikeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
 	public Integer[] dislikeComment(HttpSession session, HttpServletResponse resp,
-			@PathVariable("commentId") long commentId){
+			@PathVariable("commentId") long commentId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Comment comment = null;
 		try {
 			comment = commentDao.getCommentById(commentId);
@@ -230,7 +252,10 @@ public class LikeService {
 	@RequestMapping(value = "/undislikeComment/{commentId}", method = RequestMethod.POST)
 	@ResponseBody
 	public Integer[] undislikeComment(HttpSession session, HttpServletResponse resp,
-			@PathVariable("commentId") long commentId){
+			@PathVariable("commentId") long commentId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		Comment comment = null;
 		try {
 			comment = commentDao.getCommentById(commentId);
