@@ -80,7 +80,7 @@
 				<img src="/user/picture/${post.user.userId}" border="3" width="45"
 					height="45" align="middle"
 					style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-				${post.dateTime} <a target="_blank" href="/showPassport/${post.user.userId}">	
+				${post.dateTimeString} <a target="_blank" href="/showPassport/${post.user.userId}">
 				${post.user.username}</a>
 				<c:if test="${post.location!=null}">
  was at 

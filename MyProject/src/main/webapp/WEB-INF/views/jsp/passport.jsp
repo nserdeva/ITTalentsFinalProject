@@ -130,7 +130,7 @@ tr {
 			</div>
 			<h3>
 
-				${post.dateTime} ${post.user.username}
+				${post.dateTimeString} ${post.user.username}
 				<c:if test="${post.location!=null}">
  was at 
  <a target="_blank" href="/location/${post.location.id}">${post.location.locationName}</a>
