@@ -70,7 +70,6 @@ visibility: hidden;
 <a target="_blank" href="/location/${location.id}">${location.locationName}</a></h3>
 <p>${location.shortDescription} 
 <div class="subContainer"> 
-0 adventure seekers were here.
 </div>
 </p>
 

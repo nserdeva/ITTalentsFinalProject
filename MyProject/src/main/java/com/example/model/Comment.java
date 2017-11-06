@@ -3,6 +3,7 @@ package com.example.model;
 import com.example.model.exceptions.*;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +43,7 @@ public final class Comment implements Comparable<Comment> {
 		this.setLikesCount(likesCount);
 		this.setDislikesCount(dislikesCount);
 		this.setDatetime(datetime);
-		this.datetimeString = this.datetime.toString();
+		this.datetimeString = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(datetime);
 	}
 
 	public String getDatetimeString() {
@@ -63,7 +64,8 @@ public final class Comment implements Comparable<Comment> {
 		this.setLikesCount(likesCount);
 		this.setDislikesCount(dislikesCount);
 		this.setDatetime(datetime);
-		this.datetimeString = this.datetime.toString();
+		//this.datetimeString = this.datetime.toString();
+		this.datetimeString=new SimpleDateFormat("MM/dd/yyyy HH:mm").format(datetime);
 		this.setSentBy(sentBy);
 	}
 
@@ -152,6 +154,8 @@ public final class Comment implements Comparable<Comment> {
 	public void setDatetime(Timestamp datetime) throws CommentException {
 		if (datetime != null) {
 			this.datetime = datetime;
+			this.datetimeString= new SimpleDateFormat("MM/dd/yyyy HH:mm").format(datetime);
+
 		} else {
 			throw new CommentException("Invalid date/time!");
 		}

@@ -6,6 +6,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- In the Head of the Page being shared -->
+	<!-- For Facebook -->
+	<meta property="og:title" content="Wanderlust" />
+	<meta property="og:type" content="article" />
+	<meta property="og:image" content="" />
+	<meta property="og:url" content="" />
+	<meta property="og:description" content="" />
+
+
+
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <title>View Adventure</title>
 <script
@@ -56,7 +67,7 @@ tr {
 			<td><img src="/user/picture/${sessionScope.post.user.userId}"
 				border="3" width="45" height="45" align="middle"
 				style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-				${sessionScope.post.dateTime} <a target="_blank"
+				${sessionScope.post.dateTimeString} <a target="_blank"
 				href="/showPassport/${sessionScope.post.user.userId}">
 					${sessionScope.post.user.username}</a> <c:if
 					test="${sessionScope.post.location!=null}">
@@ -115,6 +126,34 @@ tr {
 		tag. </video>
 	</c:if>
 
+
+	<button id="shareBtn" class="btn btn-success clearfix" onclick="loadShare()">Share On Facebook</button>
+
+
+	<script>
+
+		function loadShare() {
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId : '299678220535690',
+                    cookie : true,
+                    xfbml : true,
+                    version : 'v2.2'
+                });
+                FB.getLoginStatus(function(response) {
+                    statusChangeCallback(response);
+                });
+            };
+
+            window.open('https://www.facebook.com/sharer/sharer.php?u=https://192.168.6.237:8080/post/'+${sessionScope.post.id},  'sharer', 'width=626,height=436');
+
+        }
+
+
+	</script>
+
+
+
 	<c:if test="${sessionScope.post.location !=null}">
 		<div id="map" style="width: 400px; height: 400px"></div>
 		<input type="hidden" id="latitude"
@@ -122,6 +161,7 @@ tr {
 		<input type="hidden" id="longtitude"
 			value="${sessionScope.post.location.longtitude}" />
 	</c:if>
+
 	<br>
 	<br>
 	<br>
@@ -140,7 +180,7 @@ tr {
 						<img src="/user/picture/${comment.sentBy.userId}" border="3"
 							width="45" height="45" align="middle"
 							style="border-radius: 80px; border-style: solid; border-color: #bbb;">
-						${comment.datetime} <a target="_blank"
+						${comment.datetimeString} <a target="_blank"
 							href="/showPassport/${comment.sentBy.userId}">
 							${comment.sentBy.username}</a> <br>${comment.content} <br>
 						<p id="likesCount/${comment.id}">Likes:

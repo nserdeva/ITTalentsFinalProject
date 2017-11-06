@@ -3,6 +3,7 @@ package com.example.model;
 import com.example.model.exceptions.*;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class Post implements Comparable<Post> {
     private int dislikesCount;
     private Multimedia video;
     private Timestamp dateTime;
+    private String dateTimeString;
     private Location location;
     private HashSet<Category> categories;
     //TODO SET TAGS EVERYWHERE
@@ -60,12 +62,16 @@ public class Post implements Comparable<Post> {
         this.dislikesCount = dislikesCount;
         this.description=description;
         this.dateTime = dateTime;
+        this.dateTimeString= new SimpleDateFormat("MM/dd/yyyy HH:mm").format(dateTime);
+
         // have to make methods in post dao for:
         // HashSet<Category> categories, HashSet<Multimedia> multimedia, HashSet<User>, HashSet<Tag>, HashSet<Long> usersLiked/Disliked
     }
 
     public Post(User user, long user_id, String description, int likes_count, int dislikes_count, Timestamp date_time,
-                long location_id) throws PostException {    	
+                long location_id) throws PostException {
+        this.dateTimeString= new SimpleDateFormat("MM/dd/yyyy HH:mm").format(date_time);
+
     }
 
     public Post() {
@@ -161,6 +167,11 @@ public class Post implements Comparable<Post> {
 
     public void setDateTime(Timestamp dateTime) {
         this.dateTime = dateTime;
+        this.dateTimeString= new SimpleDateFormat("MM/dd/yyyy HH:mm").format(dateTime);
+    }
+
+    public String getDateTimeString() {
+        return  this.dateTimeString;
     }
 
     public Location getLocation() {

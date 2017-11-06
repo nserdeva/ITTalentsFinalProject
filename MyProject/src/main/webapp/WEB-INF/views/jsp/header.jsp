@@ -55,7 +55,7 @@ input[type=text]:focus {
 		<input type="checkbox" onclick="changeCheckBoxesValues()"  name="seaCheckBox" class="chb" value="false">Sea
 		<input type="checkbox" onclick="changeCheckBoxesValues()" name="mountainsCheckBox" class="chb"
 			value="false">Mountains <input type="checkbox"
-			name="dessertCheckBox" onclick="changeCheckBoxesValues()" class="chb" value="false">Dessert <input
+			name="dessertCheckBox" onclick="changeCheckBoxesValues()" class="chb" value="false">Desert <input
 			type="checkbox" onclick="changeCheckBoxesValues()" name="landmarkCheckBox" class="chb" value="false">Landmark
 		<input type="checkbox" onclick="changeCheckBoxesValues()" name="resortCheckBox" class="chb" value="false">Resort
 		<input type="checkbox" onclick="changeCheckBoxesValues()" name="cityCheckBox" class="chb" value="false">City
