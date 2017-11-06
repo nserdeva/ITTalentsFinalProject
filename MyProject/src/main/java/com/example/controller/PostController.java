@@ -7,12 +7,8 @@ import com.example.model.DBManagement.PostDao;
 import com.example.model.DBManagement.TagDao;
 import com.example.model.DBManagement.UserDao;
 import com.example.model.exceptions.*;
-import org.apache.tika.mime.MimeType;
-import org.apache.tika.mime.MimeTypeException;
-import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

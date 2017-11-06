@@ -73,10 +73,13 @@
    </td>
   <tr>
 </table>
-
-    <div id="googleMap" style="width:100%;height:400px;"></div>
-
-			<div id="map" style="width:400px;height:400px"></div>
+<table align="center">
+    <tr>
+        <td>
+            <div id="map" align="center" style="width: 1070px; height: 400px;"></div>
+        </td>
+    </tr>
+</table>
 			<input type = "hidden" id = "latitude" id = "latitude" value="${sessionScope.location.latitude}" />
 			<input type = "hidden" id = "longtitude" id="longtitude" value="${sessionScope.location.longtitude}" />
 

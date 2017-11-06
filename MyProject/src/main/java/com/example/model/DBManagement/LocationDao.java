@@ -2,10 +2,7 @@ package com.example.model.DBManagement;
 
 import com.example.model.Location;
 import com.example.model.Post;
-import com.example.model.User;
 import com.example.model.exceptions.*;
-
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

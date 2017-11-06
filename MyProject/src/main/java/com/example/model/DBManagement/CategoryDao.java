@@ -1,9 +1,7 @@
 package com.example.model.DBManagement;
 
 import com.example.model.Category;
-import com.example.model.Location;
 import com.example.model.Post;
-import com.example.model.Tag;
 import com.example.model.exceptions.*;
 import org.springframework.stereotype.Component;
 
