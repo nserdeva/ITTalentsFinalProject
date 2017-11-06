@@ -67,7 +67,7 @@ public class ExploreController {
 	@RequestMapping(value = "/showMostPopular", method = RequestMethod.POST)
 	public String showMostPopularFirst(HttpSession session, HttpServletRequest request) {
 		TreeSet<Post> newsfeedPosts = new TreeSet<Post>(
-				(p1, p2) -> (p2.getLikesCount() - p1.getLikesCount()) != 0 ? (p2.getLikesCount() - p1.getLikesCount())
+				(p1, p2) -> (p2.getPeopleLiked().size()- p1.getPeopleLiked().size()) != 0 ? (p2.getPeopleLiked().size() - p1.getPeopleLiked().size())
 						: (p2.getDateTime().compareTo(p1.getDateTime())));
 		User currentUser = (User) session.getAttribute("user");
 		try {
