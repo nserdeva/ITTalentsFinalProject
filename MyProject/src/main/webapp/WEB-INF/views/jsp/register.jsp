@@ -70,6 +70,8 @@
 
 
 			<input type="submit" value="Register">
+			<font color = "white" >Already part of the travelling world? </font>
+			<a href="<c:url value="/login" /> "><u> Get back on track! </u></a>
 		</form>
 	</div>
 </body>

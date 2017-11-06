@@ -102,9 +102,10 @@
 
 <jsp:include page="header.jsp"></jsp:include>
 
-
+<div style="margin:auto; width: 50%">
 <form name="newPost" class="w3-container" action="/uploadPost" method="post" enctype="multipart/form-data">
-    Description: <textarea  name="description" rows="4" cols="50"></textarea> <br>
+    Description: <br>
+    <textarea  name="description" rows="4" cols="50"></textarea> <br>
     Location:
     <input name="locationName" id="locationInput"/>
     <input name="latitude" type="hidden" value="" id="latitude">
@@ -113,15 +114,15 @@
     <br><br>
     Tag people:
     <input name="taggedPeople" data-list="${applicationScope.usernames}" data-multiple-taggedPeople />
-    <h4>Tags should be separated by ","</h4>
+    <h6>Tags should be separated by ","</h6>
     <br><br>
     Add hashtags:
     <input name="tags" data-list="${applicationScope.tags}" data-multiple-tags />
-    <h4>Tags should be separated by ","</h4>
+    <h6>Tags should be separated by ","</h6>
     <br> <br>
     Add categories:
     <input name="categories" data-list="${applicationScope.categories.keySet()}" data-multiple-categories />
-    <h4>Categories should be separated by ","</h4>
+    <h6>Categories should be separated by ","</h6>
     <br>
 
     Upload image: <input type="file" name="image1" accept="image/*"/><br>
@@ -131,6 +132,7 @@
     <input type="submit" value="Share experience!">
 
 </form>
+</div>
 
 <script type="text/javascript">
     new Awesomplete('input[data-multiple-taggedPeople]', {

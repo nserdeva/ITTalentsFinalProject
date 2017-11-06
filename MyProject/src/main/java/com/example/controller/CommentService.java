@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,10 @@ public class CommentService {
 	@RequestMapping(value = "/postComment/{postId}/{content}", method = RequestMethod.POST)
 	@ResponseBody
 	public Comment postComment(HttpSession session, HttpServletResponse resp, HttpServletRequest request,
-			@PathVariable("postId") long postId, @PathVariable("content") String content) {
+			@PathVariable("postId") long postId, @PathVariable("content") String content) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		User sentBy = (User) session.getAttribute("user");
 		try {
 			Comment comment = new Comment(content, postId, sentBy.getUserId(), sentBy);

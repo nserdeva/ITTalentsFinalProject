@@ -57,19 +57,26 @@ public class UserController {
 	LocationDao locationDao;
 
 	@RequestMapping(value = "*", method = RequestMethod.GET)
-	public String login() {
-		return "login";
+		public String getIndex(HttpSession session) {
+			return "index";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login2() {
+	public String login2(HttpSession session) {
 		return "login";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String logUser(HttpSession session, HttpServletRequest request) {
 		String username = request.getParameter("user");
+		username=username.trim();
 		String password = request.getParameter("pass");
+		password=password.trim();
+
+		if("".equals(username) || "".equals(password)){
+			request.setAttribute("isValidData",false);
+			return "login";
+		}
 		try {
 			User user = userDao.getUserByUsername(username);
 			if (user != null) {
@@ -163,6 +170,9 @@ public class UserController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpSession session) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		session.setAttribute("logged", false);
 		session.invalidate();
 		return "login";
@@ -170,16 +180,25 @@ public class UserController {
 
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)
 	public String arrangeSettings(HttpSession session) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/changeDescription", method = RequestMethod.GET)
 	public String getChangeDescriptionForm(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/changeDescription", method = RequestMethod.POST)
 	public String changeDescription(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		String newDescription = request.getParameter("descriptionTxt");
 		try {
 			userDao.changeDescription((User) session.getAttribute("user"), newDescription);
@@ -191,6 +210,9 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeEmail", method = RequestMethod.GET)
 	public String getChangeEmailForm(HttpSession session, Model model) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		model.addAttribute("email", ((User) session.getAttribute("user")).getEmail());
 		return "settings";
 	}
@@ -198,6 +220,9 @@ public class UserController {
 	@RequestMapping(value = "/settings/changeEmail", method = RequestMethod.POST)
 	public String changeEmail(HttpSession session, HttpServletRequest request,
 			@Valid @ModelAttribute("email") String email, BindingResult result) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		if (result.hasErrors()) {
 			return "settings";
 		} else {
@@ -212,12 +237,18 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.GET)
-	public String getAvatar() {
+	public String getAvatar(HttpSession session) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		return "settings";
 	}
 
 	@RequestMapping(value = "/settings/getAvatar", method = RequestMethod.GET)
-	public void getChangeAvatar(HttpSession session, HttpServletResponse resp, Model model) {
+	public void getChangeAvatar(HttpSession session, HttpServletResponse resp, Model model) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		User u = (User) session.getAttribute("user");
 		String avatarUrl = u.getProfilePic().getUrl();
 		try {
@@ -234,6 +265,9 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.POST)
 	public String changeAvatar(HttpSession session, @RequestParam("avatar") MultipartFile file, Model model) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		User user = (User) session.getAttribute("user");
 		String avatarUrl = user.getUsername();
 		try {
@@ -262,6 +296,9 @@ public class UserController {
 	public String changePassword(HttpSession session, HttpServletRequest request,@ModelAttribute("oldPassword") String oldPassword,
 							  @Valid @ModelAttribute("newPassword") String newPassword,@ModelAttribute("confirmPassword") String confirmPassword,
 								 BindingResult result) throws SQLException, BadOperationException, NoSuchAlgorithmException, InvalidHashException, UserException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		// TODO AJAX
 		if (result.hasErrors()) {
 			//TODO RETURN ERROR MESSAGE
@@ -281,7 +318,10 @@ public class UserController {
 
 
 	@RequestMapping(value = "/follow/{userId}", method = RequestMethod.POST)
-	public void followUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId){
+	public void followUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		try {
 			User follower = (User) session.getAttribute("user");
 			User followed = userDao.getUserById(userId);
@@ -297,7 +337,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/unfollow/{userId}", method = RequestMethod.POST)
-	public void unfollowUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId){
+	public void unfollowUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId) throws IOException {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			resp.sendRedirect("login");
+		}
 		try {
 			User follower = (User) session.getAttribute("user");
 			User followed = userDao.getUserById(userId);

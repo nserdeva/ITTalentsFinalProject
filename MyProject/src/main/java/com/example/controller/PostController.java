@@ -42,7 +42,10 @@ public class PostController {
     ServletContext servletContext;
 
     @RequestMapping(value = "/uploadPost", method = RequestMethod.GET)
-    public String getUploadPostForm(HttpServletRequest request, HttpServletResponse response){
+    public String getUploadPostForm(HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+            return "login";
+        }
         return "uploadPost";
     }
 
@@ -53,6 +56,9 @@ public class PostController {
                              @RequestParam("categories") String categoryNames, @RequestParam("image1") MultipartFile image1,
                              @RequestParam("image2") MultipartFile image2, @RequestParam("image3") MultipartFile image3,
                              @RequestParam("video") MultipartFile video1, HttpSession session){
+        if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+            return "login";
+        }
         if("".equals(description) && "".equals(locationName) && "".equals(latitude) && "".equals(longtitude) && "".equals(taggedPeople)
                 && "".equals(tagNames) && "".equals(categoryNames) && image1.getSize()==0 && image2.getSize()==0
                 && image3.getSize()==0 && video1.getSize()==0){
@@ -93,6 +99,8 @@ public class PostController {
             e.printStackTrace();
         } catch (CommentException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         //put everything in database
         //reload posts
@@ -100,7 +108,7 @@ public class PostController {
         return "redirect:/myPassport";
     }
 
-    private Location getLocation(String locationInput, String latitude, String longtitude) throws LocationException, SQLException {
+    private Location getLocation(String locationInput, String latitude, String longtitude) throws LocationException, SQLException, IOException {
 
         /*if (!"".equals(locationInput)) {
             if(locationDao.existsLocation(locationInput, latitude, longtitude)){
@@ -108,6 +116,7 @@ public class PostController {
                 System.out.println("************************ADDED LOCATION: "+location.getLocationName());
             }
         }*/
+
         Location location1=new Location(latitude,longtitude, "", locationInput);
         //location=locationDao.insertLocation(location1);
         return location1;

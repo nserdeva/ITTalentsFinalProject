@@ -31,19 +31,29 @@ public class WelcomeController {
 
 	// TODO - INDEX PAGE MUST BE SHOWN FIRST
 	@RequestMapping(value = "/wanderlust", method = RequestMethod.GET)
-	public String getWelcomePage() {
+	public String getWelcomePage(HttpSession session) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		return "index";
 	}
 
 	@RequestMapping(value = "/myPassport", method = RequestMethod.GET)
 	public String getMyPassport(HttpSession session) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		long userId = ((User) session.getAttribute("user")).getUserId();
 		return "redirect:/showPassport/" + userId;
 	}
 
 	@RequestMapping(value = "/newsfeed", method = RequestMethod.GET)
 	public String showNewsfeed(HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			return "login";
+		}
 		try {
+
 			TreeSet<Post> newsfeedPosts = new TreeSet<Post>();
 			User currentUser = (User) session.getAttribute("user");
 			userDao.setFollowing(currentUser);
