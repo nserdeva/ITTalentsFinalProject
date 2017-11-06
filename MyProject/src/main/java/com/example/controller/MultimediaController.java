@@ -26,39 +26,45 @@ import java.sql.SQLException;
  */
 @Controller
 public class MultimediaController {
-    @Autowired
-    MultimediaDao multimediaDao;
+	@Autowired
+	MultimediaDao multimediaDao;
 
-    @RequestMapping(value = "/getVideo/{url}", method = RequestMethod.GET)
-    public void getUploadedImagesForm(@PathVariable("url") String tempUrl, HttpSession session, HttpServletResponse resp) {
-            try {
-                String url=tempUrl+".mp4";
-            File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+url);
-            OutputStream out = resp.getOutputStream();
-            Path path = tempImage.toPath();
-            Files.copy(path, out);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	@RequestMapping(value = "/getVideo/{url}", method = RequestMethod.GET)
+	public void getUploadedImagesForm(@PathVariable("url") String tempUrl, HttpSession session,
+			HttpServletResponse resp) {
+		try {
+			String url = tempUrl + ".mp4";
+			File tempImage = new File(
+					WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION + File.separator + url);
+			OutputStream out = resp.getOutputStream();
+			Path path = tempImage.toPath();
+			Files.copy(path, out);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    @RequestMapping(value = "/getMultimedia/{id}", method = RequestMethod.GET)
-    public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) throws UserException {
-        try {
-            Multimedia multimedia=multimediaDao.getMultimediaById(id);
-            String url=multimedia.getUrl();
-            File tempImage = new File(WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION +File.separator+url);
-            OutputStream out = resp.getOutputStream();
-            Path path = tempImage.toPath();
-            Files.copy(path, out);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (PostException e) {
-            e.printStackTrace();
-        }
-    }
+	@RequestMapping(value = "/getMultimedia/{id}", method = RequestMethod.GET)
+	public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) {
+		try {
+			Multimedia multimedia = multimediaDao.getMultimediaById(id);
+			String url = multimedia.getUrl();
+			File tempImage = new File(
+					WebInitializer.LOCATION + WebInitializer.MULTIMEDIA_LOCATION + File.separator + url);
+			OutputStream out = resp.getOutputStream();
+			Path path = tempImage.toPath();
+			Files.copy(path, out);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (PostException e) {
+			e.printStackTrace();
+		} catch (UserException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

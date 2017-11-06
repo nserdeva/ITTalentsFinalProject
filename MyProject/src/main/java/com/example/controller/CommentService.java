@@ -1,7 +1,6 @@
 package com.example.controller;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,6 @@ import com.example.model.exceptions.UserException;
 
 @Controller
 @RestController
-//@RequestMapping(value="/comment")
 public class CommentService {
 	@Autowired
 	UserDao userDao;
@@ -35,17 +33,26 @@ public class CommentService {
 	@Autowired
 	PostDao postDao;
 
-
-	
 	@RequestMapping(value = "/postComment/{postId}/{content}", method = RequestMethod.POST)
-	@ResponseBody	
-	public Comment postComment(HttpSession session, HttpServletResponse resp, HttpServletRequest request, @PathVariable("postId") long postId, @PathVariable("content") String content)
-			throws UserException, SQLException, PostException, CommentException {
-		User sentBy = (User)session.getAttribute("user");
-		Comment comment = new Comment(content, postId,sentBy.getUserId(), sentBy);
-		commentDao.insertComment(comment, sentBy);
-		resp.setStatus(200);
-	   return commentDao.getCommentById(comment.getId());
+	@ResponseBody
+	public Comment postComment(HttpSession session, HttpServletResponse resp, HttpServletRequest request,
+			@PathVariable("postId") long postId, @PathVariable("content") String content) {
+		User sentBy = (User) session.getAttribute("user");
+		try {
+			Comment comment = new Comment(content, postId, sentBy.getUserId(), sentBy);
+			commentDao.insertComment(comment, sentBy);
+			resp.setStatus(200);
+			return commentDao.getCommentById(comment.getId());
+		} catch (PostException e) {
+			e.printStackTrace();
+		} catch (UserException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (CommentException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

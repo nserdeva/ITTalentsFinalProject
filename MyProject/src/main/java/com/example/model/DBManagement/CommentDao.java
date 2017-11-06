@@ -70,6 +70,8 @@ public final class CommentDao extends AbstractDao { // used to operate with tabl
 				c = new Comment(rs.getLong("comment_id"), rs.getString("content"), rs.getInt("likes_counter"),
 						rs.getInt("dislikes_counter"), rs.getLong("post_id"), rs.getLong("user_id"),
 						rs.getTimestamp("date_time"));
+				c.setPeopleLiked(this.getAllPeopleLiked(c));
+				c.setPeopleDisliked(this.getAllPeopleDisliked(c));
 			}
 			return c;
 		}

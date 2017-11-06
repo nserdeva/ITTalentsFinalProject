@@ -18,9 +18,11 @@ public final class User {
 	// ::::::::: main object characteristics :::::::::
 	private long userId = 0;
 	@Size(min = MIN_USERNAME_LENGTH, max = MAX_USERNAME_LENGTH)
-	@Pattern(regexp = USERNAME_VALIDATION_REGEX, message = "Username may contain numbers and letters")
+	@Pattern(regexp = USERNAME_VALIDATION_REGEX, message = "Username must be at least " + MIN_USERNAME_LENGTH
+			+ " characters long and must contain only letters, digits, hyphens and underscores! ")
 	private String username = null;
-	@Pattern(regexp = PASSWORD_VALIDATION_REGEX, message = "Invalid password")
+	@Pattern(regexp = PASSWORD_VALIDATION_REGEX, message = "Password must be at least " + MIN_PASSWORD_LENGTH
+			+ " characters long and must contain at least one lowercase character, at least one uppercase character and at least one non-alphabetic character!")
 	@Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
 	private String password = null;
 	@Pattern(regexp = EMAIL_VALIDATION_REGEX, message = "Invalid email address")
@@ -31,8 +33,7 @@ public final class User {
 	private HashSet<User> following = null;
 	private TreeMap<Timestamp, Location> visitedLocations = null; // order by date and time of visit required
 	private HashSet<Location> wishlist = null;
-	private TreeSet<Post> posts = new TreeSet<>(); // order by date and time of post submition required
-	// !!! overriding of compareTo() in 'Post' required !!!
+	private TreeSet<Post> posts = new TreeSet<>(); 
 
 	// ::::::::: additional object characteristics :::::::::
 	private static final int MIN_USERNAME_LENGTH = 5;
@@ -44,7 +45,6 @@ public final class User {
 	private static final String USERNAME_VALIDATION_REGEX = "([A-Za-z0-9-_]+)";
 
 	// ::::::::: constructor to be used for user registration :::::::::
-	// public modifier required - constructor will be used in 'controller' package
 	public User(String username, String password, String email) throws UserException {
 		this.setUsername(username);
 		this.setPassword(password);
@@ -60,6 +60,7 @@ public final class User {
 	}
 
 	public User() {
+		
 	}
 
 	// ::::::::: constructor to be used when loading an existing user from db
@@ -139,19 +140,6 @@ public final class User {
 		}
 	}
 
-	/*
-	 * public void setPassword(String password) throws UserException { if
-	 * (password.length() >= MIN_PASWORD_LENGTH) { if
-	 * (password.matches("^(?=.*[a-z])(?=.*[A-Z])$")) { if
-	 * (password.matches("^(?=.*[0-9])$") || password.matches("^(?=.*[@#$%^&+=])$"))
-	 * { this.password = password; // hashing required } else { throw new
-	 * UserException("Password must contain at least one non-alphabetic character!"
-	 * ); } } else { throw new UserException(
-	 * "Password must contain at least one uppercase and at least one lowercase character!"
-	 * ); } } else { throw new UserException("Password must be at least " +
-	 * MIN_PASWORD_LENGTH + " characters long!"); } }
-	 */
-
 	public boolean setPassword(String password) throws UserException {
 		if (password != null && password.length() >= MIN_PASSWORD_LENGTH
 				&& (password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])$")
@@ -184,12 +172,6 @@ public final class User {
 	public void setProfilePic(Multimedia profilePic) {
 		this.profilePic = profilePic;
 	}
-
-	/*
-	 * void setProfilePic(Multimedia profilePic) throws UserException { if
-	 * (profilePic != null) { this.profilePic = profilePic; } else { throw new
-	 * UserException("Invalid profile picture!"); } }
-	 */
 
 	public void setFollowers(HashSet<User> followers) {
 		this.followers = followers;
@@ -232,7 +214,7 @@ public final class User {
 
 	// ::::::::: add/remove from visited_locations :::::::::
 	public void addVisitedLocation(Timestamp datetime, Location location) {
-			if (this.visitedLocations == null) {
+		if (this.visitedLocations == null) {
 			this.visitedLocations = new TreeMap<Timestamp, Location>();
 		}
 		this.visitedLocations.put(datetime, location);
@@ -294,4 +276,5 @@ public final class User {
 	public boolean follows(User u) {
 		return this.following != null ? this.following.contains(u) : false;
 	}
+	
 }
