@@ -44,6 +44,15 @@
             <input type="text"  name="email" placeholder="${sessionScope.user.email}" />
             <input type="submit" value="Change email"/>
         </form><br>
+
+        <button onclick="showPassword()" class="w3-btn w3-black">Password</button>
+        <form id="passwordChange" name="password" class="w3-hide w3-red" method="post" action="/settings/changePassword"  >
+            Change email:
+            <input type="password"  name="oldPassword" placeholder="Old password" /><br>
+            <input type="password"  name="newPassword" placeholder="New password"  /><br>
+            <input type="password"  name="confirmPassword" placeholder="Confirm new password" /><br>
+            <input type="submit" value="Change password"/>
+        </form><br>
     </div>
 
 	<script>
@@ -65,6 +74,14 @@
         }
         function showAvatar() {
             var x = document.getElementById("avatarChange");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+        function showPassword() {
+            var x = document.getElementById("passwordChange");
             if (x.className.indexOf("w3-show") == -1) {
                 x.className += " w3-show";
             } else {

@@ -92,7 +92,6 @@
 					<p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
 				</div>
 				</p>
-
 				</div></td>
 		</tr>
 		<tr>

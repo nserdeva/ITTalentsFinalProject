@@ -261,6 +261,28 @@ public class UserController {
 		return "settings";
 	}
 
+	@RequestMapping(value = "/settings/changePassword", method = RequestMethod.POST)
+	public String changePassword(HttpSession session, HttpServletRequest request,@ModelAttribute("oldPassword") String oldPassword,
+							  @Valid @ModelAttribute("newPassword") String newPassword,@ModelAttribute("confirmPassword") String confirmPassword,
+								 BindingResult result) throws SQLException, BadOperationException, NoSuchAlgorithmException, InvalidHashException, UserException {
+		// TODO AJAX
+		if (result.hasErrors()) {
+			//TODO RETURN ERROR MESSAGE
+			return "settings";
+		} else {
+			// System.out.println(newEmail==null);
+			User user=(User)session.getAttribute("user");
+			if(Hash.verify(oldPassword,user.getPassword())){
+				if(newPassword.equals(confirmPassword)){
+					String newPass=Hash.create(newPassword, Type.BCRYPT);
+					userDao.changePassword(user, newPass);
+				}
+			}
+		}
+		return "settings";
+	}
+
+
 	@RequestMapping(value = "/follow/{userId}", method = RequestMethod.POST)
 	public void followUser(HttpSession session, HttpServletResponse resp, @PathVariable("userId") long userId)
 			throws UserException {
