@@ -82,7 +82,12 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 						<div class="w3-container">
 							<h3>
-								<b> ${post.user.username} <c:if
+								<b> 
+								
+								<a target="_blank" href="/showPassport/${post.user.userId}">
+												${post.user.username}</a>;
+								
+								<c:if
 										test="${post.location!=null}">
  was at 
  <a target="_blank" href="/location/${post.location.id}">${post.location.locationName}</a>

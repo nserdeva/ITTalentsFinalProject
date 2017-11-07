@@ -75,7 +75,7 @@ tr {
 				<a target="_blank" href="/location/${sessionScope.post.location.id}">${sessionScope.post.location.locationName}</a>
 
 				</c:if>
-				</h3> <c:if test="${sessionScope.post.taggedPeople.size()>0}">
+				<c:if test="${sessionScope.post.taggedPeople.size()>0}">
 				with
 				<c:forEach var="taggedUser"
 						items="${sessionScope.post.taggedPeople}">
@@ -102,8 +102,7 @@ tr {
 					Dislikes:
 					<p id="dislikesCount">${sessionScope.post.peopleDisliked.size()}</p>
 				</div>
-				</p>
-				</div></td>
+				</td>
 		</tr>
 		<tr>
 	</table>
@@ -155,8 +154,13 @@ tr {
 
 
 	<c:if test="${sessionScope.post.location !=null}">
-		<div id="map" style="width: 400px; height: 400px"></div>
-		<input type="hidden" id="latitude"
+	<table align="center">
+		<tr>
+			<td>
+				<div id="map" align="center" style="width: 1070px; height: 400px;"></div>
+			</td>
+		</tr>
+	</table>		<input type="hidden" id="latitude"
 			value="${sessionScope.post.location.latitude}" />
 		<input type="hidden" id="longtitude"
 			value="${sessionScope.post.location.longtitude}" />
@@ -165,8 +169,7 @@ tr {
 	<br>
 	<br>
 	<br>
-	<textarea id="newCommentInputContent" rows="6" cols="79">
-</textarea>
+	<textarea id="newCommentInputContent" rows="6" cols="79"></textarea>
 	<br>
 	<button style="background-color: purple" id="postCommentButton"
 		onclick="postComment(${sessionScope.post.id})">Post</button>
