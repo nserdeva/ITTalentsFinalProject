@@ -58,8 +58,8 @@ public class UserController {
 	LocationDao locationDao;
 
 	@RequestMapping(value = "*", method = RequestMethod.GET)
-		public String getIndex(HttpSession session) {
-			return "index";
+	public String getIndex(HttpSession session) {
+		return "index";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -70,12 +70,12 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String logUser(HttpSession session, HttpServletRequest request) {
 		String username = request.getParameter("user");
-		username=username.trim();
+		username = username.trim();
 		String password = request.getParameter("pass");
-		password=password.trim();
+		password = password.trim();
 
-		if("".equals(username) || "".equals(password)){
-			request.setAttribute("isValidData",false);
+		if ("".equals(username) || "".equals(password)) {
+			request.setAttribute("isValidData", false);
 			return "login";
 		}
 		try {
@@ -87,17 +87,11 @@ public class UserController {
 					request.setAttribute("isValidData", true);
 					HashSet<String> usernames = userDao.getAllUsernames();
 					for (String name : usernames) {
-						System.out.println(name);
 					}
 					HashSet<String> tags = tagDao.getAllTags();
 					for (String tag : tags) {
-						System.out.println(tag);
 					}
 					HashMap<String, Category> categories = categoryDao.getAllCategories();
-					for (Category category : categories.values()) {
-						System.out.println(category.getId());
-						System.out.println(category.getName());
-					}
 					Set<String> categoryNames = categories.keySet();
 					HashSet<String> locationNames = locationDao.getAllLocationNames();
 					servletContext.setAttribute("locations", locationNames);
@@ -131,8 +125,8 @@ public class UserController {
 		String pass2 = request.getParameter("pass2");
 		String email = request.getParameter("email");
 		try {
-		User test = new User(username, pass, email); //test if given data is correct
-		if (pass != null && pass.equals(pass2)) {
+			User test = new User(username, pass, email); // test if given data is correct
+			if (pass != null && pass.equals(pass2)) {
 				if (!userDao.existsUsername(username)) {
 					User user = new User(username, Hash.create(pass, Type.BCRYPT), email);
 					userDao.insertUser(user);
@@ -140,38 +134,32 @@ public class UserController {
 					session.setAttribute("logged", true);
 					return "redirect:/showPassport/" + user.getUserId();
 				} else {
-					System.out.println("Vlizash li TUKA weeee");
-
 					return "register";
 				}
-		} else {
-			request.setAttribute("doPasswordsMatch", false);
-			return "register";
-		}
-			} catch (SQLException | NoSuchAlgorithmException e) {
-				e.printStackTrace();
-				return "register";
-			} catch (UserException | BadOperationException e) {
-				System.out.println("Vlizash li weeee");
-				if(e.getMessage().contains("Username")) {
-					System.out.println("VLIZA PRI USERNAME");
-					request.setAttribute("isValidUsername", false);
-				} 
-				if(e.getMessage().contains("e-mail")) {
-					System.out.println("VLIZA PRI EMAIL");
-					request.setAttribute("isValidEmail", false);
-				}
-				if(e.getMessage().contains("Password")) {
-					System.out.println("VLIZA PRI PASSWORD");
-					request.setAttribute("isValidPassword", false);
-				}
+			} else {
+				request.setAttribute("doPasswordsMatch", false);
 				return "register";
 			}
+		} catch (SQLException | NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "register";
+		} catch (UserException | BadOperationException e) {
+			if (e.getMessage().contains("Username")) {
+				request.setAttribute("isValidUsername", false);
+			}
+			if (e.getMessage().contains("e-mail")) {
+				request.setAttribute("isValidEmail", false);
+			}
+			if (e.getMessage().contains("Password")) {
+				request.setAttribute("isValidPassword", false);
+			}
+			return "register";
+		}
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpSession session) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		session.setAttribute("logged", false);
@@ -181,7 +169,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)
 	public String arrangeSettings(HttpSession session) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		return "settings";
@@ -189,7 +177,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeDescription", method = RequestMethod.GET)
 	public String getChangeDescriptionForm(HttpSession session, HttpServletRequest request) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		return "settings";
@@ -197,7 +185,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeDescription", method = RequestMethod.POST)
 	public String changeDescription(HttpSession session, HttpServletRequest request) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		String newDescription = request.getParameter("descriptionTxt");
@@ -211,7 +199,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeEmail", method = RequestMethod.GET)
 	public String getChangeEmailForm(HttpSession session, Model model) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		model.addAttribute("email", ((User) session.getAttribute("user")).getEmail());
@@ -221,7 +209,7 @@ public class UserController {
 	@RequestMapping(value = "/settings/changeEmail", method = RequestMethod.POST)
 	public String changeEmail(HttpSession session, HttpServletRequest request,
 			@Valid @ModelAttribute("email") String email, BindingResult result) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		if (result.hasErrors()) {
@@ -239,7 +227,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.GET)
 	public String getAvatar(HttpSession session) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		return "settings";
@@ -247,7 +235,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/getAvatar", method = RequestMethod.GET)
 	public void getChangeAvatar(HttpSession session, HttpServletResponse resp, Model model) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		User u = (User) session.getAttribute("user");
@@ -266,7 +254,7 @@ public class UserController {
 
 	@RequestMapping(value = "/settings/changeAvatar", method = RequestMethod.POST)
 	public String changeAvatar(HttpSession session, @RequestParam("avatar") MultipartFile file, Model model) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		User user = (User) session.getAttribute("user");
@@ -294,22 +282,22 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/settings/changePassword", method = RequestMethod.POST)
-	public String changePassword(HttpSession session, HttpServletRequest request,@ModelAttribute("oldPassword") String oldPassword,
-							  @Valid @ModelAttribute("newPassword") String newPassword,@ModelAttribute("confirmPassword") String confirmPassword,
-								 BindingResult result) throws SQLException, BadOperationException, NoSuchAlgorithmException, InvalidHashException, UserException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+	public String changePassword(HttpSession session, HttpServletRequest request,
+			@ModelAttribute("oldPassword") String oldPassword, @Valid @ModelAttribute("newPassword") String newPassword,
+			@ModelAttribute("confirmPassword") String confirmPassword, BindingResult result)
+			throws SQLException, BadOperationException, NoSuchAlgorithmException, InvalidHashException, UserException {
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		// TODO AJAX
 		if (result.hasErrors()) {
-			//TODO RETURN ERROR MESSAGE
+			// TODO RETURN ERROR MESSAGE
 			return "settings";
 		} else {
-			// System.out.println(newEmail==null);
-			User user=(User)session.getAttribute("user");
-			if(Hash.verify(oldPassword,user.getPassword())){
-				if(newPassword.equals(confirmPassword)){
-					String newPass=Hash.create(newPassword, Type.BCRYPT);
+			User user = (User) session.getAttribute("user");
+			if (Hash.verify(oldPassword, user.getPassword())) {
+				if (newPassword.equals(confirmPassword)) {
+					String newPass = Hash.create(newPassword, Type.BCRYPT);
 					userDao.changePassword(user, newPass);
 				}
 			}

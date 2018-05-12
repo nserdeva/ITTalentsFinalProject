@@ -33,7 +33,7 @@ public class LikeService {
 	@ResponseBody
 	public Integer[] likePost(HttpSession session, Model model, HttpServletResponse resp,
 			@PathVariable("postId") long postId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Post post = null;
@@ -65,8 +65,9 @@ public class LikeService {
 
 	@RequestMapping(value = "/unlike/{postId}", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer[] unlikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+	public Integer[] unlikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId)
+			throws IOException {
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Post post = null;
@@ -89,8 +90,9 @@ public class LikeService {
 
 	@RequestMapping(value = "/dislike/{postId}", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer[] dislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+	public Integer[] dislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId)
+			throws IOException {
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Post post = null;
@@ -122,8 +124,9 @@ public class LikeService {
 
 	@RequestMapping(value = "/undislike/{postId}", method = RequestMethod.POST)
 	@ResponseBody
-	public Integer[] undislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+	public Integer[] undislikePost(HttpSession session, HttpServletResponse resp, @PathVariable("postId") long postId)
+			throws IOException {
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Post post = null;
@@ -153,7 +156,7 @@ public class LikeService {
 	@ResponseBody
 	public Integer[] likeComment(HttpSession session, Model model, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Comment comment = null;
@@ -189,7 +192,7 @@ public class LikeService {
 	@ResponseBody
 	public Integer[] unlikeComment(HttpSession session, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Comment comment = null;
@@ -217,7 +220,7 @@ public class LikeService {
 	@ResponseBody
 	public Integer[] dislikeComment(HttpSession session, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Comment comment = null;
@@ -253,7 +256,7 @@ public class LikeService {
 	@ResponseBody
 	public Integer[] undislikeComment(HttpSession session, HttpServletResponse resp,
 			@PathVariable("commentId") long commentId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		Comment comment = null;

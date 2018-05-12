@@ -23,12 +23,12 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan("com.example")
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
-        registry.addResourceHandler("/img/**").addResourceLocations("/static/img/");
-        registry.addResourceHandler("/pdf/**").addResourceLocations("/static/pdf/");
-        registry.addResourceHandler("/html/**").addResourceLocations("/static/html/");
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
+		registry.addResourceHandler("/img/**").addResourceLocations("/static/img/");
+		registry.addResourceHandler("/pdf/**").addResourceLocations("/static/pdf/");
+		registry.addResourceHandler("/html/**").addResourceLocations("/static/html/");
 		registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
 	}
 
@@ -36,17 +36,17 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	public StandardServletMultipartResolver multipartResolver() {
 		return new StandardServletMultipartResolver();
 	}
-	
+
 	@Bean
 	public InternalResourceViewResolver getInternalResourceViewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 		resolver.setViewClass(JstlView.class);
 		resolver.setPrefix("/WEB-INF/views/jsp/");
 		resolver.setSuffix(".jsp");
-		
+
 		return resolver;
 	}
-	
+
 	// localization configuration
 	@Bean
 	public MessageSource messageSource() {
@@ -54,21 +54,19 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		messageSource.setBasename("messages");
 		return messageSource;
 	}
-	
+
 	@Bean
 	public LocaleResolver localeResolver() {
 		SessionLocaleResolver resolver = new SessionLocaleResolver();
 		resolver.setDefaultLocale(Locale.ENGLISH);
 		return resolver;
 	}
-	
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		LocaleChangeInterceptor changeInterceptor = new LocaleChangeInterceptor();
 		changeInterceptor.setParamName("language");
 		registry.addInterceptor(changeInterceptor);
-    }
+	}
 
-
-	
 }

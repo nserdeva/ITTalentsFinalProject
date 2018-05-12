@@ -22,22 +22,23 @@ import java.util.Collection;
 @RestController
 @Controller
 public class LocationsService {
-    @Autowired
-    UserDao userDao;
+	@Autowired
+	UserDao userDao;
 
-    @RequestMapping(value = "/getVisitedPlaces/{userId}",method = RequestMethod.GET)
-    @ResponseBody
-    public Collection<Location> getVisitedPlaces(HttpSession session,HttpServletResponse response, @PathVariable("userId") long userId) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+	@RequestMapping(value = "/getVisitedPlaces/{userId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Collection<Location> getVisitedPlaces(HttpSession session, HttpServletResponse response,
+			@PathVariable("userId") long userId) throws IOException {
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			response.sendRedirect("login");
 		}
-    	User user = null;
-    	Collection<Location> locations = null;
-    	try {
-    	user=userDao.getUserById(userId);
-        locations=userDao.getVisitedLocations(user).values();
-        response.setStatus(200);
-    	} catch (SQLException e) {
+		User user = null;
+		Collection<Location> locations = null;
+		try {
+			user = userDao.getUserById(userId);
+			locations = userDao.getVisitedLocations(user).values();
+			response.setStatus(200);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (LocationException e) {
 			e.printStackTrace();
@@ -46,7 +47,7 @@ public class LocationsService {
 		} catch (UserException e) {
 			e.printStackTrace();
 		}
-        return locations;
-    }
-    
+		return locations;
+	}
+
 }

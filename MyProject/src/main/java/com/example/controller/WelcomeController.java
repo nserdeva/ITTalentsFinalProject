@@ -29,10 +29,9 @@ public class WelcomeController {
 	@Autowired
 	UserDao userDao;
 
-	// TODO - INDEX PAGE MUST BE SHOWN FIRST
 	@RequestMapping(value = "/wanderlust", method = RequestMethod.GET)
 	public String getWelcomePage(HttpSession session) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		return "index";
@@ -40,7 +39,7 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/myPassport", method = RequestMethod.GET)
 	public String getMyPassport(HttpSession session) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		long userId = ((User) session.getAttribute("user")).getUserId();
@@ -49,7 +48,7 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/newsfeed", method = RequestMethod.GET)
 	public String showNewsfeed(HttpSession session, HttpServletRequest request) {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			return "login";
 		}
 		try {
@@ -62,8 +61,6 @@ public class WelcomeController {
 				userDao.setFollowing(followed);
 				userDao.setProfilePic(followed);
 				userDao.setPosts(followed);
-				// userDao.setVisitedLocations(followed);
-				// userDao.setWishlistLocations(followed);
 				newsfeedPosts.addAll(userDao.getPosts(followed));
 			}
 			session.setAttribute("newsfeedPosts", newsfeedPosts);

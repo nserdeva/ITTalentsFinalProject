@@ -280,11 +280,9 @@ tr {
         var button = document.getElementById("likeButton");
         var title = button.innerHTML;
         if(title == 'Like'){
-            alert("I WANT TO LIKE THE POST");
             likePost(postId);
         }
         else{
-            alert("I WANT TO UNLIKE THE POST");
             unlikePost(postId);
         }
     }
@@ -292,19 +290,15 @@ tr {
     function handleDislike(postId){
         var button = document.getElementById("dislikeButton");
         var title = button.innerHTML;
-        alert("AMA VLIZASH LI TUK?");
         if(title == "Dislike"){
-            alert("I WANT TO DISLIKE THE POST");
             dislikePost(postId);
         }
         else{
-            alert("I WANT TO UNDISLIKE THE POST");
             undislikePost(postId);
         }
     }
 
     function likePost(postId) {
-        alert("I WANT TO LIKE POST "+ postId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -312,7 +306,6 @@ tr {
                 var likeButton = document.getElementById("likeButton");
                 likeButton.innerHTML = "Unlike";
                 likeButton.style.background='red';
-                alert("I JUST LIKED POST AND DISLIKED ANOTHER ONE");
                 var dislikeButton=document.getElementById("dislikeButton");
                 dislikeButton.innerHTML="Dislike";
                 dislikeButton.style.background="green";
@@ -325,7 +318,6 @@ tr {
                 var likeButton1 = document.getElementById("likeButton");
                 likeButton1.innerHTML = "Unlike";
                 likeButton1.style.background='red';
-                alert("I JUST LIKED POST AND CREATED NEW ENTRY");
                 var counters=JSON.parse(request.responseText);
                 document.getElementById("likesCount").innerHTML=counters[0];
                 document.getElementById("dislikesCount").innerHTML=counters[1];
@@ -339,7 +331,6 @@ tr {
     }
 
     function unlikePost(postId) {
-        alert("I WANT TO UNLIKE POST "+ postId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -347,7 +338,6 @@ tr {
                 var button = document.getElementById("likeButton");
                 button.innerHTML = "Like";
                 button.style.background='green';
-                alert("I JUST UNLIKED A POST AND DELETED THE ENTRY");
                 var counters=JSON.parse(request.responseText);
                 document.getElementById("likesCount").innerHTML=counters[0];
                 document.getElementById("dislikesCount").innerHTML=counters[1];
@@ -362,7 +352,6 @@ tr {
     }
 
     function dislikePost(postId) {
-        alert("I WANT TO DISLIKE POST "+ postId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -373,7 +362,6 @@ tr {
                 var likeButton=document.getElementById("likeButton");
                 likeButton.innerHTML="Like";
                 likeButton.style.background="green";
-                alert("I JUST DISLIKED A POST AND UPDATED THE ENTRY");
                 var counters=JSON.parse(request.responseText);
                 document.getElementById("likesCount").innerHTML=counters[0];
                 document.getElementById("dislikesCount").innerHTML=counters[1];
@@ -382,7 +370,6 @@ tr {
                 var dislikeButton1 = document.getElementById("dislikeButton");
                 dislikeButton1.innerHTML = "Undislike";
                 dislikeButton1.style.background='red';
-                alert("I JUST DISLIKED A POST AND ADDED A NEW ENTRY");
                 var counters=JSON.parse(request.responseText);
                 document.getElementById("likesCount").innerHTML=counters[0];
                 document.getElementById("dislikesCount").innerHTML=counters[1];
@@ -397,7 +384,6 @@ tr {
     }
 
     function undislikePost(postId) {
-        alert("I WANT TO UNDISLIKE POST "+ postId);
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {
             //when response is received
@@ -405,7 +391,6 @@ tr {
                 var button = document.getElementById("dislikeButton");
                 button.innerHTML = "Dislike";
                 button.style.background='green';
-                alert("I JUST UNDISLIKED A POST AND DELETED THE NEW ENTRY");
                 var counters=JSON.parse(request.responseText);
                 document.getElementById("likesCount").innerHTML=counters[0];
                 document.getElementById("dislikesCount").innerHTML=counters[1];

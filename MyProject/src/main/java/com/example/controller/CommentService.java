@@ -38,7 +38,7 @@ public class CommentService {
 	@ResponseBody
 	public Comment postComment(HttpSession session, HttpServletResponse resp, HttpServletRequest request,
 			@PathVariable("postId") long postId, @PathVariable("content") String content) throws IOException {
-		if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		User sentBy = (User) session.getAttribute("user");

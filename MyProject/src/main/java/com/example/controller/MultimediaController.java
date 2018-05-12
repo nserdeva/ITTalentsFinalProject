@@ -32,7 +32,7 @@ public class MultimediaController {
 	@RequestMapping(value = "/getVideo/{url}", method = RequestMethod.GET)
 	public void getUploadedImagesForm(@PathVariable("url") String tempUrl, HttpSession session,
 			HttpServletResponse resp) throws IOException {
-		if(session.getAttribute("user")==null && session.getAttribute("logged").equals(false)){
+		if (session.getAttribute("user") == null && session.getAttribute("logged").equals(false)) {
 			resp.sendRedirect("login");
 		}
 		try {
@@ -51,7 +51,7 @@ public class MultimediaController {
 	@RequestMapping(value = "/getMultimedia/{id}", method = RequestMethod.GET)
 	public void getVideo(@PathVariable("id") long id, HttpSession session, HttpServletResponse resp) {
 		try {
-			if(session.getAttribute("user")==null || session.getAttribute("logged").equals(false)){
+			if (session.getAttribute("user") == null || session.getAttribute("logged").equals(false)) {
 				resp.sendRedirect("login");
 			}
 			Multimedia multimedia = multimediaDao.getMultimediaById(id);
