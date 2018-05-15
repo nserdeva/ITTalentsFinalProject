@@ -46,4 +46,7 @@ Singleton, POJO, DAO, MVC
 ```
 
 
-***  *An earlier version of the project (without the use of Spring/Maven) can be found at:* https://github.com/MmmarinaMarinova/TravellerWebApplication__
+***  *An earlier version of the project (without the use of Spring/Maven) can be found at:* https://github.com/MmmarinaMarinova/TravellerWebApplication
+
+**  *Please note that there are a lot of things that need to be fixed or reconsidered!Re* 
+
